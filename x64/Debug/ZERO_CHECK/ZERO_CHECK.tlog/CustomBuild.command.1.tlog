@@ -1,0 +1,10 @@
+^D:\C++ PROJECTS\CSC8503 2023\CMAKEFILES\2D734C267EEFC1AB7CA4BC48059E56C9\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SD:/C++ Projects/CSC8503 2023" "-BD:/C++ Projects/CSC8503 2023" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "D:/C++ Projects/CSC8503 2023/CSC8503.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

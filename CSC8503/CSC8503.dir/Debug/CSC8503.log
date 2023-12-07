@@ -1,0 +1,11 @@
+﻿  cmake_pch.cxx
+  GameTechRenderer.cpp
+  Main.cpp
+D:\C++ Projects\CSC8503 2023\CSC8503\Main.cpp(112,28): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+D:\C++ Projects\CSC8503 2023\CSC8503\Main.cpp(203,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  NetworkedGame.cpp
+  NetworkPlayer.cpp
+  StateGameObject.cpp
+  TutorialGame.cpp
+  Generating Code...
+  CSC8503.vcxproj -> D:\C++ Projects\CSC8503 2023\x64\Debug\CSC8503.exe
