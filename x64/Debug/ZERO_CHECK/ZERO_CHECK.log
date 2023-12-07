@@ -1,1 +1,10 @@
 ﻿  1>Checking Build System
+  CMake is re-running because D:/C++ Projects/CSC8503 2023/CMakeFiles/generate.stamp is out-of-date.
+    the file 'D:/C++ Projects/CSC8503 2023/CMakeLists.txt'
+    is newer than 'D:/C++ Projects/CSC8503 2023/CMakeFiles/generate.stamp.depend'
+    result='-1'
+  -- Selecting Windows SDK version 10.0.22000.0 to target Windows 10.0.
+  x64 architecture in use
+  -- Configuring done (0.0s)
+  -- Generating done (0.0s)
+  -- Build files have been written to: D:/C++ Projects/CSC8503 2023

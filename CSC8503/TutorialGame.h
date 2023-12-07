@@ -57,6 +57,8 @@ namespace NCL {
 
 			void BridgeConstraintTest();
 
+			void AddMazeToWorld();
+
 #ifdef USEVULKAN
 			GameTechVulkanRenderer*	renderer;
 #else

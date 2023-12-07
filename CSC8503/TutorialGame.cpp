@@ -7,7 +7,7 @@
 #include "PositionConstraint.h"
 #include "OrientationConstraint.h"
 #include "StateGameObject.h"
-
+#include "NavigationGrid.h"
 
 
 using namespace NCL;
@@ -53,7 +53,7 @@ void TutorialGame::InitialiseAssets() {
 	sphereMesh	= renderer->LoadMesh("sphere.msh");
 	charMesh	= renderer->LoadMesh("goat.msh");
 	enemyMesh	= renderer->LoadMesh("Keeper.msh");
-	bonusMesh	= renderer->LoadMesh("apple.msh");
+	bonusMesh	= renderer->LoadMesh("coin.msh");
 	capsuleMesh = renderer->LoadMesh("capsule.msh");
 
 	basicTex	= renderer->LoadTexture("checkerboard.png");
@@ -271,6 +271,8 @@ void TutorialGame::InitWorld() {
 	InitGameExamples();
 	InitDefaultFloor();
 
+	AddMazeToWorld();
+
 	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
 }
 
@@ -404,7 +406,7 @@ GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 	SphereVolume* volume = new SphereVolume(0.5f);
 	apple->SetBoundingVolume((CollisionVolume*)volume);
 	apple->GetTransform()
-		.SetScale(Vector3(2, 2, 2))
+		.SetScale(Vector3(0.2f, 0.2f, 0.2f))
 		.SetPosition(position);
 
 	apple->SetRenderObject(new RenderObject(&apple->GetTransform(), bonusMesh, nullptr, basicShader));
@@ -424,7 +426,7 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position) {
 	SphereVolume* volume = new SphereVolume(0.5f);
 	apple->SetBoundingVolume((CollisionVolume*)volume);
 	apple->GetTransform()
-		.SetScale(Vector3(2, 2, 2))
+		.SetScale(Vector3(0.2f, 0.2f, 0.2f))
 		.SetPosition(position);
 
 	apple->SetRenderObject(new RenderObject(&apple->GetTransform(), bonusMesh, nullptr, basicShader));
@@ -596,6 +598,33 @@ void TutorialGame::BridgeConstraintTest() {
 
 	PositionConstraint* constraint = new PositionConstraint(previous, end, maxDistance);
 	world->AddConstraint(constraint);
+}
+
+
+void TutorialGame::AddMazeToWorld() {
+	NavigationGrid grid("TestGrid2.txt");
+
+	for (int y = 0; y < grid.gridHeight; ++y) {
+		for (int x = 0; x < grid.gridWidth; ++x) {
+			GridNode& n = grid.allNodes[(grid.gridWidth * y) + x];
+
+			// x = 120 in decimal, wall
+			if (n.type == 120) AddCubeToWorld(n.position, { (float)grid.nodeSize / 2,(float)grid.nodeSize / 2,(float)grid.nodeSize / 2 }, 0);
+
+			// c = 99 coin
+			if (n.type == 99) AddBonusToWorld(n.position);
+
+			// e = 101 enemy
+			if (n.type == 101) AddEnemyToWorld(n.position);
+
+			// i = 105 state object
+			if (n.type == 105) AddStateObjectToWorld(n.position);
+
+			// p = 112 player
+			if (n.type == 112) AddPlayerToWorld(n.position);
+		}
+	}
+	
 }
 
 

@@ -35,12 +35,12 @@ std::vector<Vector3> testNodes;
 
 void TestPathfinding() {
 	//implemented
-	NavigationGrid grid("TestGrid1.txt");
+	NavigationGrid grid("TestGrid2.txt");
 
 	NavigationPath outPath;
 
-	Vector3 startPos(80, 0, 10);
-	Vector3 endPos(80, 0, 80);
+	Vector3 startPos(10, 0, 10);
+	Vector3 endPos(180, 0, 180);
 
 	bool found = grid.FindPath(startPos, endPos, outPath);
 
