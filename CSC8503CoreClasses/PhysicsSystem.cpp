@@ -303,7 +303,7 @@ void PhysicsSystem::BroadPhase() {
 
 			for (auto i = data.begin(); i != data.end(); ++i) {
 				for (auto j = std::next(i); j != data.end(); ++j) {
-					info.a = std::min((*i).object, (*j).object);	// used std?
+					info.a = std::min((*i).object, (*j).object);	
 					info.b = std::max((*i).object, (*j).object);
 					broadphaseCollisions.insert(info);
 				}

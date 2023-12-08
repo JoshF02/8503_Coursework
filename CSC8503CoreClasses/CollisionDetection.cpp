@@ -178,7 +178,11 @@ bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, Collis
 	}
 	//Two OBBs
 	if (pairType == VolumeType::OBB) {
-		return OBBIntersection((OBBVolume&)*volA, transformA, (OBBVolume&)*volB, transformB, collisionInfo);
+		if (OBBIntersection((OBBVolume&)*volA, transformA, (OBBVolume&)*volB, transformB, collisionInfo)) {
+			std::cout << "OBB collision\n";
+			return true;
+		}
+		return false;
 	}
 	//Two Capsules
 
@@ -314,7 +318,6 @@ bool CollisionDetection::AABBSphereIntersection(const AABBVolume& volumeA, const
 	Vector3 boxSize = volumeA.GetHalfDimensions();
 
 	Vector3 delta = worldTransformB.GetPosition() - worldTransformA.GetPosition();
-	//Vector3 closestPointOnBox = std::clamp(delta, -boxSize, boxSize);	// used std clamp as cant find Maths::Clamp
 	Vector3 closestPointOnBox = Maths::Clamp(delta, -boxSize, boxSize);
 
 	Vector3 localPoint = delta - closestPointOnBox;
@@ -335,6 +338,30 @@ bool CollisionDetection::AABBSphereIntersection(const AABBVolume& volumeA, const
 
 bool  CollisionDetection::OBBSphereIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
 	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
+
+	Quaternion orientation = worldTransformA.GetOrientation();
+	Matrix3 transform = Matrix3(orientation);
+	Matrix3 invTransform = Matrix3(orientation.Conjugate());
+
+	Vector3 boxSize = volumeA.GetHalfDimensions();
+
+	Vector3 delta = worldTransformB.GetPosition() - worldTransformA.GetPosition();
+	Vector3 invDelta = invTransform * delta;
+	Vector3 closestPointOnBox = Maths::Clamp(invDelta, -boxSize, boxSize);
+
+	Vector3 localPoint = invDelta - closestPointOnBox;
+	float distance = localPoint.Length();
+
+	if (distance < volumeB.GetRadius()) {
+		Vector3 collisionNormal = transform * localPoint.Normalised();
+		float penetration = (volumeB.GetRadius() - distance);
+
+		Vector3 localA = Vector3();
+		Vector3 localB = -collisionNormal * volumeB.GetRadius();
+
+		collisionInfo.AddContactPoint(localA, localB, collisionNormal, penetration);
+		return true;
+	}
 	return false;
 }
 
@@ -350,10 +377,120 @@ bool CollisionDetection::SphereCapsuleIntersection(
 	return false;
 }
 
+
+
+
+struct OBBAxes {
+	Vector3 boxAaxisX;
+	Vector3 boxAaxisY;
+	Vector3 boxAaxisZ;
+	Vector3 boxBaxisX;
+	Vector3 boxBaxisY;
+	Vector3 boxBaxisZ;
+};
+
+// check if there is a separating plane for the selected axes
+float GetSeparatingPlane(const Vector3& delta, const Vector3& Plane, const OBBAxes& a, const Vector3& boxASize, const Vector3& boxBSize)
+{
+	/*return ((delta * Plane).Length() > (	// difference between box positions on an axis > sum of max extents on that axis
+		((a.boxAaxisX * boxASize.x) * Plane).Length() +
+		((a.boxAaxisY * boxASize.y) * Plane).Length() +
+		((a.boxAaxisZ * boxASize.z) * Plane).Length() +
+		((a.boxBaxisX * boxBSize.x) * Plane).Length() +
+		((a.boxBaxisY * boxBSize.y) * Plane).Length() +
+		((a.boxBaxisZ * boxBSize.z) * Plane).Length()));*/
+
+	// penetration = sum of max extents on an axis - difference between box positions on that axis
+	float penetration =  (((a.boxAaxisX * boxASize.x) * Plane).Length() +
+		((a.boxAaxisY * boxASize.y) * Plane).Length() +
+		((a.boxAaxisZ * boxASize.z) * Plane).Length() +
+		((a.boxBaxisX * boxBSize.x) * Plane).Length() +
+		((a.boxBaxisY * boxBSize.y) * Plane).Length() +
+		((a.boxBaxisZ * boxBSize.z) * Plane).Length()) - (delta * Plane).Length();
+
+	//if (penetration < 0) penetration = 0;
+
+	return penetration;
+}
+
 bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
 	const OBBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
-	return false;
+
+	Vector3 delta = worldTransformB.GetPosition() - worldTransformA.GetPosition();
+
+	Quaternion orientationA = worldTransformA.GetOrientation();
+	Matrix3 transformA = Matrix3(orientationA);
+	Vector3 boxASize = volumeA.GetHalfDimensions();
+
+	Quaternion orientationB = worldTransformB.GetOrientation();
+	Matrix3 transformB = Matrix3(orientationB);
+	Vector3 boxBSize = volumeB.GetHalfDimensions();
+
+	OBBAxes a;
+	a.boxAaxisX = transformA * Vector3(1, 0, 0);
+	a.boxAaxisY = transformA * Vector3(0, 1, 0);
+	a.boxAaxisZ = transformA * Vector3(0, 0, 1);
+	a.boxBaxisX = transformB * Vector3(1, 0, 0);
+	a.boxBaxisY = transformB * Vector3(0, 1, 0);
+	a.boxBaxisZ = transformB * Vector3(0, 0, 1);
+	
+
+	float minPen = FLT_MAX;
+	Vector3 bestAxis;
+
+	std::list<Vector3> axes = { a.boxAaxisX, a.boxAaxisY, a.boxAaxisZ, a.boxBaxisX, a.boxBaxisY, a.boxBaxisZ,	// face axes
+		Vector3::Cross(a.boxAaxisX, a.boxBaxisX), Vector3::Cross(a.boxAaxisX, a.boxBaxisY), Vector3::Cross(a.boxAaxisX, a.boxBaxisZ),
+		Vector3::Cross(a.boxAaxisY, a.boxBaxisX), Vector3::Cross(a.boxAaxisY, a.boxBaxisY), Vector3::Cross(a.boxAaxisY, a.boxBaxisZ),
+		Vector3::Cross(a.boxAaxisZ, a.boxBaxisX), Vector3::Cross(a.boxAaxisZ, a.boxBaxisY), Vector3::Cross(a.boxAaxisZ, a.boxBaxisZ),
+	};
+
+	std::list<Vector3>::const_iterator first = axes.begin();
+	std::list<Vector3>::const_iterator last = axes.end();
+
+	for (auto i = first; i != last; ++i) {
+		float temp = GetSeparatingPlane(delta, (*i), a, boxASize, boxBSize);
+
+		if (temp <= 0) return false;
+
+		if (temp < minPen) {
+			minPen = temp;
+			bestAxis = (*i);
+		}
+	}
+
+	collisionInfo.AddContactPoint(Vector3(), Vector3(), bestAxis, minPen);
+	return true;
+
+	// check for separating planes on all 15 axes
+	/*float axis1 = GetSeparatingPlane(delta, a.boxAaxisX, a, boxASize, boxBSize);	// face axes
+	float axis2 = GetSeparatingPlane(delta, a.boxAaxisY, a, boxASize, boxBSize);
+	float axis3 = GetSeparatingPlane(delta, a.boxAaxisZ, a, boxASize, boxBSize);
+	float axis4 = GetSeparatingPlane(delta, a.boxBaxisX, a, boxASize, boxBSize);
+	float axis5 = GetSeparatingPlane(delta, a.boxBaxisY, a, boxASize, boxBSize);
+	float axis6 = GetSeparatingPlane(delta, a.boxBaxisZ, a, boxASize, boxBSize);
+	float axis7 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisX, a.boxBaxisX), a, boxASize, boxBSize);	// cross product axes
+	float axis8 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisX, a.boxBaxisY), a, boxASize, boxBSize);
+	float axis9 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisX, a.boxBaxisZ), a, boxASize, boxBSize);
+	float axis10 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisY, a.boxBaxisX), a, boxASize, boxBSize);
+	float axis11 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisY, a.boxBaxisY), a, boxASize, boxBSize);
+	float axis12 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisY, a.boxBaxisZ), a, boxASize, boxBSize);
+	float axis13 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisZ, a.boxBaxisX), a, boxASize, boxBSize);
+	float axis14 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisZ, a.boxBaxisY), a, boxASize, boxBSize);
+	float axis15 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisZ, a.boxBaxisZ), a, boxASize, boxBSize);
+
+	if (axis1 || axis2 || axis3 || axis4 || axis5 || axis6 || axis7 || axis8 || axis9 || axis10 || axis11 || axis12 || axis13 || axis14 || axis15) {
+		return false;
+	}*/
 }
+
+
+
+
+
+
+
+
+
 
 Matrix4 GenerateInverseView(const Camera &c) {
 	float pitch = c.GetPitch();

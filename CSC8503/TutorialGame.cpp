@@ -264,14 +264,14 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
-	InitMixedGridWorld(15, 15, 3.5f, 3.5f);
+	//InitMixedGridWorld(15, 15, 3.5f, 3.5f);
 
 	BridgeConstraintTest();
 
 	InitGameExamples();
 	InitDefaultFloor();
 
-	AddMazeToWorld();
+	//AddMazeToWorld();
 
 	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
 }
@@ -335,6 +335,27 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 	GameObject* cube = new GameObject();
 
 	AABBVolume* volume = new AABBVolume(dimensions);
+	cube->SetBoundingVolume((CollisionVolume*)volume);
+
+	cube->GetTransform()
+		.SetPosition(position)
+		.SetScale(dimensions * 2);
+
+	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
+	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
+
+	cube->GetPhysicsObject()->SetInverseMass(inverseMass);
+	cube->GetPhysicsObject()->InitCubeInertia();
+
+	world->AddGameObject(cube);
+
+	return cube;
+}
+
+GameObject* TutorialGame::AddOBBToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
+	GameObject* cube = new GameObject();
+
+	OBBVolume* volume = new OBBVolume(dimensions);
 	cube->SetBoundingVolume((CollisionVolume*)volume);
 
 	cube->GetTransform()
@@ -441,13 +462,16 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position) {
 }
 
 void TutorialGame::InitDefaultFloor() {
-	AddFloorToWorld(Vector3(0, -20, 0));
+	AddFloorToWorld(Vector3(0, -2, 0));	// floor has height of 2 so reaches y=0
 }
 
 void TutorialGame::InitGameExamples() {
-	AddPlayerToWorld(Vector3(0, 5, 0));
-	AddEnemyToWorld(Vector3(5, 5, 0));
-	AddBonusToWorld(Vector3(10, 5, 0));
+	AddPlayerToWorld(Vector3(0, 10, 0));	// collision volumes dont match meshes well so dont sit on floor properly
+	AddEnemyToWorld(Vector3(5, 10, 0));
+	AddBonusToWorld(Vector3(10, 10, 0));
+
+	AddOBBToWorld(Vector3(15, 10, 0), Vector3(1, 1, 1));
+	AddOBBToWorld(Vector3(20, 10, 0), Vector3(1, 1, 1));
 }
 
 void TutorialGame::InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius) {
@@ -469,7 +493,8 @@ void TutorialGame::InitMixedGridWorld(int numRows, int numCols, float rowSpacing
 			Vector3 position = Vector3(x * colSpacing, 10.0f, z * rowSpacing);
 
 			if (rand() % 2) {
-				AddCubeToWorld(position, cubeDims);
+				//AddCubeToWorld(position, cubeDims);
+				AddOBBToWorld(position, cubeDims);
 			}
 			else {
 				AddSphereToWorld(position, sphereRadius);
@@ -609,19 +634,19 @@ void TutorialGame::AddMazeToWorld() {
 			GridNode& n = grid.allNodes[(grid.gridWidth * y) + x];
 
 			// x = 120 in decimal, wall
-			if (n.type == 120) AddCubeToWorld(n.position, { (float)grid.nodeSize / 2,(float)grid.nodeSize / 2,(float)grid.nodeSize / 2 }, 0);
+			if (n.type == 120) AddCubeToWorld(n.position + Vector3(0, 5, 0), {(float)grid.nodeSize / 2,(float)grid.nodeSize / 2,(float)grid.nodeSize / 2}, 0);
 
 			// c = 99 coin
-			if (n.type == 99) AddBonusToWorld(n.position);
+			if (n.type == 99) AddBonusToWorld(n.position + Vector3(0, 5, 0));
 
 			// e = 101 enemy
-			if (n.type == 101) AddEnemyToWorld(n.position);
+			if (n.type == 101) AddEnemyToWorld(n.position + Vector3(0, 5, 0));
 
 			// i = 105 state object
-			if (n.type == 105) AddStateObjectToWorld(n.position);
+			if (n.type == 105) AddStateObjectToWorld(n.position + Vector3(0, 5, 0));
 
 			// p = 112 player
-			if (n.type == 112) AddPlayerToWorld(n.position);
+			if (n.type == 112) AddPlayerToWorld(n.position + Vector3(0, 5, 0));
 		}
 	}
 	
