@@ -79,6 +79,22 @@ TutorialGame::~TutorialGame()	{
 }
 
 void TutorialGame::UpdateGame(float dt) {
+	if (menu) {
+		//world->GetMainCamera().SetPosition(Vector3(0, 0, 0));
+		InitCamera();
+		Debug::Print("1. Start Game ", Vector2(30, 40), Debug::GREEN);
+		Debug::Print("Exit - Press ESC", Vector2(30, 50), Debug::GREEN);
+		physics->Update(dt);
+
+
+		world->UpdateWorld(dt);
+		renderer->Update(dt);
+		renderer->Render();
+
+		Debug::UpdateRenderables(dt);
+		return;
+	}
+
 	if (!inSelectionMode) {
 		world->GetMainCamera().UpdateCamera(dt);
 	}
@@ -261,6 +277,8 @@ void TutorialGame::InitCamera() {
 }
 
 void TutorialGame::InitWorld() {
+	menu = false;
+
 	world->ClearAndErase();
 	physics->Clear();
 

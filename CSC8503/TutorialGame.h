@@ -18,13 +18,14 @@ namespace NCL {
 
 			virtual void UpdateGame(float dt);
 
+			void InitMenu() { menu = true; };
+			void InitWorld();
+			void InitCamera();
+
 		protected:
 			void InitialiseAssets();
 
-			void InitCamera();
 			void UpdateKeys();
-
-			void InitWorld();
 
 			/*
 			These are some of the world/object creation functions I created when testing the functionality
@@ -72,6 +73,7 @@ namespace NCL {
 
 			bool useGravity;
 			bool inSelectionMode;
+			bool menu;
 
 			float		forceMagnitude;
 

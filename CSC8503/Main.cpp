@@ -218,6 +218,66 @@ void TestBehaviourTree() {
 }
 
 
+
+
+
+
+class InitWorldState : public PushdownState {
+public:
+	InitWorldState(TutorialGame* g) { this->g = g; };
+
+	PushdownResult OnUpdate(float dt, PushdownState** newState) override {
+		/*if (Window::GetKeyboard()->KeyDown(KeyCodes::F1))
+			g->InitWorld();*/
+		if (Window::GetKeyboard()->KeyDown(KeyCodes::F3))
+			return PushdownResult::Pop;
+
+		return PushdownResult::NoChange;
+	}
+
+	void OnAwake() override {
+		g->InitCamera();
+		g->InitWorld();
+	}
+
+protected:
+	TutorialGame* g;
+};
+
+class MenuState : public PushdownState {
+public:
+	MenuState(TutorialGame* g) { this->g = g; };
+
+	PushdownResult OnUpdate(float dt, PushdownState** newState) override {
+		if (Window::GetKeyboard()->KeyDown(KeyCodes::NUM1)) {
+			*newState = new InitWorldState(g);
+			return PushdownResult::Push;
+		}
+		
+		return PushdownResult::NoChange;
+	}
+
+	void OnAwake() override {
+		g->InitMenu();
+	}
+
+protected:
+	TutorialGame* g;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class PauseScreen : public PushdownState {
 	PushdownResult OnUpdate(float dt, PushdownState** newState) override {
 		if (Window::GetKeyboard()->KeyPressed(KeyCodes::U)) {
@@ -371,6 +431,7 @@ int main() {
 
 	TutorialGame* g = new TutorialGame();
 	//NetworkedGame* g = new NetworkedGame();
+	PushdownMachine* menuState = new PushdownMachine(new MenuState(g));
 
 	TestStateMachine();
 	TestPathfinding();
@@ -399,7 +460,7 @@ int main() {
 		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 
 		g->UpdateGame(dt);
-
+		menuState->Update(dt);
 		DisplayPathfinding();
 	}
 	Window::DestroyGameWindow();
