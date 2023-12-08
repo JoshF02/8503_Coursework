@@ -178,11 +178,9 @@ bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, Collis
 	}
 	//Two OBBs
 	if (pairType == VolumeType::OBB) {
-		if (OBBIntersection((OBBVolume&)*volA, transformA, (OBBVolume&)*volB, transformB, collisionInfo)) {
-			std::cout << "OBB collision\n";
-			return true;
-		}
-		return false;
+		collisionInfo.a = b;
+		collisionInfo.b = a;	//swapping collisionInfos fixes broken collisions
+		return OBBIntersection((OBBVolume&)*volA, transformA, (OBBVolume&)*volB, transformB, collisionInfo);
 	}
 	//Two Capsules
 
@@ -204,6 +202,16 @@ bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, Collis
 		collisionInfo.a = b;
 		collisionInfo.b = a;
 		return OBBSphereIntersection((OBBVolume&)*volB, transformB, (SphereVolume&)*volA, transformA, collisionInfo);
+	}
+
+	//OBB vs AABB pairs
+	if (volA->type == VolumeType::OBB && volB->type == VolumeType::AABB) {
+		collisionInfo.a = b;
+		collisionInfo.b = a;
+		return OBBIntersection((OBBVolume&)*volA, transformA, (OBBVolume&)*volB, transformB, collisionInfo);
+	}
+	if (volA->type == VolumeType::AABB && volB->type == VolumeType::OBB) {
+		return OBBIntersection((OBBVolume&)*volB, transformB, (OBBVolume&)*volA, transformA, collisionInfo);
 	}
 
 	//Capsule vs other interactions
@@ -379,7 +387,6 @@ bool CollisionDetection::SphereCapsuleIntersection(
 
 
 
-
 struct OBBAxes {
 	Vector3 boxAaxisX;
 	Vector3 boxAaxisY;
@@ -392,14 +399,6 @@ struct OBBAxes {
 // check if there is a separating plane for the selected axes
 float GetSeparatingPlane(const Vector3& delta, const Vector3& Plane, const OBBAxes& a, const Vector3& boxASize, const Vector3& boxBSize)
 {
-	/*return ((delta * Plane).Length() > (	// difference between box positions on an axis > sum of max extents on that axis
-		((a.boxAaxisX * boxASize.x) * Plane).Length() +
-		((a.boxAaxisY * boxASize.y) * Plane).Length() +
-		((a.boxAaxisZ * boxASize.z) * Plane).Length() +
-		((a.boxBaxisX * boxBSize.x) * Plane).Length() +
-		((a.boxBaxisY * boxBSize.y) * Plane).Length() +
-		((a.boxBaxisZ * boxBSize.z) * Plane).Length()));*/
-
 	// penetration = sum of max extents on an axis - difference between box positions on that axis
 	float penetration =  (((a.boxAaxisX * boxASize.x) * Plane).Length() +
 		((a.boxAaxisY * boxASize.y) * Plane).Length() +
@@ -407,8 +406,6 @@ float GetSeparatingPlane(const Vector3& delta, const Vector3& Plane, const OBBAx
 		((a.boxBaxisX * boxBSize.x) * Plane).Length() +
 		((a.boxBaxisY * boxBSize.y) * Plane).Length() +
 		((a.boxBaxisZ * boxBSize.z) * Plane).Length()) - (delta * Plane).Length();
-
-	//if (penetration < 0) penetration = 0;
 
 	return penetration;
 }
@@ -425,6 +422,10 @@ bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transfo
 	Quaternion orientationB = worldTransformB.GetOrientation();
 	Matrix3 transformB = Matrix3(orientationB);
 	Vector3 boxBSize = volumeB.GetHalfDimensions();
+
+	// if both AABBs anyway then can just resolve that way
+	if (transformA.GetDiagonal() == Vector3(1, 1, 1) && transformB.GetDiagonal() == Vector3(1, 1, 1)) return AABBIntersection((AABBVolume&)volumeB,
+		worldTransformB, (AABBVolume&)volumeA, worldTransformA, collisionInfo);
 
 	OBBAxes a;
 	a.boxAaxisX = transformA * Vector3(1, 0, 0);
@@ -460,35 +461,7 @@ bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transfo
 
 	collisionInfo.AddContactPoint(Vector3(), Vector3(), bestAxis, minPen);
 	return true;
-
-	// check for separating planes on all 15 axes
-	/*float axis1 = GetSeparatingPlane(delta, a.boxAaxisX, a, boxASize, boxBSize);	// face axes
-	float axis2 = GetSeparatingPlane(delta, a.boxAaxisY, a, boxASize, boxBSize);
-	float axis3 = GetSeparatingPlane(delta, a.boxAaxisZ, a, boxASize, boxBSize);
-	float axis4 = GetSeparatingPlane(delta, a.boxBaxisX, a, boxASize, boxBSize);
-	float axis5 = GetSeparatingPlane(delta, a.boxBaxisY, a, boxASize, boxBSize);
-	float axis6 = GetSeparatingPlane(delta, a.boxBaxisZ, a, boxASize, boxBSize);
-	float axis7 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisX, a.boxBaxisX), a, boxASize, boxBSize);	// cross product axes
-	float axis8 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisX, a.boxBaxisY), a, boxASize, boxBSize);
-	float axis9 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisX, a.boxBaxisZ), a, boxASize, boxBSize);
-	float axis10 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisY, a.boxBaxisX), a, boxASize, boxBSize);
-	float axis11 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisY, a.boxBaxisY), a, boxASize, boxBSize);
-	float axis12 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisY, a.boxBaxisZ), a, boxASize, boxBSize);
-	float axis13 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisZ, a.boxBaxisX), a, boxASize, boxBSize);
-	float axis14 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisZ, a.boxBaxisY), a, boxASize, boxBSize);
-	float axis15 = GetSeparatingPlane(delta, Vector3::Cross(a.boxAaxisZ, a.boxBaxisZ), a, boxASize, boxBSize);
-
-	if (axis1 || axis2 || axis3 || axis4 || axis5 || axis6 || axis7 || axis8 || axis9 || axis10 || axis11 || axis12 || axis13 || axis14 || axis15) {
-		return false;
-	}*/
 }
-
-
-
-
-
-
-
 
 
 

@@ -271,7 +271,7 @@ void TutorialGame::InitWorld() {
 	InitGameExamples();
 	InitDefaultFloor();
 
-	//AddMazeToWorld();
+	AddMazeToWorld();
 
 	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
 }
@@ -466,12 +466,13 @@ void TutorialGame::InitDefaultFloor() {
 }
 
 void TutorialGame::InitGameExamples() {
-	AddPlayerToWorld(Vector3(0, 10, 0));	// collision volumes dont match meshes well so dont sit on floor properly
-	AddEnemyToWorld(Vector3(5, 10, 0));
-	AddBonusToWorld(Vector3(10, 10, 0));
+	AddPlayerToWorld(Vector3(0, 15, 0));	// collision volumes dont match meshes well so dont sit on floor properly
+	AddEnemyToWorld(Vector3(5, 15, 0));
+	AddBonusToWorld(Vector3(10, 15, 0));
 
-	AddOBBToWorld(Vector3(15, 10, 0), Vector3(1, 1, 1));
-	AddOBBToWorld(Vector3(20, 10, 0), Vector3(1, 1, 1));
+	AddOBBToWorld(Vector3(15, 15, 0), Vector3(1, 1, 1));
+	AddOBBToWorld(Vector3(20, 15, 0), Vector3(1, 1, 1));
+	AddOBBToWorld(Vector3(20, 25, 0), Vector3(1, 1, 1));
 }
 
 void TutorialGame::InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius) {
@@ -493,8 +494,8 @@ void TutorialGame::InitMixedGridWorld(int numRows, int numCols, float rowSpacing
 			Vector3 position = Vector3(x * colSpacing, 10.0f, z * rowSpacing);
 
 			if (rand() % 2) {
-				//AddCubeToWorld(position, cubeDims);
-				AddOBBToWorld(position, cubeDims);
+				AddCubeToWorld(position, cubeDims);
+				//AddOBBToWorld(position, cubeDims);
 			}
 			else {
 				AddSphereToWorld(position, sphereRadius);
