@@ -128,7 +128,7 @@ void TutorialGame::UpdateGame(float dt) {
 		Debug::Print("(G)ravity off", Vector2(5, 95), Debug::RED);
 	}
 
-	RayCollision closestCollision;
+	/*RayCollision closestCollision;
 	if (Window::GetKeyboard()->KeyPressed(KeyCodes::K) && selectionObject) {
 		Vector3 rayPos;
 		Vector3 rayDir;
@@ -147,40 +147,7 @@ void TutorialGame::UpdateGame(float dt) {
 
 			objClosest->GetRenderObject()->SetColour(Vector4(1, 0, 1, 1));
 		}
-	}
-
-
-	// pick up item in front of player
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::E) && !pickedUpObj) {
-		Vector3 rayPos;
-		Vector3 rayDir;
-
-		rayDir = selectionObject->GetTransform().GetOrientation() * Vector3(0, 0, -1);
-
-		rayPos = selectionObject->GetTransform().GetPosition();
-
-		Ray r = Ray(rayPos, rayDir);
-
-		if (world->Raycast(r, closestCollision, true, selectionObject, 10.0f)) {
-
-			float inverseMass = ((GameObject*)closestCollision.node)->GetPhysicsObject()->GetInverseMass();
-			if (inverseMass != 0) {	// dont pick up static objects
-				pickedUpObj = (GameObject*)closestCollision.node;
-				pickedUpObj->GetRenderObject()->SetColour(Vector4(1, 1, 0, 1));
-				oldInverseMass = inverseMass;	// saves inverse mass of object
-				pickedUpObj->GetPhysicsObject()->SetInverseMass(0);	// sets inverse mass of object to 0 so forces arent applied to it
-			}
-		}
-	}
-
-	// drop item
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::R) && pickedUpObj) {
-		pickedUpObj->GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));	// resets colour and inverse mass before dropping
-		pickedUpObj->GetPhysicsObject()->SetInverseMass(oldInverseMass);
-		pickedUpObj = nullptr;
-	}
-
-
+	}*/
 
 	Debug::DrawLine(Vector3(), Vector3(0, 100, 0), Vector4(1, 0, 0, 1));
 
@@ -285,6 +252,46 @@ void TutorialGame::LockedObjectMovement() {
 	}
 
 	selectionObject->GetTransform().SetOrientation(Quaternion::Quaternion(Matrix4::Rotation(yaw, Vector3(0, 1, 0))));
+
+	// pick up item in front of player
+	RayCollision closestCollision;
+	if (Window::GetKeyboard()->KeyPressed(KeyCodes::E) && !pickedUpObj) {
+		Vector3 rayPos;
+		Vector3 rayDir;
+
+		rayDir = selectionObject->GetTransform().GetOrientation() * Vector3(0, 0, -1);
+
+		rayPos = selectionObject->GetTransform().GetPosition();
+
+		Ray r = Ray(rayPos, rayDir);
+
+		if (world->Raycast(r, closestCollision, true, selectionObject, 10.0f)) {
+
+			float inverseMass = ((GameObject*)closestCollision.node)->GetPhysicsObject()->GetInverseMass();
+			if (inverseMass != 0) {	// dont pick up static objects
+				pickedUpObj = (GameObject*)closestCollision.node;
+				pickedUpObj->GetRenderObject()->SetColour(Vector4(1, 1, 0, 1));
+				oldInverseMass = inverseMass;	// saves inverse mass of object
+				pickedUpObj->GetPhysicsObject()->SetInverseMass(0);	// sets inverse mass of object to 0 so forces arent applied to it
+				pickedUpObj->GetPhysicsObject()->ClearForces();
+			}
+		}
+	}
+
+	// drop item
+	if (Window::GetKeyboard()->KeyPressed(KeyCodes::R) && pickedUpObj) {
+		pickedUpObj->GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));	// resets colour and inverse mass before dropping
+		pickedUpObj->GetPhysicsObject()->SetInverseMass(oldInverseMass);
+		pickedUpObj = nullptr;
+	}
+
+	// throw item
+	if (Window::GetKeyboard()->KeyPressed(KeyCodes::F) && pickedUpObj) {
+		pickedUpObj->GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
+		pickedUpObj->GetPhysicsObject()->SetInverseMass(oldInverseMass);
+		pickedUpObj->GetPhysicsObject()->AddForce(fwdAxis * 500);			// doesnt always apply force properly
+		pickedUpObj = nullptr;
+	}
 }
 
 void TutorialGame::DebugObjectMovement() {
