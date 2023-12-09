@@ -149,14 +149,14 @@ void TutorialGame::UpdateGame(float dt) {
 		}
 	}*/
 
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::G)) {	// TEST GAME OVER
+	if (Window::GetKeyboard()->KeyPressed(KeyCodes::B)) {	// TEST GAME OVER
 		player->itemsLeft--;
 
 		if (player->itemsLeft == 0) {
 			player->win = true;
 		}
 	}
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::H)) {	// TEST GAME OVER
+	if (Window::GetKeyboard()->KeyPressed(KeyCodes::N)) {	// TEST GAME OVER
 		player->lose = true;
 	}
 
@@ -183,8 +183,8 @@ void TutorialGame::UpdateGame(float dt) {
 		testStateObject->Update(dt);
 	}
 
-	SelectObject();
-	MoveSelectedObject();
+	//SelectObject();
+	//MoveSelectedObject();
 
 	world->UpdateWorld(dt);
 	renderer->Update(dt);
@@ -269,6 +269,10 @@ void TutorialGame::LockedObjectMovement() {
 		selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 200, 0));
 	}
 
+	if (Window::GetKeyboard()->KeyDown(KeyCodes::SHIFT)) {
+		selectionObject->GetPhysicsObject()->AddForce(Vector3(0, -200, 0));
+	}
+
 	// rotate player with mouse
 	yaw -= controller.GetNamedAxis("XLook");
 
@@ -319,6 +323,12 @@ void TutorialGame::LockedObjectMovement() {
 		pickedUpObj->GetPhysicsObject()->SetInverseMass(oldInverseMass);
 		pickedUpObj->GetPhysicsObject()->AddForce(fwdAxis * 500);			// doesnt always apply force properly
 		pickedUpObj = nullptr;
+	}
+
+	// rotate item
+	if (pickedUpObj) {
+		float torque = Window::GetMouse()->GetWheelMovement() * 100.0f;
+		pickedUpObj->GetPhysicsObject()->AddTorque(Vector3(torque, 0, 0));
 	}
 }
 
@@ -640,7 +650,7 @@ letting you move the camera around.
 
 */
 bool TutorialGame::SelectObject() {
-	/*if (Window::GetKeyboard()->KeyPressed(KeyCodes::Q)) {
+	if (Window::GetKeyboard()->KeyPressed(KeyCodes::Q)) {
 		inSelectionMode = !inSelectionMode;
 		if (inSelectionMode) {
 			Window::GetWindow()->ShowOSPointer(true);
@@ -650,7 +660,7 @@ bool TutorialGame::SelectObject() {
 			Window::GetWindow()->ShowOSPointer(false);
 			Window::GetWindow()->LockMouseToWindow(true);
 		}
-	}*/
+	}
 	if (inSelectionMode) {
 		Debug::Print("Press Q to change to camera mode!", Vector2(5, 85));
 
@@ -673,7 +683,7 @@ bool TutorialGame::SelectObject() {
 				return false;
 			}
 		}
-		/*if (Window::GetKeyboard()->KeyPressed(NCL::KeyCodes::L)) {
+		if (Window::GetKeyboard()->KeyPressed(NCL::KeyCodes::L)) {
 			if (selectionObject) {
 				if (lockedObject == selectionObject) {
 					lockedObject = nullptr;
@@ -682,7 +692,7 @@ bool TutorialGame::SelectObject() {
 					lockedObject = selectionObject;
 				}
 			}
-		}*/
+		}
 	}
 	else {
 		Debug::Print("Press Q to change to select mode!", Vector2(5, 85));

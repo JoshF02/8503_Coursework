@@ -87,6 +87,13 @@ namespace NCL {
 
 		static bool	AABBTest(const Vector3& posA, const Vector3& posB, const Vector3& halfSizeA, const Vector3& halfSizeB);
 
+		static bool SATTest(const Vector3& sizeA, const Matrix3& rotationA, const Vector3& sizeB, const Matrix3& rotationB,
+			const Vector3& centerDist, const Vector3& axis, float& overlap);
+
+		static Vector3 BoxCornerDir(int index);
+
+		static Vector3 FindClosestNormalOnBox(const Vector3& localNormal);
+
 
 		static bool ObjectIntersection(GameObject* a, GameObject* b, CollisionInfo& collisionInfo);
 
@@ -102,6 +109,13 @@ namespace NCL {
 
 		static bool OBBIntersection(	const OBBVolume& volumeA, const Transform& worldTransformA,
 										const OBBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
+
+		static bool BoxOBBIntersection(const Vector3& boxSize, const Vector3& boxPos,
+			const OBBVolume& volumeOBB, const Transform& TransformOBB, CollisionInfo& collisionInfo);
+
+		static bool AABBOBBIntersection(const AABBVolume& volumeA, const Transform& worldTransformA,
+			const OBBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
+		
 
 
 		static bool OBBSphereIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
