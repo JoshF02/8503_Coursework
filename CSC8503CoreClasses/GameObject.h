@@ -26,6 +26,10 @@ namespace NCL::CSC8503 {
 			return isActive;
 		}
 
+		void SetActive(bool act) {
+			isActive = act;
+		}
+
 		Transform& GetTransform() {
 			return transform;
 		}

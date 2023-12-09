@@ -1,96 +1,91 @@
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\cmake_pch.pch
-c:\users\josh\downloads\csc8503 2023\x64\debug\csc8503coreclasses.pdb
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\cmake_pch.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\debug.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\gameobject.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\gameworld.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\renderobject.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\transform.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\debug.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\gameobject.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\gameworld.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\renderobject.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\transform.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\host.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\compress.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\utility.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\types.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\time.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\enet.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\callbacks.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\constraint.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\spherevolume.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\ray.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\obbvolume.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\collisionvolume.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\aabbvolume.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\navigationpath.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\navigationmap.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\statetransition.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\state.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\behaviournodewithchildren.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\behaviournode.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\behaviouraction.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\peer.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\packet.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\behaviourselector.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\behaviourselector.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\behavioursequence.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\behavioursequence.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\pushdownmachine.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\pushdownmachine.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\pushdownstate.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\pushdownstate.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\statemachine.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\statemachine.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\navigationgrid.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\navigationgrid.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\navigationmesh.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\navigationmesh.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\capsulevolume.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\capsulevolume.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\collisiondetection.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\collisiondetection.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\quadtree.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\quadtree.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\gameclient.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\gameclient.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\gameserver.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\gameserver.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\networkbase.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\networkbase.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\networkobject.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\networkobject.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\networkstate.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\networkstate.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\positionconstraint.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\positionconstraint.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\orientationconstraint.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\orientationconstraint.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\physicsobject.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\physicsobject.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\physicssystem.cpp.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\physicssystem.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\enet\list.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\enet\list.c.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\enet\protocol.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\enet\protocol.c.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\enet\win32.h.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\enet\win32.c.obj
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\cmakefiles\generate.stamp
-c:\users\josh\downloads\csc8503 2023\x64\debug\csc8503coreclasses.lib
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\std.ixx.module.json
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\std.compat.ixx.module.json
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8f6cce2b.tlog\cl.command.1.tlog
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8f6cce2b.tlog\cl.items.tlog
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8f6cce2b.tlog\cl.read.1.tlog
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8f6cce2b.tlog\cl.write.1.tlog
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8f6cce2b.tlog\custombuild.command.1.tlog
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8f6cce2b.tlog\custombuild.read.1.tlog
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8f6cce2b.tlog\custombuild.write.1.tlog
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8f6cce2b.tlog\lib-link.read.1.tlog
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8f6cce2b.tlog\lib-link.write.1.tlog
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8f6cce2b.tlog\lib.command.1.tlog
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8f6cce2b_md.tlog\cl.command.1.tlog
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8f6cce2b_md.tlog\microsoft.build.cpptasks.cl.read.1.tlog
-c:\users\josh\downloads\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8f6cce2b_md.tlog\microsoft.build.cpptasks.cl.write.1.tlog
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\cmake_pch.pch
+d:\c++ projects\csc8503 2023\x64\debug\csc8503coreclasses.pdb
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\cmake_pch.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\debug.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\gameobject.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\gameworld.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\renderobject.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\transform.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\debug.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\gameobject.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\gameworld.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\renderobject.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\transform.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\host.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\compress.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\utility.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\types.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\time.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\enet.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\callbacks.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\constraint.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\spherevolume.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\ray.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\obbvolume.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\collisionvolume.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\aabbvolume.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\navigationpath.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\navigationmap.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\statetransition.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\state.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\behaviournodewithchildren.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\behaviournode.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\behaviouraction.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\peer.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\packet.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\behaviourselector.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\behaviourselector.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\behavioursequence.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\behavioursequence.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\pushdownmachine.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\pushdownmachine.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\pushdownstate.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\pushdownstate.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\statemachine.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\statemachine.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\navigationgrid.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\navigationgrid.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\navigationmesh.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\navigationmesh.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\capsulevolume.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\capsulevolume.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\collisiondetection.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\collisiondetection.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\quadtree.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\quadtree.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\gameclient.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\gameclient.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\gameserver.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\gameserver.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\networkbase.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\networkbase.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\networkobject.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\networkobject.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\networkstate.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\networkstate.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\positionconstraint.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\positionconstraint.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\orientationconstraint.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\orientationconstraint.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\physicsobject.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\physicsobject.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\physicssystem.cpp.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\physicssystem.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\enet\list.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\enet\list.c.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\enet\protocol.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\enet\protocol.c.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\enet\win32.h.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\enet\win32.c.obj
+d:\c++ projects\csc8503 2023\csc8503coreclasses\cmakefiles\generate.stamp
+d:\c++ projects\csc8503 2023\x64\debug\csc8503coreclasses.lib
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8a1ad1c6.tlog\cl.command.1.tlog
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8a1ad1c6.tlog\cl.items.tlog
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8a1ad1c6.tlog\cl.read.1.tlog
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8a1ad1c6.tlog\cl.write.1.tlog
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8a1ad1c6.tlog\custombuild.command.1.tlog
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8a1ad1c6.tlog\custombuild.read.1.tlog
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8a1ad1c6.tlog\custombuild.write.1.tlog
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8a1ad1c6.tlog\lib-link.read.1.tlog
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8a1ad1c6.tlog\lib-link.write.1.tlog
+d:\c++ projects\csc8503 2023\csc8503coreclasses\csc8503coreclasses.dir\debug\csc8503c.8a1ad1c6.tlog\lib.command.1.tlog

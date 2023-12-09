@@ -22,6 +22,9 @@
     <ClCompile Include="D:\C++ Projects\CSC8503 2023\CSC8503\TutorialGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\C++ Projects\CSC8503 2023\CSC8503\PlayerGameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\C++ Projects\CSC8503 2023\CSC8503\GameTechRenderer.h">
@@ -37,6 +40,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\C++ Projects\CSC8503 2023\CSC8503\TutorialGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\C++ Projects\CSC8503 2023\CSC8503\PlayerGameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\C++ Projects\CSC8503 2023\CSC8503\CMakeFiles\CSC8503.dir\Debug\cmake_pch.hxx">

@@ -14,19 +14,19 @@ using namespace NCL;
 using namespace CSC8503;
 
 TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *Window::GetWindow()->GetMouse()) {
-	world		= new GameWorld();
+	world = new GameWorld();
 #ifdef USEVULKAN
-	renderer	= new GameTechVulkanRenderer(*world);
+	renderer = new GameTechVulkanRenderer(*world);
 	renderer->Init();
 	renderer->InitStructures();
 #else 
 	renderer = new GameTechRenderer(*world);
 #endif
 
-	physics		= new PhysicsSystem(*world);
+	physics = new PhysicsSystem(*world);
 
-	forceMagnitude	= 10.0f;
-	useGravity		= false;
+	forceMagnitude = 10.0f;
+	useGravity = false;
 	inSelectionMode = false;
 
 	world->GetMainCamera().SetController(controller);
@@ -43,27 +43,27 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 
 /*
 
-Each of the little demo scenarios used in the game uses the same 2 meshes, 
+Each of the little demo scenarios used in the game uses the same 2 meshes,
 and the same texture and shader. There's no need to ever load in anything else
 for this module, even in the coursework, but you can add it if you like!
 
 */
 void TutorialGame::InitialiseAssets() {
-	cubeMesh	= renderer->LoadMesh("cube.msh");
-	sphereMesh	= renderer->LoadMesh("sphere.msh");
-	charMesh	= renderer->LoadMesh("goat.msh");
-	enemyMesh	= renderer->LoadMesh("Keeper.msh");
-	bonusMesh	= renderer->LoadMesh("coin.msh");
+	cubeMesh = renderer->LoadMesh("cube.msh");
+	sphereMesh = renderer->LoadMesh("sphere.msh");
+	charMesh = renderer->LoadMesh("goat.msh");
+	enemyMesh = renderer->LoadMesh("Keeper.msh");
+	bonusMesh = renderer->LoadMesh("coin.msh");
 	capsuleMesh = renderer->LoadMesh("capsule.msh");
 
-	basicTex	= renderer->LoadTexture("checkerboard.png");
+	basicTex = renderer->LoadTexture("checkerboard.png");
 	basicShader = renderer->LoadShader("scene.vert", "scene.frag");
 
 	InitCamera();
 	InitWorld();
 }
 
-TutorialGame::~TutorialGame()	{
+TutorialGame::~TutorialGame() {
 	delete cubeMesh;
 	delete sphereMesh;
 	delete charMesh;
@@ -102,7 +102,7 @@ void TutorialGame::UpdateGame(float dt) {
 		Vector3 objPos = lockedObject->GetTransform().GetPosition();
 		Vector3 camPos = objPos + Quaternion::Quaternion(Matrix4::Rotation(yaw, Vector3(0, 1, 0))) * lockedOffset;	// rotate camera around player
 
-		Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0,1,0));
+		Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0, 1, 0));
 
 		Matrix4 modelMat = temp.Inverse();
 
@@ -148,6 +148,34 @@ void TutorialGame::UpdateGame(float dt) {
 			objClosest->GetRenderObject()->SetColour(Vector4(1, 0, 1, 1));
 		}
 	}*/
+
+	if (Window::GetKeyboard()->KeyPressed(KeyCodes::G)) {	// TEST GAME OVER
+		player->itemsLeft--;
+
+		if (player->itemsLeft == 0) {
+			player->win = true;
+		}
+	}
+	if (Window::GetKeyboard()->KeyPressed(KeyCodes::H)) {	// TEST GAME OVER
+		player->lose = true;
+	}
+
+	if (!player->win && !player->lose) {
+		UpdateScoreAndTimer(dt);
+	}
+	else {
+		world->UpdateWorld(dt);
+		renderer->Update(dt);
+		physics->Update(dt);
+		EndGame();
+		renderer->Render();
+		return;
+	}
+
+
+
+
+
 
 	Debug::DrawLine(Vector3(), Vector3(0, 100, 0), Vector4(1, 0, 0, 1));
 
@@ -207,8 +235,8 @@ void TutorialGame::UpdateKeys() {
 }
 
 void TutorialGame::LockedObjectMovement() {
-	Matrix4 view		= world->GetMainCamera().BuildViewMatrix();
-	Matrix4 camWorld	= view.Inverse();
+	Matrix4 view = world->GetMainCamera().BuildViewMatrix();
+	Matrix4 camWorld = view.Inverse();
 
 	Vector3 rightAxis = Vector3(camWorld.GetColumn(0)); //view is inverse of model!
 
@@ -238,7 +266,7 @@ void TutorialGame::LockedObjectMovement() {
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyCodes::SPACE)) {
-		selectionObject->GetPhysicsObject()->AddForce(Vector3(0,200,0));
+		selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 200, 0));
 	}
 
 	// rotate player with mouse
@@ -295,7 +323,7 @@ void TutorialGame::LockedObjectMovement() {
 }
 
 void TutorialGame::DebugObjectMovement() {
-//If we've selected an object, we can manipulate it with some key presses
+	//If we've selected an object, we can manipulate it with some key presses
 	if (inSelectionMode && selectionObject) {
 		//Twist the selected object!
 		if (Window::GetKeyboard()->KeyDown(KeyCodes::LEFT)) {
@@ -343,6 +371,7 @@ void TutorialGame::InitCamera() {
 
 void TutorialGame::InitWorld() {
 	menu = false;
+	timer = maxTimer;
 
 	world->ClearAndErase();
 	physics->Clear();
@@ -358,7 +387,7 @@ void TutorialGame::InitWorld() {
 
 	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
 
-	GameObject* player = AddPlayerToWorld(Vector3(30, 20, 0));	// adds player to world
+	player = AddPlayerToWorld(Vector3(30, 20, 0));	// adds player to world
 	lockedObject = player;
 	selectionObject = player;
 	yaw = 0;
@@ -393,7 +422,7 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 /*
 
 Builds a game object that uses a sphere mesh for its graphics, and a bounding sphere for its
-rigid body representation. This and the cube function will let you build a lot of 'simple' 
+rigid body representation. This and the cube function will let you build a lot of 'simple'
 physics worlds. You'll probably need another function for the creation of OBB cubes too.
 
 */
@@ -461,12 +490,12 @@ GameObject* TutorialGame::AddOBBToWorld(const Vector3& position, Vector3 dimensi
 	return cube;
 }
 
-GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
-	float meshSize		= 1.0f;
-	float inverseMass	= 0.5f;
+PlayerGameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
+	float meshSize = 1.0f;
+	float inverseMass = 0.5f;
 
-	GameObject* character = new GameObject();
-	SphereVolume* volume  = new SphereVolume(1.0f);
+	PlayerGameObject* character = new PlayerGameObject();
+	SphereVolume* volume = new SphereVolume(1.0f);
 
 	character->SetBoundingVolume((CollisionVolume*)volume);
 
@@ -486,8 +515,8 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 }
 
 GameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
-	float meshSize		= 3.0f;
-	float inverseMass	= 0.5f;
+	float meshSize = 3.0f;
+	float inverseMass = 0.5f;
 
 	GameObject* character = new GameObject();
 
@@ -595,8 +624,8 @@ void TutorialGame::InitMixedGridWorld(int numRows, int numCols, float rowSpacing
 }
 
 void TutorialGame::InitCubeGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, const Vector3& cubeDims) {
-	for (int x = 1; x < numCols+1; ++x) {
-		for (int z = 1; z < numRows+1; ++z) {
+	for (int x = 1; x < numCols + 1; ++x) {
+		for (int z = 1; z < numRows + 1; ++z) {
 			Vector3 position = Vector3(x * colSpacing, 10.0f, z * rowSpacing);
 			AddCubeToWorld(position, cubeDims, 1.0f);
 		}
@@ -605,9 +634,9 @@ void TutorialGame::InitCubeGridWorld(int numRows, int numCols, float rowSpacing,
 
 /*
 Every frame, this code will let you perform a raycast, to see if there's an object
-underneath the cursor, and if so 'select it' into a pointer, so that it can be 
+underneath the cursor, and if so 'select it' into a pointer, so that it can be
 manipulated later. Pressing Q will let you toggle between this behaviour and instead
-letting you move the camera around. 
+letting you move the camera around.
 
 */
 bool TutorialGame::SelectObject() {
@@ -725,7 +754,7 @@ void TutorialGame::AddMazeToWorld() {
 			GridNode& n = grid.allNodes[(grid.gridWidth * y) + x];
 
 			// x = 120 in decimal, wall
-			if (n.type == 120) AddCubeToWorld(n.position + Vector3(0, 5, 0), {(float)grid.nodeSize / 2,(float)grid.nodeSize / 2,(float)grid.nodeSize / 2}, 0);
+			if (n.type == 120) AddCubeToWorld(n.position + Vector3(0, 5, 0), { (float)grid.nodeSize / 2,(float)grid.nodeSize / 2,(float)grid.nodeSize / 2 }, 0);
 
 			// c = 99 coin
 			if (n.type == 99) AddBonusToWorld(n.position + Vector3(0, 5, 0));
@@ -740,7 +769,62 @@ void TutorialGame::AddMazeToWorld() {
 			if (n.type == 112) AddPlayerToWorld(n.position + Vector3(0, 5, 0));
 		}
 	}
-	
+}
+
+void TutorialGame::UpdateScoreAndTimer(float dt) {
+	timer -= dt;
+	int minutes = floor(timer / 60.0f);
+	int seconds = std::round(std::fmod(timer, 60.0f));
+	if (seconds == 60) seconds = 0, minutes++;
+	Vector4 timerColor = timer <= 20.0f ? Debug::RED : Debug::YELLOW;
+	std::string time = "Time: " + std::to_string(minutes) + ":" + std::to_string(seconds);
+	Debug::Print(time, Vector2(90 - time.length(), 5), timerColor);
+	if (timer <= 0.0f) {
+		timer = 0.0f;
+		player->lose = true;
+	}
+
+	std::string score = "Score = " + std::to_string(player->score);
+	Debug::Print(score, Vector2(90 - time.length(), 10), timerColor);
+
+	std::string itemsHasGet = "Items Collected = " + std::to_string(player->itemsCollected);
+	Debug::Print(itemsHasGet, Vector2(90 - time.length() - 10, 15), timerColor);
+
+	std::string itemsLeft = "Items Left = " + std::to_string(player->itemsLeft);
+	Debug::Print(itemsLeft, Vector2(90 - time.length() - 10, 20), timerColor);
+
+	std::string ComeBackMenu = "F3 : Return To Menu ";
+	Debug::Print(ComeBackMenu, Vector2(0, 10), Debug::BLUE);
+
+}
+
+void TutorialGame::EndGame() {
+
+	InitCamera();
+
+	std::string wonOrLost = "";
+	if (player->lose) wonOrLost = "You Lost...";
+	if (player->win) wonOrLost = "You Won!";
+	Debug::Print(wonOrLost, Vector2(30, 40));
+
+	std::string score = "Score = ";
+	score.append(std::to_string(player->score));
+	score.append(";");
+	Debug::Print(score, Vector2(30, 50));
+
+
+	std::string itemLeft = "Items Left = ";
+	itemLeft.append(std::to_string(player->itemsLeft));
+	itemLeft.append(";");
+	Debug::Print(itemLeft, Vector2(30, 60));
+
+	std::string text = "Play Again(F3);";
+
+	Debug::Print(text, Vector2(30, 70));
+
+	text = "Exit (ESC);";
+	Debug::Print(text, Vector2(30, 80));
+
 }
 
 

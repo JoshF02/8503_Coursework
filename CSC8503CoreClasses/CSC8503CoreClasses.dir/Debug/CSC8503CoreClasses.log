@@ -1,7 +1,17 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (CSC8503CoreClasses.dir\Debug\) contains files shared from another project (CSC8503CoreClasses.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  GameObject.h
   GameWorld.h
+  GameObject.cpp
   GameWorld.cpp
+  CollisionDetection.h
+  CollisionDetection.cpp
+  QuadTree.h
+  QuadTree.cpp
   GameServer.cpp
+  NetworkObject.h
+  NetworkObject.cpp
+  PositionConstraint.cpp
+  OrientationConstraint.cpp
   PhysicsObject.cpp
   PhysicsSystem.cpp
   PhysicsSystem.h
