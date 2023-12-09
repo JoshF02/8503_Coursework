@@ -76,6 +76,7 @@ namespace NCL {
 			bool menu;
 
 			float		forceMagnitude;
+			float yaw;
 
 			GameObject* selectionObject = nullptr;
 
@@ -93,7 +94,7 @@ namespace NCL {
 
 			//Coursework Additional functionality	
 			GameObject* lockedObject	= nullptr;
-			Vector3 lockedOffset		= Vector3(0, 14, 20);
+			Vector3 lockedOffset		= Vector3(0, 8, 14);
 			void LockCameraToObject(GameObject* o) {
 				lockedObject = o;
 			}

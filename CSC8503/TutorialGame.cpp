@@ -100,7 +100,7 @@ void TutorialGame::UpdateGame(float dt) {
 	}
 	if (lockedObject != nullptr) {
 		Vector3 objPos = lockedObject->GetTransform().GetPosition();
-		Vector3 camPos = objPos + lockedOffset;
+		Vector3 camPos = objPos + Quaternion::Quaternion(Matrix4::Rotation(yaw, Vector3(0, 1, 0))) * lockedOffset;	// rotate camera around player
 
 		Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0,1,0));
 
@@ -110,7 +110,7 @@ void TutorialGame::UpdateGame(float dt) {
 		Vector3 angles = q.ToEuler(); //nearly there now!
 
 		world->GetMainCamera().SetPosition(camPos);
-		world->GetMainCamera().SetPitch(angles.x);
+		//world->GetMainCamera().SetPitch(angles.x);	// let player control pitch with mouse
 		world->GetMainCamera().SetYaw(angles.y);
 	}
 
@@ -167,9 +167,9 @@ void TutorialGame::UpdateKeys() {
 		selectionObject = nullptr;
 	}
 
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::F2)) {
+	/*if (Window::GetKeyboard()->KeyPressed(KeyCodes::F2)) {
 		InitCamera(); //F2 will reset the camera to a specific default place
-	}
+	}*/
 
 	if (Window::GetKeyboard()->KeyPressed(KeyCodes::G)) {
 		useGravity = !useGravity; //Toggle gravity!
@@ -216,17 +216,37 @@ void TutorialGame::LockedObjectMovement() {
 	fwdAxis.Normalise();
 
 
-	if (Window::GetKeyboard()->KeyDown(KeyCodes::UP)) {
-		selectionObject->GetPhysicsObject()->AddForce(fwdAxis);
+	if (Window::GetKeyboard()->KeyDown(KeyCodes::W)) {
+		selectionObject->GetPhysicsObject()->AddForce(fwdAxis * 20);
 	}
 
-	if (Window::GetKeyboard()->KeyDown(KeyCodes::DOWN)) {
-		selectionObject->GetPhysicsObject()->AddForce(-fwdAxis);
+	if (Window::GetKeyboard()->KeyDown(KeyCodes::S)) {
+		selectionObject->GetPhysicsObject()->AddForce(-fwdAxis * 20);
 	}
 
-	if (Window::GetKeyboard()->KeyDown(KeyCodes::NEXT)) {
-		selectionObject->GetPhysicsObject()->AddForce(Vector3(0,-10,0));
+	if (Window::GetKeyboard()->KeyDown(KeyCodes::A)) {
+		selectionObject->GetPhysicsObject()->AddForce(-rightAxis * 20);
 	}
+
+	if (Window::GetKeyboard()->KeyDown(KeyCodes::D)) {
+		selectionObject->GetPhysicsObject()->AddForce(rightAxis * 20);
+	}
+
+	if (Window::GetKeyboard()->KeyDown(KeyCodes::SPACE)) {
+		selectionObject->GetPhysicsObject()->AddForce(Vector3(0,200,0));
+	}
+
+	// rotate player with mouse
+	yaw -= controller.GetNamedAxis("XLook");
+
+	if (yaw < 0) {
+		yaw += 360.0f;
+	}
+	if (yaw > 360.0f) {
+		yaw -= 360.0f;
+	}
+
+	selectionObject->GetTransform().SetOrientation(Quaternion::Quaternion(Matrix4::Rotation(yaw, Vector3(0, 1, 0))));
 }
 
 void TutorialGame::DebugObjectMovement() {
@@ -292,6 +312,11 @@ void TutorialGame::InitWorld() {
 	AddMazeToWorld();
 
 	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
+
+	GameObject* player = AddPlayerToWorld(Vector3(30, 20, 0));
+	lockedObject = player;
+	selectionObject = player;
+	yaw = 0;
 }
 
 /*
@@ -541,7 +566,7 @@ letting you move the camera around.
 
 */
 bool TutorialGame::SelectObject() {
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::Q)) {
+	/*if (Window::GetKeyboard()->KeyPressed(KeyCodes::Q)) {
 		inSelectionMode = !inSelectionMode;
 		if (inSelectionMode) {
 			Window::GetWindow()->ShowOSPointer(true);
@@ -551,7 +576,7 @@ bool TutorialGame::SelectObject() {
 			Window::GetWindow()->ShowOSPointer(false);
 			Window::GetWindow()->LockMouseToWindow(true);
 		}
-	}
+	}*/
 	if (inSelectionMode) {
 		Debug::Print("Press Q to change to camera mode!", Vector2(5, 85));
 
@@ -574,7 +599,7 @@ bool TutorialGame::SelectObject() {
 				return false;
 			}
 		}
-		if (Window::GetKeyboard()->KeyPressed(NCL::KeyCodes::L)) {
+		/*if (Window::GetKeyboard()->KeyPressed(NCL::KeyCodes::L)) {
 			if (selectionObject) {
 				if (lockedObject == selectionObject) {
 					lockedObject = nullptr;
@@ -583,7 +608,7 @@ bool TutorialGame::SelectObject() {
 					lockedObject = selectionObject;
 				}
 			}
-		}
+		}*/
 	}
 	else {
 		Debug::Print("Press Q to change to select mode!", Vector2(5, 85));
