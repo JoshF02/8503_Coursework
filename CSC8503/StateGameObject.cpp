@@ -71,15 +71,15 @@ void StateGameObject::MoveRight(float dt) {
 
 
 
-EnemyGameObject::EnemyGameObject(PlayerGameObject* gameObject, GameWorld* world) {
+EnemyGameObject::EnemyGameObject(PlayerGameObject* gameObject, GameWorld* world, float xMin, float xMax, float zMin, float zMax) {
     this->target = gameObject;
     this->stateMachine = new StateMachine();
     this->world = world;
 
-    patrolPoints.push_back(Vector3(-10, 2.5, -10));
-    patrolPoints.push_back(Vector3(-180, 2.5, -10));
-    patrolPoints.push_back(Vector3(-180, 2.5, -180));
-    patrolPoints.push_back(Vector3(-10, 2.5, -180));
+    patrolPoints.push_back(Vector3(xMin, 2.5, zMin));
+    patrolPoints.push_back(Vector3(xMax, 2.5, zMin));
+    patrolPoints.push_back(Vector3(xMax, 2.5, zMax));
+    patrolPoints.push_back(Vector3(xMin, 2.5, zMax));
 
     State* patrol = new State([&](float dt) -> void {
         Vector3 nextPatrolPointPos = patrolPoints[currentPatrolIndex];

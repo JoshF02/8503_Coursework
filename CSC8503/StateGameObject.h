@@ -23,7 +23,7 @@ namespace NCL {
 
         class EnemyGameObject : public GameObject {
         public:
-            EnemyGameObject(PlayerGameObject* target, GameWorld* world);
+            EnemyGameObject(PlayerGameObject* target, GameWorld* world, float xMin, float xMax, float zMin, float zMax);
             ~EnemyGameObject();
 
             void Update(float dt) override;

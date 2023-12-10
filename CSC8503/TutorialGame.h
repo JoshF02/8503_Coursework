@@ -57,7 +57,7 @@ namespace NCL {
 			GameObject* AddOBBToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
 
 			PlayerGameObject* AddPlayerToWorld(const Vector3& position);
-			EnemyGameObject* AddEnemyToWorld(const Vector3& position);
+			EnemyGameObject* AddEnemyToWorld(const Vector3& position, float xMin, float xMax, float zMin, float zMax);
 			GameObject* AddBonusToWorld(const Vector3& position);
 
 			StateGameObject* AddStateObjectToWorld(const Vector3& position);

@@ -561,11 +561,11 @@ PlayerGameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	return character;
 }
 
-EnemyGameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
+EnemyGameObject* TutorialGame::AddEnemyToWorld(const Vector3& position, float xMin, float xMax, float zMin, float zMax) {
 	float meshSize = 3.0f;
 	float inverseMass = 0.5f;
 
-	EnemyGameObject* character = new EnemyGameObject(player, world);
+	EnemyGameObject* character = new EnemyGameObject(player, world, xMin, xMax, zMin, zMax);
 	//character->SetName("EnemyPlayer");
 
 	//AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
@@ -637,7 +637,9 @@ void TutorialGame::InitDefaultFloor() {
 
 void TutorialGame::InitGameExamples() {
 	AddPlayerToWorld(Vector3(0, 15, 0));	// collision volumes dont match meshes well so dont sit on floor properly
-	AddEnemyToWorld(Vector3(5, 2.5, -100));
+	AddEnemyToWorld(Vector3(-10, 2.5, -100), -10, -180, -10, -180);
+	AddEnemyToWorld(Vector3(-30, 2.5, -70), -30, -160, -30, -160);
+
 	AddBonusToWorld(Vector3(10, 15, 0));
 
 	AddCubeToWorld(Vector3(5, 50, 0), Vector3(1, 1, 1));
