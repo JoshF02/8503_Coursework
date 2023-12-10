@@ -13,6 +13,7 @@
 
 #include "Transform.h"
 #include "CollisionVolume.h"
+//#include "TutorialGame.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -59,12 +60,12 @@ protected:
     int counter = 0;
 };*/
 
-class PressurePlateGameObject : public GameObject {
+class SwitchGameObject : public GameObject {
 
 public:
-    PressurePlateGameObject(bool onTimer);
+    SwitchGameObject(bool onTimer, GameObject* doorToOpen = nullptr);
 
-    //~PressurePlateGameObject();
+    //~SwitchGameObject();
 
     void OnCollisionBegin(GameObject* otherObject) override;
 
@@ -74,10 +75,35 @@ public:
 
     void Update(float dt) override;
 
-    bool pressurePlateActive = false;
+protected:
+    bool switchActive = false;
+    bool isOnTimer;
+    GameObject* doorToOpen;
+    float timeSinceLastEnter = 0;
+    float doorOriginalY;
+    float amountToOpen = 15.0f;
+    float openSpeed = 0.1f;
+};
+
+
+
+class KeyGameObject : public GameObject {
+
+public:
+    KeyGameObject(GameObject* doorToOpen = nullptr, GameWorld* world = nullptr);
+
+    //~KeyGameObject();
+
+    void OnCollisionBegin(GameObject* otherObject) override;
+
+    //void OnCollisionStay(GameObject* otherObject) override;
+
+    //void OnCollisionEnd(GameObject* otherObject) override;
+
+    //void Update(float dt) override;
 
 protected:
-    float timeSinceLastEnter = 0;
-
-    bool isOnTimer;
+    bool switchActive = false;
+    GameObject* doorToOpen;
+    GameWorld* world;
 };

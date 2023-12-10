@@ -119,7 +119,14 @@ void TutorialGame::UpdateGame(float dt) {
 
 		// move picked up object with player
 		if (pickedUpObj != nullptr) {
-			pickedUpObj->GetTransform().SetPosition(objPos + Quaternion::Quaternion(Matrix4::Rotation(yaw, Vector3(0, 1, 0))) * pickedUpOffset);
+
+			if (!pickedUpObj->IsActive()) {
+				std::cout << "PICKED UP OBJ NOT ACTIVE SO REMOVING\n";	
+				pickedUpObj = nullptr;
+			}
+			else {
+				pickedUpObj->GetTransform().SetPosition(objPos + Quaternion::Quaternion(Matrix4::Rotation(yaw, Vector3(0, 1, 0))) * pickedUpOffset);
+			}
 		}
 	}
 
@@ -177,8 +184,6 @@ void TutorialGame::UpdateGame(float dt) {
 		renderer->Render();
 		return;
 	}
-
-
 
 
 
@@ -411,6 +416,8 @@ void TutorialGame::InitWorld() {
 		bool onTimer = (rand() % 2 > 0.5) ? true : false;
 		AddPressurePlateToWorld(Vector3(30 * i, 20, 60), onTimer);
 	}
+
+	AddKeyToWorld(Vector3(-50, 20, 60));
 }
 
 void TutorialGame::InitPlayer() { 	// gives control + camera to player
@@ -445,8 +452,8 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 }
 
 // Adds immovable pressure plate
-PressurePlateGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& position, bool onTimer) {
-	PressurePlateGameObject* plate = new PressurePlateGameObject(onTimer);
+SwitchGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& position, bool onTimer) {
+	SwitchGameObject* plate = new SwitchGameObject(onTimer, AddCubeToWorld(position + Vector3(0, 30, 0), Vector3(5, 5, 5), 0));
 
 	Vector3 plateSize = Vector3(10, 1, 10);
 	AABBVolume* volume = new AABBVolume(plateSize);
@@ -456,6 +463,7 @@ PressurePlateGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& po
 		.SetPosition(position);
 
 	plate->SetRenderObject(new RenderObject(&plate->GetTransform(), cubeMesh, basicTex, basicShader));
+	plate->GetRenderObject()->SetColour(Vector4(0, 1, 1, 1));
 	plate->SetPhysicsObject(new PhysicsObject(&plate->GetTransform(), plate->GetBoundingVolume()));
 
 	plate->GetPhysicsObject()->SetInverseMass(0);
@@ -464,6 +472,29 @@ PressurePlateGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& po
 	world->AddGameObject(plate);
 
 	return plate;
+}
+
+// Adds key
+KeyGameObject* TutorialGame::AddKeyToWorld(const Vector3& position) {
+	KeyGameObject* key = new KeyGameObject(AddCubeToWorld(position + Vector3(0, 30, 0), Vector3(5, 5, 5), 0), world);
+
+	Vector3 keySize = Vector3(2, 2, 2);
+	AABBVolume* volume = new AABBVolume(keySize);
+	key->SetBoundingVolume((CollisionVolume*)volume);
+	key->GetTransform()
+		.SetScale(keySize * 2)
+		.SetPosition(position);
+
+	key->SetRenderObject(new RenderObject(&key->GetTransform(), cubeMesh, basicTex, basicShader));
+	key->GetRenderObject()->SetColour(Vector4(1, 1, 0, 1));
+	key->SetPhysicsObject(new PhysicsObject(&key->GetTransform(), key->GetBoundingVolume()));
+
+	key->GetPhysicsObject()->SetInverseMass(10);
+	key->GetPhysicsObject()->InitCubeInertia();
+
+	world->AddGameObject(key);
+
+	return key;
 }
 
 /*
