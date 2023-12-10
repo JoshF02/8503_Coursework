@@ -224,7 +224,10 @@ void TestBehaviourTree() {
 
 class InitWorldState : public PushdownState {
 public:
-	InitWorldState(TutorialGame* g) { this->g = g; };
+	InitWorldState(TutorialGame* g, bool shouldRestart) { 
+		this->g = g;
+		restart = shouldRestart;
+	};
 
 	PushdownResult OnUpdate(float dt, PushdownState** newState) override {
 		/*if (Window::GetKeyboard()->KeyDown(KeyCodes::F1))
@@ -236,12 +239,22 @@ public:
 	}
 
 	void OnAwake() override {
-		g->InitCamera();
-		g->InitWorld();
+		g->gameHasStarted = true;
+
+		if (restart) {
+			g->InitCamera();
+			g->InitWorld();
+		}
+		else {
+			g->DisableMenu();
+			g->InitPlayer();
+		}
 	}
 
 protected:
 	TutorialGame* g;
+
+	bool restart;
 };
 
 class MenuState : public PushdownState {
@@ -249,8 +262,12 @@ public:
 	MenuState(TutorialGame* g) { this->g = g; };
 
 	PushdownResult OnUpdate(float dt, PushdownState** newState) override {
-		if (Window::GetKeyboard()->KeyDown(KeyCodes::NUM1)) {
-			*newState = new InitWorldState(g);
+		if (Window::GetKeyboard()->KeyDown(KeyCodes::NUM1)) {	// unpause / start for first time
+			*newState = new InitWorldState(g, false);
+			return PushdownResult::Push;
+		}
+		if (Window::GetKeyboard()->KeyDown(KeyCodes::NUM2)) {	// restart
+			*newState = new InitWorldState(g, true);
 			return PushdownResult::Push;
 		}
 		

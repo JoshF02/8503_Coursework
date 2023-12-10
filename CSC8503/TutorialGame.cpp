@@ -83,12 +83,19 @@ void TutorialGame::UpdateGame(float dt) {
 	if (menu) {
 		//world->GetMainCamera().SetPosition(Vector3(0, 0, 0));
 		InitCamera();
-		Debug::Print("1. Start Game ", Vector2(30, 40), Debug::GREEN);
-		Debug::Print("Exit - Press ESC", Vector2(30, 50), Debug::GREEN);
-		physics->Update(dt);
 
+		if (!gameHasStarted) {	// loaded into menu upon opening game
+			Debug::Print("1. Start Game ", Vector2(30, 40), Debug::GREEN);
+		}
+		else {	// brought up menu by pausing
+			Debug::Print("1. Unpause Game ", Vector2(30, 40), Debug::GREEN);
+			Debug::Print("2. Restart Game ", Vector2(30, 50), Debug::GREEN);
 
-		world->UpdateWorld(dt);
+			//physics->Update(dt);
+			//world->UpdateWorld(dt);
+		}
+		Debug::Print("Exit - Press ESC", Vector2(30, 60), Debug::GREEN);
+		
 		renderer->Update(dt);
 		renderer->Render();
 
@@ -400,15 +407,19 @@ void TutorialGame::InitWorld() {
 
 	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
 
-	player = AddPlayerToWorld(Vector3(30, 20, 0));	// adds player to world
-	lockedObject = player;
-	selectionObject = player;
-	yaw = 0;
-
 	for (int i = 0; i < 4; ++i) {
 		bool onTimer = (rand() % 2 > 0.5) ? true : false;
 		AddPressurePlateToWorld(Vector3(30 * i, 20, 60), onTimer);
 	}
+
+	player = AddPlayerToWorld(Vector3(30, 20, 0));	// adds player to world
+	InitPlayer();
+	yaw = 0;
+}
+
+void TutorialGame::InitPlayer() { 	// gives control + camera to player
+	lockedObject = player;
+	selectionObject = player;
 }
 
 /*
@@ -837,7 +848,7 @@ void TutorialGame::UpdateScoreAndTimer(float dt) {
 	std::string itemsCollected = "(" + std::to_string(player->itemsCollected) + " Collected)";
 	Debug::Print(itemsCollected, Vector2(90 - time.length() - 6, 20), timerColor);
 
-	std::string ComeBackMenu = "F3 : Return To Menu ";
+	std::string ComeBackMenu = "F3 : Pause Game ";
 	Debug::Print(ComeBackMenu, Vector2(0, 10), Debug::BLUE);
 
 }

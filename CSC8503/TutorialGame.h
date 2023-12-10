@@ -20,8 +20,13 @@ namespace NCL {
 			virtual void UpdateGame(float dt);
 
 			void InitMenu() { menu = true; };
+			void DisableMenu() { menu = false; };
+
 			void InitWorld();
 			void InitCamera();
+			void InitPlayer();
+
+			bool gameHasStarted = false;
 
 		protected:
 			void InitialiseAssets();
