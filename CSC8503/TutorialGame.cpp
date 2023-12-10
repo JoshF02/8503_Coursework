@@ -351,6 +351,10 @@ void TutorialGame::LockedObjectMovement() {
 				oldInverseMass = inverseMass;	// saves inverse mass of object
 				pickedUpObj->GetPhysicsObject()->SetInverseMass(0);	// sets inverse mass of object to 0 so forces arent applied to it
 				pickedUpObj->GetPhysicsObject()->ClearForces();
+
+				if (pickedUpObj->GetName() == "key") {
+					player->OnCollisionBegin(pickedUpObj);	// gives score for picking up, as if you collided with it
+				}
 			}
 		}
 	}
@@ -544,6 +548,8 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 // Adds immovable pressure plate
 SwitchGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& position, bool onTimer, GameObject* door) {
 	SwitchGameObject* plate = new SwitchGameObject(onTimer, door);
+	std::string name = "plate";
+	plate->SetName(name);
 
 	Vector3 plateSize = Vector3(10, 0.01f, 10);
 	AABBVolume* volume = new AABBVolume(plateSize);
@@ -567,6 +573,8 @@ SwitchGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& position,
 // Adds key
 KeyGameObject* TutorialGame::AddKeyToWorld(const Vector3& position, GameObject* door, bool isHeistItem) {
 	KeyGameObject* key = new KeyGameObject(door, world, isHeistItem, player);
+	std::string name = "key";
+	key->SetName(name);
 
 	Vector3 keySize = Vector3(2, 2, 2);
 	AABBVolume* volume = new AABBVolume(keySize);

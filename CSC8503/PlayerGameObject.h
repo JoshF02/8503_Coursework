@@ -34,10 +34,12 @@ public:
     //void Update(float dt) override;;
 
     int itemsCollected = 0;
-    int itemsLeft = 5;
+    int itemsLeft = 2;
     int score = 0;
     bool win = false;
     bool lose = false;
+
+    std::vector<GameObject*> alreadyScoredFor = {};
 };
 
 /*class TriggerGameObject : public GameObject {
@@ -63,7 +65,7 @@ protected:
 class SwitchGameObject : public GameObject {
 
 public:
-    SwitchGameObject(bool onTimer, GameObject* doorToOpen = nullptr);
+    SwitchGameObject(bool onTimer, GameObject* doorToOpen = nullptr, PlayerGameObject* player = nullptr);
 
     //~SwitchGameObject();
 
@@ -83,6 +85,7 @@ protected:
     float doorOriginalY;
     float amountToOpen = 15.0f;
     float openSpeed = 0.1f;
+    PlayerGameObject* player;
 };
 
 

@@ -11,7 +11,7 @@ PlayerGameObject::~PlayerGameObject() {
 
 void PlayerGameObject::OnCollisionBegin(NCL::CSC8503::GameObject* otherObject) {
 
-    if (otherObject->GetName() == "coinTools") {
+    /*if (otherObject->GetName() == "coinTools") {
         otherObject->SetActive(false);
         otherObject->SetBoundingVolume(nullptr);
         score += 10;
@@ -21,6 +21,22 @@ void PlayerGameObject::OnCollisionBegin(NCL::CSC8503::GameObject* otherObject) {
         if (itemsLeft == 0) {
             win = true;
         }
+    }*/
+
+    if (otherObject->GetName() == "key" && !(std::find(alreadyScoredFor.begin(), alreadyScoredFor.end(), otherObject) != alreadyScoredFor.end())) {
+        score += 5;
+        alreadyScoredFor.push_back(otherObject);
+
+        itemsCollected++;
+        itemsLeft--;
+
+        /*if (itemsLeft == 0) {
+            win = true;
+        }*/
+    }
+    if (otherObject->GetName() == "plate" && !(std::find(alreadyScoredFor.begin(), alreadyScoredFor.end(), otherObject) != alreadyScoredFor.end())) {
+        score += 5;
+        alreadyScoredFor.push_back(otherObject);
     }
 
     //std::cout << counter << " ONBEGIN\n";
@@ -61,9 +77,10 @@ void TriggerGameObject::OnCollisionEnd(GameObject* otherObject) {
     triggerActive = false;
 }*/
 
-SwitchGameObject::SwitchGameObject(bool onTimer, GameObject* doorToOpen) {
+SwitchGameObject::SwitchGameObject(bool onTimer, GameObject* doorToOpen, PlayerGameObject* player) {
     isOnTimer = onTimer;
     this->doorToOpen = doorToOpen;
+    this->player = player;
    
     doorOriginalY = doorToOpen->GetTransform().GetPosition().y;
 }
@@ -127,7 +144,10 @@ void KeyGameObject::OnCollisionBegin(GameObject* otherObject) { // deletes key a
         switchActive = true;
         this->SetActive(false);
 
+        player->score += 10;
+
         if (isHeistItem && player) {
+            player->score += 60;
             player->win = true;
         }
 
