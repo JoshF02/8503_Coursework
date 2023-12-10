@@ -246,7 +246,7 @@ void TutorialGame::UpdateKeys() {
 }
 
 void TutorialGame::LockedObjectMovement() {
-	Matrix4 view = world->GetMainCamera().BuildViewMatrix();
+	/*Matrix4 view = world->GetMainCamera().BuildViewMatrix();
 	Matrix4 camWorld = view.Inverse();
 
 	Vector3 rightAxis = Vector3(camWorld.GetColumn(0)); //view is inverse of model!
@@ -255,7 +255,14 @@ void TutorialGame::LockedObjectMovement() {
 	//so we can take a guess, and use the cross of straight up, and
 	//the right axis, to hopefully get a vector that's good enough!
 
-	Vector3 fwdAxis = Vector3::Cross(Vector3(0, 1, 0), rightAxis);
+	Vector3 fwdAxis = Vector3::Cross(Vector3(0, 1, 0), rightAxis);*/
+
+	Vector3 fwdAxis = selectionObject->GetTransform().GetOrientation() * Vector3(0, 0, -1);	// using player object's axes instead
+	Vector3 rightAxis = Vector3::Cross(fwdAxis, Vector3(0, 1, 0));
+
+	//std::cout << fwdAxis << "VS\n" << Vector3::Cross(Vector3(0, 1, 0), Vector3(camWorld.GetColumn(0))) << "\n";
+	//std::cout << rightAxis << "VS\n" << Vector3(camWorld.GetColumn(0)) << "\n\n";
+
 	fwdAxis.y = 0.0f;
 	fwdAxis.Normalise();
 
@@ -316,6 +323,24 @@ void TutorialGame::LockedObjectMovement() {
 		rayPos = selectionObject->GetTransform().GetPosition();
 
 		Ray r = Ray(rayPos, rayDir);
+
+
+		/*GameObject* player = selectionObject;
+
+		yaw = controller.GetNamedAxis("XLook");
+
+		if (yaw < 0) {
+			yaw += 360.0f;
+		}
+		if (yaw > 360.0f) {
+			yaw -= 360.0f;
+		}
+
+		Quaternion facingDir = player->GetTransform().GetOrientation();
+
+		selectionObject->GetTransform().SetOrientation(facingDir + 
+			Quaternion::Quaternion(Matrix4::Rotation(yaw, Vector3(0, 1, 0))));*/
+
 
 		if (world->Raycast(r, closestCollision, true, selectionObject, 10.0f)) {
 
@@ -406,7 +431,7 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
-	player = AddPlayerToWorld(Vector3(30, 20, 0));	// adds player to world
+	player = AddPlayerToWorld(Vector3(100, 0.02f, -100));	// adds player to world
 	InitPlayer();
 	yaw = 0;
 
@@ -456,6 +481,9 @@ void TutorialGame::InitWorld() {
 
 	
 	// Zone 4 (Maze)
+	GameObject* startingArea = AddCubeToWorld(Vector3(100, 0.01f, -100), Vector3(10, 0.01f, 10), 0);
+	startingArea->GetRenderObject()->SetColour(Vector4(0, 1, 1, 1));
+	AddKeyToWorld(Vector3(170, 2, 160), startingArea, true);
 	AddMazeToWorld();
 
 	//InitTestingObjs();
@@ -537,8 +565,8 @@ SwitchGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& position,
 }
 
 // Adds key
-KeyGameObject* TutorialGame::AddKeyToWorld(const Vector3& position, GameObject* door) {
-	KeyGameObject* key = new KeyGameObject(door, world);
+KeyGameObject* TutorialGame::AddKeyToWorld(const Vector3& position, GameObject* door, bool isHeistItem) {
+	KeyGameObject* key = new KeyGameObject(door, world, isHeistItem, player);
 
 	Vector3 keySize = Vector3(2, 2, 2);
 	AABBVolume* volume = new AABBVolume(keySize);

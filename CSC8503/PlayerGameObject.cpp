@@ -115,15 +115,22 @@ void SwitchGameObject::Update(float dt) {
 
 
 
-KeyGameObject::KeyGameObject(GameObject* doorToOpen, GameWorld* world) {
+KeyGameObject::KeyGameObject(GameObject* doorToOpen, GameWorld* world, bool isHeistItem, PlayerGameObject* player) {
     this->doorToOpen = doorToOpen;
     this->world = world;
+    this->isHeistItem = isHeistItem;
+    this->player = player;
 }
 
 void KeyGameObject::OnCollisionBegin(GameObject* otherObject) { // deletes key and door when key used
     if (!switchActive && otherObject == doorToOpen) {
         switchActive = true;
         this->SetActive(false);
+
+        if (isHeistItem && player) {
+            player->win = true;
+        }
+
         world->RemoveGameObject(doorToOpen, false);
         world->RemoveGameObject(this, false);
         std::cout << "KEY USED, DELETING DOOR AND USED KEY\n";

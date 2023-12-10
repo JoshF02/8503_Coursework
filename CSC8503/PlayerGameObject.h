@@ -90,7 +90,7 @@ protected:
 class KeyGameObject : public GameObject {
 
 public:
-    KeyGameObject(GameObject* doorToOpen = nullptr, GameWorld* world = nullptr);
+    KeyGameObject(GameObject* doorToOpen = nullptr, GameWorld* world = nullptr, bool isHeistItem = false, PlayerGameObject* player = nullptr);
 
     //~KeyGameObject();
 
@@ -104,6 +104,8 @@ public:
 
 protected:
     bool switchActive = false;
+    bool isHeistItem;
     GameObject* doorToOpen;
     GameWorld* world;
+    PlayerGameObject* player;
 };

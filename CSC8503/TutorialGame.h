@@ -72,7 +72,7 @@ namespace NCL {
 			void EndGame();
 
 			SwitchGameObject* AddPressurePlateToWorld(const Vector3& position, bool onTimer, GameObject* door);
-			KeyGameObject* AddKeyToWorld(const Vector3& position, GameObject* door);
+			KeyGameObject* AddKeyToWorld(const Vector3& position, GameObject* door, bool isHeistItem = false);
 
 #ifdef USEVULKAN
 			GameTechVulkanRenderer* renderer;
@@ -108,7 +108,7 @@ namespace NCL {
 			//Coursework Additional functionality	
 			GameObject* lockedObject = nullptr;
 			Vector3 lockedOffset = Vector3(0, 8, 14);
-			Vector3 pickedUpOffset = Vector3(0, 2, -6);
+			Vector3 pickedUpOffset = Vector3(0, 4, -8);
 			void LockCameraToObject(GameObject* o) {
 				lockedObject = o;
 			}
