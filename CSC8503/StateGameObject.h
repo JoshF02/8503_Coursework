@@ -23,7 +23,7 @@ namespace NCL {
 
         class EnemyGameObject : public GameObject {
         public:
-            EnemyGameObject(PlayerGameObject* target);
+            EnemyGameObject(PlayerGameObject* target, GameWorld* world);
             ~EnemyGameObject();
 
             void Update(float dt) override;
@@ -36,10 +36,13 @@ namespace NCL {
             StateMachine* stateMachine;
 
         protected:
-            std::vector<Vector3> patrolPoints;
-            int currentPatrolIndex;
+            std::vector<Vector3> patrolPoints = {};
+            int currentPatrolIndex = 0;
             float speed;
             Vector3 currentPos;
+            Vector3 playerPos;
+
+            GameWorld* world;
         };
     }
 }

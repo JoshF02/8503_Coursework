@@ -565,7 +565,7 @@ EnemyGameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 	float meshSize = 3.0f;
 	float inverseMass = 0.5f;
 
-	EnemyGameObject* character = new EnemyGameObject(player);
+	EnemyGameObject* character = new EnemyGameObject(player, world);
 	//character->SetName("EnemyPlayer");
 
 	//AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
@@ -637,7 +637,7 @@ void TutorialGame::InitDefaultFloor() {
 
 void TutorialGame::InitGameExamples() {
 	AddPlayerToWorld(Vector3(0, 15, 0));	// collision volumes dont match meshes well so dont sit on floor properly
-	AddEnemyToWorld(Vector3(5, 25, -100));
+	AddEnemyToWorld(Vector3(5, 2.5, -100));
 	AddBonusToWorld(Vector3(10, 15, 0));
 
 	AddCubeToWorld(Vector3(5, 50, 0), Vector3(1, 1, 1));

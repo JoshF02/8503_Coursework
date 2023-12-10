@@ -1,18 +1,11 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (CSC8503CoreClasses.dir\Debug\) contains files shared from another project (CSC8503CoreClasses.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Scanning sources for module dependencies...
-  Main.cpp
-D:\C++ Projects\CSC8503 2023\CSC8503\Main.cpp(112,28): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-D:\C++ Projects\CSC8503 2023\CSC8503\Main.cpp(203,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-  NetworkPlayer.cpp
-  NetworkedGame.cpp
-  StateGameObject.cpp
   TutorialGame.cpp
 D:\C++ Projects\CSC8503 2023\CSC8503\TutorialGame.cpp(412,38): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\C++ Projects\CSC8503 2023\CSC8503\TutorialGame.cpp(830,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 D:\C++ Projects\CSC8503 2023\CSC8503\TutorialGame.cpp(831,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\C++ Projects\CSC8503 2023\CSC8503\TutorialGame.cpp(832,14): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\C++ Projects\CSC8503 2023\CSC8503\TutorialGame.cpp(836,32): warning C4244: 'argument': conversion from 'unsigned __int64' to 'float', possible loss of data
-D:\C++ Projects\CSC8503 2023\CSC8503\TutorialGame.cpp(843,33): warning C4244: 'argument': conversion from 'unsigned __int64' to 'float', possible loss of data
-D:\C++ Projects\CSC8503 2023\CSC8503\TutorialGame.cpp(846,53): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\C++ Projects\CSC8503 2023\CSC8503\TutorialGame.cpp(849,58): warning C4244: 'argument': conversion from 'unsigned __int64' to 'float', possible loss of data
-  Generating Code...
+D:\C++ Projects\CSC8503 2023\CSC8503\TutorialGame.cpp(835,32): warning C4244: 'argument': conversion from 'unsigned __int64' to 'float', possible loss of data
+D:\C++ Projects\CSC8503 2023\CSC8503\TutorialGame.cpp(842,33): warning C4244: 'argument': conversion from 'unsigned __int64' to 'float', possible loss of data
+D:\C++ Projects\CSC8503 2023\CSC8503\TutorialGame.cpp(845,53): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\C++ Projects\CSC8503 2023\CSC8503\TutorialGame.cpp(848,58): warning C4244: 'argument': conversion from 'unsigned __int64' to 'float', possible loss of data
   CSC8503.vcxproj -> D:\C++ Projects\CSC8503 2023\x64\Debug\CSC8503.exe
