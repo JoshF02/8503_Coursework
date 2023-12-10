@@ -65,6 +65,8 @@ namespace NCL {
 			void UpdateScoreAndTimer(float dt);
 			void EndGame();
 
+			PressurePlateGameObject* AddPressurePlateToWorld(const Vector3& position);
+
 #ifdef USEVULKAN
 			GameTechVulkanRenderer* renderer;
 #else

@@ -26,9 +26,52 @@ public:
 
     void OnCollisionBegin(GameObject* otherObject) override;
 
+    void OnCollisionEnd(GameObject* otherObject) override;
+
+    //void Update(float dt) override;;
+
     int itemsCollected = 0;
     int itemsLeft = 5;
     int score = 0;
     bool win = false;
     bool lose = false;
+};
+
+/*class TriggerGameObject : public GameObject {
+
+public:
+    TriggerGameObject();
+
+    //~TriggerGameObject();
+
+    void OnCollisionBegin(GameObject* otherObject) override;
+
+    void OnCollisionEnd(GameObject* otherObject) override;
+
+    //void Update(float dt);
+
+protected:
+    bool triggerActive = false;
+    int counter = 0;
+};*/
+
+class PressurePlateGameObject : public GameObject {
+
+public:
+    PressurePlateGameObject();
+
+    //~PressurePlateGameObject();
+
+    void OnCollisionBegin(GameObject* otherObject) override;
+
+    //void OnCollisionStay(GameObject* otherObject) override;
+
+    //void OnCollisionEnd(GameObject* otherObject) override;
+
+    void Update(float dt) override;
+
+protected:
+    bool pressurePlateActive = false;
+    //int counter = 0;
+    float timeSinceLastEnter = 0;
 };

@@ -26,7 +26,8 @@ TutorialGame::TutorialGame() : controller(*Window::GetWindow()->GetKeyboard(), *
 	physics = new PhysicsSystem(*world);
 
 	forceMagnitude = 10.0f;
-	useGravity = false;
+	useGravity = true;
+	physics->UseGravity(useGravity);
 	inSelectionMode = false;
 
 	world->GetMainCamera().SetController(controller);
@@ -121,12 +122,12 @@ void TutorialGame::UpdateGame(float dt) {
 
 	UpdateKeys();
 
-	if (useGravity) {
+	/*if (useGravity) {
 		Debug::Print("(G)ravity on", Vector2(5, 95), Debug::RED);
 	}
 	else {
 		Debug::Print("(G)ravity off", Vector2(5, 95), Debug::RED);
-	}
+	}*/
 
 	/*RayCollision closestCollision;
 	if (Window::GetKeyboard()->KeyPressed(KeyCodes::K) && selectionObject) {
@@ -151,6 +152,7 @@ void TutorialGame::UpdateGame(float dt) {
 
 	if (Window::GetKeyboard()->KeyPressed(KeyCodes::B)) {	// TEST GAME OVER
 		player->itemsLeft--;
+		player->itemsCollected++;
 
 		if (player->itemsLeft == 0) {
 			player->win = true;
@@ -159,6 +161,7 @@ void TutorialGame::UpdateGame(float dt) {
 	if (Window::GetKeyboard()->KeyPressed(KeyCodes::N)) {	// TEST GAME OVER
 		player->lose = true;
 	}
+
 
 	if (!player->win && !player->lose) {
 		UpdateScoreAndTimer(dt);
@@ -204,10 +207,10 @@ void TutorialGame::UpdateKeys() {
 		InitCamera(); //F2 will reset the camera to a specific default place
 	}*/
 
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::G)) {
+	/*if (Window::GetKeyboard()->KeyPressed(KeyCodes::G)) {
 		useGravity = !useGravity; //Toggle gravity!
 		physics->UseGravity(useGravity);
-	}
+	}*/
 	//Running certain physics updates in a consistent order might cause some
 	//bias in the calculations - the same objects might keep 'winning' the constraint
 	//allowing the other one to stretch too much etc. Shuffling the order so that it
@@ -401,6 +404,10 @@ void TutorialGame::InitWorld() {
 	lockedObject = player;
 	selectionObject = player;
 	yaw = 0;
+
+	for (int i = 0; i < 4; ++i) {
+		AddPressurePlateToWorld(Vector3(30 * i, 20, 60));
+	}
 }
 
 /*
@@ -427,6 +434,28 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 	world->AddGameObject(floor);
 
 	return floor;
+}
+
+// Adds immovable pressure plate
+PressurePlateGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& position) {
+	PressurePlateGameObject* plate = new PressurePlateGameObject();
+
+	Vector3 plateSize = Vector3(10, 1, 10);
+	AABBVolume* volume = new AABBVolume(plateSize);
+	plate->SetBoundingVolume((CollisionVolume*)volume);
+	plate->GetTransform()
+		.SetScale(plateSize * 2)
+		.SetPosition(position);
+
+	plate->SetRenderObject(new RenderObject(&plate->GetTransform(), cubeMesh, basicTex, basicShader));
+	plate->SetPhysicsObject(new PhysicsObject(&plate->GetTransform(), plate->GetBoundingVolume()));
+
+	plate->GetPhysicsObject()->SetInverseMass(0);
+	plate->GetPhysicsObject()->InitCubeInertia();
+
+	world->AddGameObject(plate);
+
+	return plate;
 }
 
 /*
@@ -552,6 +581,7 @@ GameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 
 GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 	GameObject* apple = new GameObject();
+	//TriggerGameObject* apple = new TriggerGameObject();
 
 	SphereVolume* volume = new SphereVolume(0.5f);
 	apple->SetBoundingVolume((CollisionVolume*)volume);
@@ -596,8 +626,11 @@ void TutorialGame::InitDefaultFloor() {
 
 void TutorialGame::InitGameExamples() {
 	AddPlayerToWorld(Vector3(0, 15, 0));	// collision volumes dont match meshes well so dont sit on floor properly
-	AddEnemyToWorld(Vector3(5, 15, 0));
+	AddEnemyToWorld(Vector3(5, 25, 0));
 	AddBonusToWorld(Vector3(10, 15, 0));
+
+	AddCubeToWorld(Vector3(5, 50, 0), Vector3(1, 1, 1));
+	AddCubeToWorld(Vector3(5, 15, 0), Vector3(1, 1, 1));
 
 	AddOBBToWorld(Vector3(15, 15, 0), Vector3(1, 1, 1));
 	AddOBBToWorld(Vector3(20, 15, 0), Vector3(1, 1, 1));
@@ -797,11 +830,11 @@ void TutorialGame::UpdateScoreAndTimer(float dt) {
 	std::string score = "Score = " + std::to_string(player->score);
 	Debug::Print(score, Vector2(90 - time.length(), 10), timerColor);
 
-	std::string itemsHasGet = "Items Collected = " + std::to_string(player->itemsCollected);
-	Debug::Print(itemsHasGet, Vector2(90 - time.length() - 10, 15), timerColor);
-
 	std::string itemsLeft = "Items Left = " + std::to_string(player->itemsLeft);
-	Debug::Print(itemsLeft, Vector2(90 - time.length() - 10, 20), timerColor);
+	Debug::Print(itemsLeft, Vector2(90 - time.length() - 9.5, 15), timerColor);
+
+	std::string itemsCollected = "(" + std::to_string(player->itemsCollected) + " Collected)";
+	Debug::Print(itemsCollected, Vector2(90 - time.length() - 6, 20), timerColor);
 
 	std::string ComeBackMenu = "F3 : Return To Menu ";
 	Debug::Print(ComeBackMenu, Vector2(0, 10), Debug::BLUE);

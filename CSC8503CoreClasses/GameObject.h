@@ -62,6 +62,14 @@ namespace NCL::CSC8503 {
 			//std::cout << "OnCollisionBegin event occured!\n";
 		}
 
+		virtual void OnCollisionStay(GameObject* otherObject) {
+			//std::cout << "OnCollisionStay event occured!\n";
+		}
+
+		virtual void Update(float dt) {
+			//std::cout << "update\n";
+		}
+
 		virtual void OnCollisionEnd(GameObject* otherObject) {
 			//std::cout << "OnCollisionEnd event occured!\n";
 		}
@@ -78,6 +86,10 @@ namespace NCL::CSC8503 {
 			return worldID;
 		}
 
+		/*bool GetIsTrigger() const {
+			return isTrigger;
+		}*/
+
 	protected:
 		Transform			transform;
 
@@ -87,6 +99,7 @@ namespace NCL::CSC8503 {
 		NetworkObject*		networkObject;
 
 		bool		isActive;
+		//bool		isTrigger = false;
 		int			worldID;
 		std::string	name;
 

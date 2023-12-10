@@ -76,6 +76,10 @@ void GameWorld::UpdateWorld(float dt) {
 	if (shuffleConstraints) {
 		std::shuffle(constraints.begin(), constraints.end(), e);
 	}
+
+	for (GameObject* g : gameObjects) {
+		g->Update(dt);
+	}
 }
 
 bool GameWorld::Raycast(Ray& r, RayCollision& closestCollision, bool closestObject, GameObject* ignoreThis, float maxLength) const {

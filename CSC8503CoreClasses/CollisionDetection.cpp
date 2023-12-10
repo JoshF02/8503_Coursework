@@ -205,16 +205,6 @@ bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, Collis
 	}
 
 	//OBB vs AABB pairs
-	/*if (volA->type == VolumeType::OBB && volB->type == VolumeType::AABB) {
-		//collisionInfo.a = b;
-		//collisionInfo.b = a;
-		return OBBIntersection((OBBVolume&)*volA, transformA, (OBBVolume&)*volB, transformB, collisionInfo);
-	}
-	if (volA->type == VolumeType::AABB && volB->type == VolumeType::OBB) {
-		collisionInfo.a = b;
-		collisionInfo.b = a;
-		return OBBIntersection((OBBVolume&)*volB, transformB, (OBBVolume&)*volA, transformA, collisionInfo);
-	}*/
 	if (volA->type == VolumeType::AABB && volB->type == VolumeType::OBB) {
 		return AABBOBBIntersection((AABBVolume&)*volA, transformA, (OBBVolume&)*volB, transformB, collisionInfo);
 	}
@@ -521,81 +511,7 @@ bool CollisionDetection::SphereCapsuleIntersection(
 
 
 
-/*struct OBBAxes {
-	Vector3 boxAaxisX;
-	Vector3 boxAaxisY;
-	Vector3 boxAaxisZ;
-	Vector3 boxBaxisX;
-	Vector3 boxBaxisY;
-	Vector3 boxBaxisZ;
-};
 
-// check if there is a separating plane for the selected axes
-float GetSeparatingPlane(const Vector3& delta, const Vector3& Plane, const OBBAxes& a, const Vector3& boxASize, const Vector3& boxBSize)
-{
-	// penetration = sum of max extents on an axis - difference between box positions on that axis
-	float penetration =  (((a.boxAaxisX * boxASize.x) * Plane).Length() +
-		((a.boxAaxisY * boxASize.y) * Plane).Length() +
-		((a.boxAaxisZ * boxASize.z) * Plane).Length() +
-		((a.boxBaxisX * boxBSize.x) * Plane).Length() +
-		((a.boxBaxisY * boxBSize.y) * Plane).Length() +
-		((a.boxBaxisZ * boxBSize.z) * Plane).Length()) - (delta * Plane).Length();
-
-	return penetration;
-}
-
-bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transform& worldTransformA,
-	const OBBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
-
-	Vector3 delta = worldTransformB.GetPosition() - worldTransformA.GetPosition();
-
-	Quaternion orientationA = worldTransformA.GetOrientation();
-	Matrix3 transformA = Matrix3(orientationA);
-	Vector3 boxASize = volumeA.GetHalfDimensions();
-
-	Quaternion orientationB = worldTransformB.GetOrientation();
-	Matrix3 transformB = Matrix3(orientationB);
-	Vector3 boxBSize = volumeB.GetHalfDimensions();
-
-	// if both AABBs anyway then can just resolve that way
-	if (transformA.GetDiagonal() == Vector3(1, 1, 1) && transformB.GetDiagonal() == Vector3(1, 1, 1)) return AABBIntersection((AABBVolume&)volumeB,
-		worldTransformB, (AABBVolume&)volumeA, worldTransformA, collisionInfo);
-
-	OBBAxes a;
-	a.boxAaxisX = transformA * Vector3(1, 0, 0);
-	a.boxAaxisY = transformA * Vector3(0, 1, 0);
-	a.boxAaxisZ = transformA * Vector3(0, 0, 1);
-	a.boxBaxisX = transformB * Vector3(1, 0, 0);
-	a.boxBaxisY = transformB * Vector3(0, 1, 0);
-	a.boxBaxisZ = transformB * Vector3(0, 0, 1);
-	
-
-	float minPen = FLT_MAX;
-	Vector3 bestAxis;
-
-	std::list<Vector3> axes = { a.boxAaxisX, a.boxAaxisY, a.boxAaxisZ, a.boxBaxisX, a.boxBaxisY, a.boxBaxisZ,	// face axes
-		Vector3::Cross(a.boxAaxisX, a.boxBaxisX), Vector3::Cross(a.boxAaxisX, a.boxBaxisY), Vector3::Cross(a.boxAaxisX, a.boxBaxisZ),
-		Vector3::Cross(a.boxAaxisY, a.boxBaxisX), Vector3::Cross(a.boxAaxisY, a.boxBaxisY), Vector3::Cross(a.boxAaxisY, a.boxBaxisZ),
-		Vector3::Cross(a.boxAaxisZ, a.boxBaxisX), Vector3::Cross(a.boxAaxisZ, a.boxBaxisY), Vector3::Cross(a.boxAaxisZ, a.boxBaxisZ),
-	};
-
-	std::list<Vector3>::const_iterator first = axes.begin();
-	std::list<Vector3>::const_iterator last = axes.end();
-
-	for (auto i = first; i != last; ++i) {
-		float temp = GetSeparatingPlane(delta, (*i), a, boxASize, boxBSize);
-
-		if (temp <= 0) return false;
-
-		if (temp < minPen) {
-			minPen = temp;
-			bestAxis = (*i);
-		}
-	}
-
-	collisionInfo.AddContactPoint(Vector3(), Vector3(), bestAxis, minPen);
-	return true;
-}*/
 
 bool CollisionDetection::BoxOBBIntersection(const Vector3& boxSize, const Vector3& boxPos, const OBBVolume& volumeOBB, const Transform& TransformOBB, 
 	CollisionInfo& collisionInfo) {
