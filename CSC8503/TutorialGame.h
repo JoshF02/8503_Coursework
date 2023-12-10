@@ -70,8 +70,8 @@ namespace NCL {
 			void UpdateScoreAndTimer(float dt);
 			void EndGame();
 
-			SwitchGameObject* AddPressurePlateToWorld(const Vector3& position, bool onTimer);
-			KeyGameObject* AddKeyToWorld(const Vector3& position);
+			SwitchGameObject* AddPressurePlateToWorld(const Vector3& position, bool onTimer, GameObject* door);
+			KeyGameObject* AddKeyToWorld(const Vector3& position, GameObject* door);
 
 #ifdef USEVULKAN
 			GameTechVulkanRenderer* renderer;

@@ -414,10 +414,12 @@ void TutorialGame::InitWorld() {
 
 	for (int i = 0; i < 4; ++i) {
 		bool onTimer = (rand() % 2 > 0.5) ? true : false;
-		AddPressurePlateToWorld(Vector3(30 * i, 20, 60), onTimer);
+		GameObject* door = AddCubeToWorld(Vector3(30 * i, 20, 60) + Vector3(0, 30, 0), Vector3(5, 5, 5), 0);
+		AddPressurePlateToWorld(Vector3(30 * i, 20, 60), onTimer, door);
 	}
 
-	AddKeyToWorld(Vector3(-50, 20, 60));
+	GameObject* door = AddCubeToWorld(Vector3(-50, 20, 60) + Vector3(0, 0, 30), Vector3(5, 5, 5), 0);
+	AddKeyToWorld(Vector3(-50, 20, 60), door);
 }
 
 void TutorialGame::InitPlayer() { 	// gives control + camera to player
@@ -452,8 +454,8 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 }
 
 // Adds immovable pressure plate
-SwitchGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& position, bool onTimer) {
-	SwitchGameObject* plate = new SwitchGameObject(onTimer, AddCubeToWorld(position + Vector3(0, 30, 0), Vector3(5, 5, 5), 0));
+SwitchGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& position, bool onTimer, GameObject* door) {
+	SwitchGameObject* plate = new SwitchGameObject(onTimer, door);
 
 	Vector3 plateSize = Vector3(10, 1, 10);
 	AABBVolume* volume = new AABBVolume(plateSize);
@@ -475,8 +477,8 @@ SwitchGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& position,
 }
 
 // Adds key
-KeyGameObject* TutorialGame::AddKeyToWorld(const Vector3& position) {
-	KeyGameObject* key = new KeyGameObject(AddCubeToWorld(position + Vector3(0, 30, 0), Vector3(5, 5, 5), 0), world);
+KeyGameObject* TutorialGame::AddKeyToWorld(const Vector3& position, GameObject* door) {
+	KeyGameObject* key = new KeyGameObject(door, world);
 
 	Vector3 keySize = Vector3(2, 2, 2);
 	AABBVolume* volume = new AABBVolume(keySize);
