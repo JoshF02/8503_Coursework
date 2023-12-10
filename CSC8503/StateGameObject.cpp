@@ -83,7 +83,11 @@ EnemyGameObject::EnemyGameObject(PlayerGameObject* gameObject, GameWorld* world,
 
     State* patrol = new State([&](float dt) -> void {
         Vector3 nextPatrolPointPos = patrolPoints[currentPatrolIndex];
-        speed = 40.0f;
+        speed = 30.0f;
+
+        if (currentPos.z > 1) { // if the enemy leaves its zone, next patrol point is the doorway back to its zone
+            nextPatrolPointPos = Vector3(-160, 2.5, 1);
+        }
 
         if ((nextPatrolPointPos - currentPos).LengthSquared() < 1.0f) {
             currentPatrolIndex++;
@@ -95,7 +99,7 @@ EnemyGameObject::EnemyGameObject(PlayerGameObject* gameObject, GameWorld* world,
         });
 
     State* chase = new State([&](float dt) -> void {
-        speed = 15.0f;
+        speed = 10.0f;
         MoveToPosition(Vector3(playerPos.x, 2.5, playerPos.z)); // keeps enemy on the ground
         });
 

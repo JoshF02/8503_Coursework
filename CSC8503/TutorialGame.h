@@ -23,6 +23,7 @@ namespace NCL {
 			void DisableMenu() { menu = false; };
 
 			void InitWorld();
+			void InitTestingObjs();
 			void InitCamera();
 			void InitPlayer();
 

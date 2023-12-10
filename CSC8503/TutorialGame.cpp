@@ -276,13 +276,22 @@ void TutorialGame::LockedObjectMovement() {
 		selectionObject->GetPhysicsObject()->AddForce(rightAxis * 20);
 	}
 
-	if (Window::GetKeyboard()->KeyDown(KeyCodes::SPACE)) {
-		selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 200, 0));
+	if (Window::GetKeyboard()->KeyDown(KeyCodes::SPACE)) {	// only allow jump if on ground
+		
+		RayCollision closestCollision;
+		Vector3 rayDir = Vector3(0, -1, 0);
+		Vector3 rayPos = selectionObject->GetTransform().GetPosition();
+		Ray r = Ray(rayPos, rayDir);
+
+		if (world->Raycast(r, closestCollision, true, selectionObject, 1.5f)) {
+			//std::cout << "CLOSE TO GROUND, ALLOWING JUMP\n";
+			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 200, 0));
+		}
 	}
 
-	if (Window::GetKeyboard()->KeyDown(KeyCodes::SHIFT)) {
+	/*if (Window::GetKeyboard()->KeyDown(KeyCodes::SHIFT)) {
 		selectionObject->GetPhysicsObject()->AddForce(Vector3(0, -200, 0));
-	}
+	}*/
 
 	// rotate player with mouse
 	yaw -= controller.GetNamedAxis("XLook");
@@ -401,25 +410,76 @@ void TutorialGame::InitWorld() {
 	InitPlayer();
 	yaw = 0;
 
-	//InitMixedGridWorld(15, 15, 3.5f, 3.5f);
-
-	BridgeConstraintTest();
-
-	InitGameExamples();
 	InitDefaultFloor();
 
+	// External Walls
+	AddCubeToWorld(Vector3(0, 10, -200), Vector3(200, 10, 1), 0);
+	AddCubeToWorld(Vector3(0, 10, 200), Vector3(200, 10, 1), 0);
+	AddCubeToWorld(Vector3(-200, 10, 0), Vector3(1, 10, 200), 0);
+	AddCubeToWorld(Vector3(200, 10, 0), Vector3(1, 10, 200), 0);
+
+
+	// Internal Walls
+	AddCubeToWorld(Vector3(-75, 5, 1), Vector3(75, 5, 1), 0);	// centre walls
+	AddCubeToWorld(Vector3(-185, 5, 1), Vector3(15, 5, 1), 0);
+	AddCubeToWorld(Vector3(-100, 5, 46), Vector3(1, 5, 44), 0);	// walls between zones 2 and 3
+	AddCubeToWorld(Vector3(-100, 5, 154.5), Vector3(1, 5, 44.5), 0);
+
+
+	// Zone 1
+	GameObject* zone1Door = AddCubeToWorld(Vector3(-160, 5, 1), Vector3(10, 5, 1), 0);
+	zone1Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
+	AddPressurePlateToWorld(Vector3(-160, 0.01f, -70), false, zone1Door);
+	AddEnemyToWorld(Vector3(-10, 2.5, -100), -10, -180, -10, -180);
+	AddEnemyToWorld(Vector3(-30, 2.5, -70), -30, -160, -30, -160);
+	AddEnemyToWorld(Vector3(10, 2.5, -100), 10, 180, -10, -180);
+	AddEnemyToWorld(Vector3(30, 2.5, -70), 30, 160, -30, -160);
+
+
+	// Zone 2
+	GameObject* zone2Door = AddCubeToWorld(Vector3(-100, 5, 100), Vector3(1, 5, 10), 0);
+	zone2Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
+	AddKeyToWorld(Vector3(-170, 2, -160), zone2Door);	// put at end of bridge in zone 1
+	AddOBBToWorld(Vector3(-170, 2, 150), Vector3(2, 2, 2));
+	AddOBBToWorld(Vector3(-180, 2, 150), Vector3(2, 2, 2));
+	AddOBBToWorld(Vector3(-170, 2, 140), Vector3(2, 2, 2));
+	AddOBBToWorld(Vector3(-180, 2, 140), Vector3(2, 2, 2));
+	AddOBBToWorld(Vector3(-170, 6, 150), Vector3(2, 2, 2));
+	AddOBBToWorld(Vector3(-170, 10, 150), Vector3(2, 2, 2));
+	AddOBBToWorld(Vector3(-150, 4, 60), Vector3(10, 4, 2), 0.05f);
+
+
+	// Zone 3
+	GameObject* zone3Door = AddCubeToWorld(Vector3(5, 5, 170), Vector3(5, 5, 10), 0);
+	zone3Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
+	AddPressurePlateToWorld(Vector3(-50, 0.01f, 70), true, zone3Door);
+
+	
+	// Zone 4 (Maze)
 	AddMazeToWorld();
 
-	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
+	//InitTestingObjs();
+}
+
+void TutorialGame::InitTestingObjs() {
+	//InitMixedGridWorld(15, 15, 3.5f, 3.5f);
+
+	//BridgeConstraintTest();
+
+	InitGameExamples();
 
 	for (int i = 0; i < 4; ++i) {
 		bool onTimer = (rand() % 2 > 0.5) ? true : false;
-		GameObject* door = AddCubeToWorld(Vector3(30 * i, 20, 60) + Vector3(0, 30, 0), Vector3(5, 5, 5), 0);
-		AddPressurePlateToWorld(Vector3(30 * i, 20, 60), onTimer, door);
+		GameObject* door = AddCubeToWorld(Vector3(30 * i, 20, 60), Vector3(5, 5, 5), 0);
+		AddPressurePlateToWorld(Vector3(30 * i, 11, 40), onTimer, door);
 	}
 
-	GameObject* door = AddCubeToWorld(Vector3(-50, 20, 60) + Vector3(0, 0, 30), Vector3(5, 5, 5), 0);
-	AddKeyToWorld(Vector3(-50, 20, 60), door);
+	GameObject* door = AddCubeToWorld(Vector3(-50, 10, 90), Vector3(5, 10, 5), 0);
+	AddKeyToWorld(Vector3(-50, 0, 60), door);
+
+	AddSphereToWorld(Vector3(-50, 0, 40), 10, 0);
+
+	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
 }
 
 void TutorialGame::InitPlayer() { 	// gives control + camera to player
@@ -457,7 +517,7 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 SwitchGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& position, bool onTimer, GameObject* door) {
 	SwitchGameObject* plate = new SwitchGameObject(onTimer, door);
 
-	Vector3 plateSize = Vector3(10, 1, 10);
+	Vector3 plateSize = Vector3(10, 0.01f, 10);
 	AABBVolume* volume = new AABBVolume(plateSize);
 	plate->SetBoundingVolume((CollisionVolume*)volume);
 	plate->GetTransform()
@@ -584,6 +644,7 @@ PlayerGameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 		.SetPosition(position);
 
 	character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, basicShader));
+	character->GetRenderObject()->SetColour(Vector4(0, 1, 0, 1));
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
@@ -613,7 +674,7 @@ EnemyGameObject* TutorialGame::AddEnemyToWorld(const Vector3& position, float xM
 	character->SetRenderObject(new RenderObject(&character->GetTransform(), enemyMesh, nullptr, basicShader));
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
-	character->GetRenderObject()->SetColour(Vector4(1, 0, 1, 1));
+	character->GetRenderObject()->SetColour(Vector4(1, 0, 0, 1));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitSphereInertia();
@@ -843,19 +904,19 @@ void TutorialGame::AddMazeToWorld() {
 			GridNode& n = grid.allNodes[(grid.gridWidth * y) + x];
 
 			// x = 120 in decimal, wall
-			if (n.type == 120) AddCubeToWorld(n.position + Vector3(0, 5, 0), { (float)grid.nodeSize / 2,(float)grid.nodeSize / 2,(float)grid.nodeSize / 2 }, 0);
+			if (n.type == 120) AddCubeToWorld(n.position + Vector3(5, 5, 5), { (float)grid.nodeSize / 2,(float)grid.nodeSize / 2,(float)grid.nodeSize / 2 }, 0);
 
 			// c = 99 coin
-			if (n.type == 99) AddBonusToWorld(n.position + Vector3(0, 5, 0));
+			//if (n.type == 99) AddBonusToWorld(n.position + Vector3(0, 5, 0));
 
 			// e = 101 enemy
 			//if (n.type == 101) AddEnemyToWorld(n.position + Vector3(0, 5, 0));
 
-			// i = 105 state object
-			if (n.type == 105) AddStateObjectToWorld(n.position + Vector3(0, 5, 0));
+			// i = 105 state object	
+			//if (n.type == 105) AddStateObjectToWorld(n.position + Vector3(0, 5, 0));
 
 			// p = 112 player
-			if (n.type == 112) AddPlayerToWorld(n.position + Vector3(0, 5, 0));
+			//if (n.type == 112) AddPlayerToWorld(n.position + Vector3(0, 5, 0));
 		}
 	}
 }
