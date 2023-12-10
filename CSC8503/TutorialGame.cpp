@@ -81,18 +81,14 @@ TutorialGame::~TutorialGame() {
 
 void TutorialGame::UpdateGame(float dt) {
 	if (menu) {
-		//world->GetMainCamera().SetPosition(Vector3(0, 0, 0));
 		InitCamera();
 
 		if (!gameHasStarted) {	// loaded into menu upon opening game
 			Debug::Print("1. Start Game ", Vector2(30, 40), Debug::GREEN);
 		}
 		else {	// brought up menu by pausing
-			Debug::Print("1. Unpause Game ", Vector2(30, 40), Debug::GREEN);
-			Debug::Print("2. Restart Game ", Vector2(30, 50), Debug::GREEN);
-
-			//physics->Update(dt);
-			//world->UpdateWorld(dt);
+			Debug::Print("1. Restart Game ", Vector2(30, 40), Debug::GREEN);
+			Debug::Print("2. Unpause Game ", Vector2(30, 50), Debug::GREEN);
 		}
 		Debug::Print("Exit - Press ESC", Vector2(30, 60), Debug::GREEN);
 		
@@ -396,6 +392,10 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
+	player = AddPlayerToWorld(Vector3(30, 20, 0));	// adds player to world
+	InitPlayer();
+	yaw = 0;
+
 	//InitMixedGridWorld(15, 15, 3.5f, 3.5f);
 
 	BridgeConstraintTest();
@@ -411,10 +411,6 @@ void TutorialGame::InitWorld() {
 		bool onTimer = (rand() % 2 > 0.5) ? true : false;
 		AddPressurePlateToWorld(Vector3(30 * i, 20, 60), onTimer);
 	}
-
-	player = AddPlayerToWorld(Vector3(30, 20, 0));	// adds player to world
-	InitPlayer();
-	yaw = 0;
 }
 
 void TutorialGame::InitPlayer() { 	// gives control + camera to player
@@ -565,11 +561,12 @@ PlayerGameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	return character;
 }
 
-GameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
+EnemyGameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 	float meshSize = 3.0f;
 	float inverseMass = 0.5f;
 
-	GameObject* character = new GameObject();
+	EnemyGameObject* character = new EnemyGameObject(player);
+	//character->SetName("EnemyPlayer");
 
 	//AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
 	CapsuleVolume* volume = new CapsuleVolume(0.9f * meshSize, 0.7f * meshSize);
@@ -582,6 +579,8 @@ GameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 
 	character->SetRenderObject(new RenderObject(&character->GetTransform(), enemyMesh, nullptr, basicShader));
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
+
+	character->GetRenderObject()->SetColour(Vector4(1, 0, 1, 1));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitSphereInertia();
@@ -638,7 +637,7 @@ void TutorialGame::InitDefaultFloor() {
 
 void TutorialGame::InitGameExamples() {
 	AddPlayerToWorld(Vector3(0, 15, 0));	// collision volumes dont match meshes well so dont sit on floor properly
-	AddEnemyToWorld(Vector3(5, 25, 0));
+	AddEnemyToWorld(Vector3(5, 25, -100));
 	AddBonusToWorld(Vector3(10, 15, 0));
 
 	AddCubeToWorld(Vector3(5, 50, 0), Vector3(1, 1, 1));
@@ -815,7 +814,7 @@ void TutorialGame::AddMazeToWorld() {
 			if (n.type == 99) AddBonusToWorld(n.position + Vector3(0, 5, 0));
 
 			// e = 101 enemy
-			if (n.type == 101) AddEnemyToWorld(n.position + Vector3(0, 5, 0));
+			//if (n.type == 101) AddEnemyToWorld(n.position + Vector3(0, 5, 0));
 
 			// i = 105 state object
 			if (n.type == 105) AddStateObjectToWorld(n.position + Vector3(0, 5, 0));
@@ -880,6 +879,7 @@ void TutorialGame::EndGame() {
 	text = "Exit (ESC);";
 	Debug::Print(text, Vector2(30, 80));
 
+	gameHasStarted = false;
 }
 
 

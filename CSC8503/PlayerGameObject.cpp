@@ -1,7 +1,7 @@
 #include "PlayerGameObject.h"
 
 PlayerGameObject::PlayerGameObject() {
-
+    name = "player";
 }
 PlayerGameObject::~PlayerGameObject() {
 
@@ -11,7 +11,7 @@ PlayerGameObject::~PlayerGameObject() {
 
 void PlayerGameObject::OnCollisionBegin(NCL::CSC8503::GameObject* otherObject) {
 
-    if (name == "player" && otherObject->GetName() == "coinTools") {
+    if (otherObject->GetName() == "coinTools") {
         otherObject->SetActive(false);
         otherObject->SetBoundingVolume(nullptr);
         score += 10;

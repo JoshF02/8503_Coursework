@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "PlayerGameObject.h"
 
 namespace NCL {
     namespace CSC8503 {
@@ -9,7 +10,7 @@ namespace NCL {
             StateGameObject();
             ~StateGameObject();
 
-            virtual void Update(float dt);
+            void Update(float dt) override;
 
         protected:
             void MoveLeft(float dt);
@@ -17,6 +18,28 @@ namespace NCL {
 
             StateMachine* stateMachine;
             float counter;
+        };
+
+
+        class EnemyGameObject : public GameObject {
+        public:
+            EnemyGameObject(PlayerGameObject* target);
+            ~EnemyGameObject();
+
+            void Update(float dt) override;
+
+            void MoveToPosition(Vector3 targetPos);
+
+            void OnCollisionBegin(GameObject* otherObject) override;
+
+            PlayerGameObject* target;
+            StateMachine* stateMachine;
+
+        protected:
+            std::vector<Vector3> patrolPoints;
+            int currentPatrolIndex;
+            float speed;
+            Vector3 currentPos;
         };
     }
 }

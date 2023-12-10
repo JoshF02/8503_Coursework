@@ -262,12 +262,12 @@ public:
 	MenuState(TutorialGame* g) { this->g = g; };
 
 	PushdownResult OnUpdate(float dt, PushdownState** newState) override {
-		if (Window::GetKeyboard()->KeyDown(KeyCodes::NUM1)) {	// unpause / start for first time
-			*newState = new InitWorldState(g, false);
+		if (Window::GetKeyboard()->KeyDown(KeyCodes::NUM1)) {	// restart / start for first time
+			*newState = new InitWorldState(g, true);
 			return PushdownResult::Push;
 		}
-		if (Window::GetKeyboard()->KeyDown(KeyCodes::NUM2)) {	// restart
-			*newState = new InitWorldState(g, true);
+		if (Window::GetKeyboard()->KeyDown(KeyCodes::NUM2)) {	// unpause 
+			*newState = new InitWorldState(g, false);
 			return PushdownResult::Push;
 		}
 		

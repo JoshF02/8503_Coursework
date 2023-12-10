@@ -55,3 +55,84 @@ void StateGameObject::MoveRight(float dt) {
 	GetPhysicsObject()->AddForce({ 100, 0, 0 });
 	counter -= dt;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EnemyGameObject::EnemyGameObject(PlayerGameObject* gameObject) {
+    this->target = gameObject;
+    this->stateMachine = new StateMachine();
+
+    currentPatrolIndex = 0;
+    patrolPoints = {};
+    patrolPoints.push_back(Vector3(-10, 2.5, -10));
+    patrolPoints.push_back(Vector3(-180, 2.5, -10));
+    patrolPoints.push_back(Vector3(-180, 2.5, -180));
+    patrolPoints.push_back(Vector3(-10, 2.5, -180));
+
+    State* patrol = new State([&](float dt) -> void {
+        Vector3 targetPos = patrolPoints[currentPatrolIndex];
+        speed = 40.0f;
+
+        if ((targetPos - currentPos).LengthSquared() < 1.0f) {
+            currentPatrolIndex++;
+            currentPatrolIndex %= 4;
+            targetPos = patrolPoints[currentPatrolIndex];
+        }
+
+        MoveToPosition(targetPos);
+        });
+
+    State* chase = new State([&](float dt) -> void {
+        Vector3 targetPos = target->GetTransform().GetPosition();
+        speed = 15.0f;
+        MoveToPosition(targetPos);
+        });
+
+    stateMachine->AddState(patrol);
+    stateMachine->AddState(chase);
+
+    stateMachine->AddTransition(new StateTransition(patrol, chase, [&]() -> bool {
+        bool canTransition = (target->GetTransform().GetPosition() - this->GetTransform().GetPosition()).Length() <= 45.0f;
+        if (canTransition) std::cout << "SWITCH TO CHASE\n";
+        return canTransition;
+        }));
+
+    stateMachine->AddTransition(new StateTransition(chase, patrol, [&]() -> bool {
+        bool canTransition = (target->GetTransform().GetPosition() - this->GetTransform().GetPosition()).Length() > 65.0f;
+        if (canTransition) std::cout << "SWITCH TO PATROL\n";
+        return canTransition;
+        }));
+}
+
+EnemyGameObject::~EnemyGameObject() {
+    delete stateMachine;
+}
+
+void EnemyGameObject::Update(float dt) {
+    currentPos = GetTransform().GetPosition();
+    stateMachine->Update(dt);
+}
+
+void EnemyGameObject::MoveToPosition(Vector3 targetPos) {
+    Vector3 direction = (targetPos - currentPos).Normalised();
+    GetPhysicsObject()->SetLinearVelocity(direction * speed);
+}
+
+void EnemyGameObject::OnCollisionBegin(GameObject* otherObject) {
+    if (otherObject->GetName() == "player") {
+        ((PlayerGameObject*)otherObject)->lose = true;
+    }
+}
