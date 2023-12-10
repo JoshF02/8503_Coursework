@@ -61,27 +61,27 @@ void TriggerGameObject::OnCollisionEnd(GameObject* otherObject) {
     triggerActive = false;
 }*/
 
-PressurePlateGameObject::PressurePlateGameObject() {
-
+PressurePlateGameObject::PressurePlateGameObject(bool onTimer) {
+    isOnTimer = onTimer;
 }
 
 void PressurePlateGameObject::OnCollisionBegin(GameObject* otherObject) {
-    //std::cout << counter++ << "ONBEGIN\n";
+    //std::cout << "ONBEGIN\n";
     timeSinceLastEnter = 0;
 
     if (!pressurePlateActive) {
-        std::cout << "ACTIVATING\n";
+        std::cout << "ISONTIMER=" << isOnTimer << " ACTIVATING\n";
         pressurePlateActive = true;
     }
 }
 
 void PressurePlateGameObject::Update(float dt) {
     //std::cout << "UPDATE\n";
-    if (pressurePlateActive) {
+    if (pressurePlateActive && isOnTimer) {
         timeSinceLastEnter += dt;
 
         if (timeSinceLastEnter > 0.5f) {
-            std::cout << "BEEN LONG ENOUGH\n";
+            std::cout << "TIMER REACHED, DEACTIVATING\n";
             timeSinceLastEnter = 0;
             pressurePlateActive = false;
         }

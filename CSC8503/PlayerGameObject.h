@@ -26,6 +26,8 @@ public:
 
     void OnCollisionBegin(GameObject* otherObject) override;
 
+    //void OnCollisionStay(GameObject* otherObject) override;
+
     void OnCollisionEnd(GameObject* otherObject) override;
 
     //void Update(float dt) override;;
@@ -46,9 +48,11 @@ public:
 
     void OnCollisionBegin(GameObject* otherObject) override;
 
+    //void OnCollisionStay(GameObject* otherObject) override;
+
     void OnCollisionEnd(GameObject* otherObject) override;
 
-    //void Update(float dt);
+    //void Update(float dt) override;
 
 protected:
     bool triggerActive = false;
@@ -58,7 +62,7 @@ protected:
 class PressurePlateGameObject : public GameObject {
 
 public:
-    PressurePlateGameObject();
+    PressurePlateGameObject(bool onTimer);
 
     //~PressurePlateGameObject();
 
@@ -70,8 +74,10 @@ public:
 
     void Update(float dt) override;
 
-protected:
     bool pressurePlateActive = false;
-    //int counter = 0;
+
+protected:
     float timeSinceLastEnter = 0;
+
+    bool isOnTimer;
 };

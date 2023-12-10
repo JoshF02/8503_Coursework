@@ -406,7 +406,8 @@ void TutorialGame::InitWorld() {
 	yaw = 0;
 
 	for (int i = 0; i < 4; ++i) {
-		AddPressurePlateToWorld(Vector3(30 * i, 20, 60));
+		bool onTimer = (rand() % 2 > 0.5) ? true : false;
+		AddPressurePlateToWorld(Vector3(30 * i, 20, 60), onTimer);
 	}
 }
 
@@ -437,8 +438,8 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 }
 
 // Adds immovable pressure plate
-PressurePlateGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& position) {
-	PressurePlateGameObject* plate = new PressurePlateGameObject();
+PressurePlateGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& position, bool onTimer) {
+	PressurePlateGameObject* plate = new PressurePlateGameObject(onTimer);
 
 	Vector3 plateSize = Vector3(10, 1, 10);
 	AABBVolume* volume = new AABBVolume(plateSize);
