@@ -450,11 +450,11 @@ int main() {
 	//NetworkedGame* g = new NetworkedGame();
 	PushdownMachine* menuState = new PushdownMachine(new MenuState(g));
 
-	TestStateMachine();
-	TestPathfinding();
-	TestBehaviourTree();
+	//TestStateMachine();
+	//TestPathfinding();
+	//TestBehaviourTree();
 
-	TestNetworking();
+	//TestNetworking();
 
 	w->GetTimer().GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
 	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyCodes::ESCAPE)) {

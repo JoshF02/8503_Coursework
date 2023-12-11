@@ -190,6 +190,7 @@ void TutorialGame::UpdateGame(float dt) {
 
 	Debug::DrawLine(Vector3(), Vector3(0, 100, 0), Vector4(1, 0, 0, 1));
 
+
 	if (testStateObject) {
 		testStateObject->Update(dt);
 	}
@@ -435,7 +436,7 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
-	player = AddPlayerToWorld(Vector3(100, 0.02f, -100));	// adds player to world
+	player = AddPlayerToWorld(Vector3(100, 20.02f, 100));	// adds player to world			WAS 100, 0.02, -100
 	InitPlayer();
 	yaw = 0;
 
@@ -489,6 +490,7 @@ void TutorialGame::InitWorld() {
 	startingArea->GetRenderObject()->SetColour(Vector4(0, 1, 1, 1));
 	AddKeyToWorld(Vector3(170, 2, 160), startingArea, true);
 	AddMazeToWorld();
+	AddBTEnemyToWorld(Vector3(80, 10, 90));
 
 	//InitTestingObjs();
 }
@@ -691,6 +693,7 @@ PlayerGameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	return character;
 }
 
+// state machine enemy
 EnemyGameObject* TutorialGame::AddEnemyToWorld(const Vector3& position, float xMin, float xMax, float zMin, float zMax) {
 	float meshSize = 3.0f;
 	float inverseMass = 0.5f;
@@ -711,6 +714,36 @@ EnemyGameObject* TutorialGame::AddEnemyToWorld(const Vector3& position, float xM
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
 	character->GetRenderObject()->SetColour(Vector4(1, 0, 0, 1));
+
+	character->GetPhysicsObject()->SetInverseMass(inverseMass);
+	character->GetPhysicsObject()->InitSphereInertia();
+
+	world->AddGameObject(character);
+
+	return character;
+}
+
+// behaviour tree advanced enemy
+BTEnemyGameObject* TutorialGame::AddBTEnemyToWorld(const Vector3& position) {	// CHANGE TO GOOSE WITH SPHERE COLLIDER
+	float meshSize = 3.0f;
+	float inverseMass = 0.5f;
+
+	BTEnemyGameObject* character = new BTEnemyGameObject(player, grid);
+	//character->SetName("EnemyPlayer");
+
+	//AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
+	CapsuleVolume* volume = new CapsuleVolume(0.9f * meshSize, 0.7f * meshSize);
+
+	character->SetBoundingVolume((CollisionVolume*)volume);
+
+	character->GetTransform()
+		.SetScale(Vector3(meshSize, meshSize, meshSize))
+		.SetPosition(position);
+
+	character->SetRenderObject(new RenderObject(&character->GetTransform(), enemyMesh, nullptr, basicShader));
+	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
+
+	character->GetRenderObject()->SetColour(Vector4(1, 0, 1, 1));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitSphereInertia();
@@ -933,14 +966,14 @@ void TutorialGame::BridgeConstraintTest() {
 
 
 void TutorialGame::AddMazeToWorld() {
-	NavigationGrid grid("TestGrid2.txt");
+	grid = new NavigationGrid("MazeGrid.txt");
 
-	for (int y = 0; y < grid.gridHeight; ++y) {
-		for (int x = 0; x < grid.gridWidth; ++x) {
-			GridNode& n = grid.allNodes[(grid.gridWidth * y) + x];
+	for (int y = 0; y < grid->gridHeight; ++y) {
+		for (int x = 0; x < grid->gridWidth; ++x) {
+			GridNode& n = grid->allNodes[(grid->gridWidth * y) + x];
 
 			// x = 120 in decimal, wall
-			if (n.type == 120) AddCubeToWorld(n.position + Vector3(5, 5, 5), { (float)grid.nodeSize / 2,(float)grid.nodeSize / 2,(float)grid.nodeSize / 2 }, 0);
+			if (n.type == 120) AddCubeToWorld(n.position + Vector3(0, 5, 0), { (float)grid->nodeSize / 2,(float)grid->nodeSize / 2,(float)grid->nodeSize / 2 }, 0);
 
 			// c = 99 coin
 			//if (n.type == 99) AddBonusToWorld(n.position + Vector3(0, 5, 0));
@@ -952,7 +985,7 @@ void TutorialGame::AddMazeToWorld() {
 			//if (n.type == 105) AddStateObjectToWorld(n.position + Vector3(0, 5, 0));
 
 			// p = 112 player
-			//if (n.type == 112) AddPlayerToWorld(n.position + Vector3(0, 5, 0));
+			if (n.type == 112) AddPlayerToWorld(n.position + Vector3(0, 5, 0));
 		}
 	}
 }

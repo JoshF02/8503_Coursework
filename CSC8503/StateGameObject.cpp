@@ -183,3 +183,75 @@ void EnemyGameObject::OnCollisionBegin(GameObject* otherObject) {
         ((PlayerGameObject*)otherObject)->lose = true;
     }
 }
+
+
+
+
+
+
+
+
+BTEnemyGameObject::BTEnemyGameObject(PlayerGameObject* player, NavigationGrid* grid) {
+    this->player = player;
+    this->grid = grid;
+}
+
+BTEnemyGameObject::~BTEnemyGameObject() {
+
+}
+
+void BTEnemyGameObject::Update(float dt) {
+
+    // Pathfinding test
+    std::vector<Vector3> testNodes = {};
+    NavigationPath outPath;
+    Vector3 startPos = GetTransform().GetPosition();
+    Vector3 endPos = player->GetTransform().GetPosition();
+    startPos.y = 0;
+    endPos.y = 0;
+
+    bool found = false;
+    if (endPos.x > 0 && endPos.z > 0) {
+        found = grid->FindPath(startPos, endPos, outPath);
+
+        Vector3 pos;
+        while (outPath.PopWaypoint(pos)) {
+            testNodes.push_back(pos);
+        }
+
+        for (int i = 1; i < testNodes.size(); ++i) {
+            Vector3 a = testNodes[i - 1];
+            Vector3 b = testNodes[i];
+
+            Debug::DrawLine(a, b, Vector4(0, 1, 0, 1));
+        }
+    }
+
+    /*if (!testNodes.empty()) {
+        Vector3 nodeDir = testNodes[currentNodeIndex] - startPos;
+
+        if (nodeDir.LengthSquared() < 1.0f) {
+            currentNodeIndex++;
+            nodeDir = testNodes[currentNodeIndex] - startPos;
+        }
+
+        GetPhysicsObject()->AddForce(nodeDir * 100.0f);
+    }*/
+    if (found && testNodes.size() > 1) {
+        //Vector3 nodeDir = testNodes[1] - startPos;
+        //GetPhysicsObject()->AddForce(nodeDir * 10.0f);
+
+        /*float alpha = dt;
+        Vector3 lerp = (testNodes[1] * alpha) + (startPos * (1 - alpha));
+        lerp.y = GetTransform().GetPosition().y;
+        GetTransform().SetPosition(lerp);*/
+
+        Vector3 direction = (testNodes[1] - startPos).Normalised();
+        GetPhysicsObject()->SetLinearVelocity(direction * 10);
+
+        // face towards target position
+        float angle = atan2(-direction.x, -direction.z);
+        float angleDegrees = Maths::RadiansToDegrees(angle);
+        GetTransform().SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), angleDegrees));
+    }
+}

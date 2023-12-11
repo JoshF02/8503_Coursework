@@ -44,5 +44,19 @@ namespace NCL {
 
             GameWorld* world;
         };
+
+
+        class BTEnemyGameObject : public GameObject {
+        public:
+            BTEnemyGameObject(PlayerGameObject* player, NavigationGrid* grid);
+            ~BTEnemyGameObject();
+
+            void Update(float dt) override;
+
+        protected:
+            PlayerGameObject* player;
+            NavigationGrid* grid;
+            int currentNodeIndex = 0;
+        };
     }
 }

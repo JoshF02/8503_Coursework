@@ -59,6 +59,7 @@ namespace NCL {
 
 			PlayerGameObject* AddPlayerToWorld(const Vector3& position);
 			EnemyGameObject* AddEnemyToWorld(const Vector3& position, float xMin, float xMax, float zMin, float zMax);
+			BTEnemyGameObject* AddBTEnemyToWorld(const Vector3& position);
 			GameObject* AddBonusToWorld(const Vector3& position);
 
 			StateGameObject* AddStateObjectToWorld(const Vector3& position);
@@ -122,6 +123,8 @@ namespace NCL {
 			float maxTimer = 300.0f;
 
 			PlayerGameObject* player = nullptr;
+
+			NavigationGrid* grid;
 		};
 	}
 }
