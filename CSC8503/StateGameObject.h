@@ -53,10 +53,17 @@ namespace NCL {
 
             void Update(float dt) override;
 
+            void MoveToPosition(Vector3 targetPos);
+
         protected:
             PlayerGameObject* player;
             NavigationGrid* grid;
             int currentNodeIndex = 0;
+            float timeSincePathfind = 0;
+            bool foundPath = false;
+            Vector3 currentPos;
+            float speed = 10;
+            std::vector<Vector3> testNodes = {};
         };
     }
 }

@@ -202,56 +202,55 @@ BTEnemyGameObject::~BTEnemyGameObject() {
 
 void BTEnemyGameObject::Update(float dt) {
 
-    // Pathfinding test
-    std::vector<Vector3> testNodes = {};
-    NavigationPath outPath;
-    Vector3 startPos = GetTransform().GetPosition();
-    Vector3 endPos = player->GetTransform().GetPosition();
-    startPos.y = 0;
-    endPos.y = 0;
+    currentPos = GetTransform().GetPosition();
+    Vector3 playerPos = player->GetTransform().GetPosition();
+    currentPos.y = 0;
+    playerPos.y = 0;
 
-    bool found = false;
-    if (endPos.x > 0 && endPos.z > 0) {
-        found = grid->FindPath(startPos, endPos, outPath);
+    timeSincePathfind += dt;
+
+    // make this a behaviour action - if foundPath output success, otherwise failure
+    if (playerPos.x > 0 && playerPos.z > 0 && timeSincePathfind > 5) {    // only pathfind every 5 seconds, if player within maze
+        testNodes = {};
+        timeSincePathfind = 0;
+        currentNodeIndex = 0;
+
+        NavigationPath outPath;
+        foundPath = grid->FindPath(currentPos, playerPos, outPath); // pathfinds to player
 
         Vector3 pos;
-        while (outPath.PopWaypoint(pos)) {
+        while (outPath.PopWaypoint(pos)) {  // converts path into Vector3 position nodes
             testNodes.push_back(pos);
         }
+    }
 
-        for (int i = 1; i < testNodes.size(); ++i) {
+    // make this a behaviour action - if pathfinding action successful do this, if end of path reached output success, otherwise ongoing
+    if (foundPath) {
+        for (int i = 1; i < testNodes.size(); ++i) {    // draws path for debug
             Vector3 a = testNodes[i - 1];
             Vector3 b = testNodes[i];
 
             Debug::DrawLine(a, b, Vector4(0, 1, 0, 1));
         }
-    }
 
-    /*if (!testNodes.empty()) {
-        Vector3 nodeDir = testNodes[currentNodeIndex] - startPos;
+        Vector3 nextPathPos = testNodes[currentNodeIndex];
 
-        if (nodeDir.LengthSquared() < 1.0f) {
+        if ((nextPathPos - currentPos).LengthSquared() < 1.0f && currentNodeIndex < (testNodes.size() - 1)) { // if close to current node but not at end of path
             currentNodeIndex++;
-            nodeDir = testNodes[currentNodeIndex] - startPos;
+            nextPathPos = testNodes[currentNodeIndex];
         }
 
-        GetPhysicsObject()->AddForce(nodeDir * 100.0f);
-    }*/
-    if (found && testNodes.size() > 1) {
-        //Vector3 nodeDir = testNodes[1] - startPos;
-        //GetPhysicsObject()->AddForce(nodeDir * 10.0f);
-
-        /*float alpha = dt;
-        Vector3 lerp = (testNodes[1] * alpha) + (startPos * (1 - alpha));
-        lerp.y = GetTransform().GetPosition().y;
-        GetTransform().SetPosition(lerp);*/
-
-        Vector3 direction = (testNodes[1] - startPos).Normalised();
-        GetPhysicsObject()->SetLinearVelocity(direction * 10);
-
-        // face towards target position
-        float angle = atan2(-direction.x, -direction.z);
-        float angleDegrees = Maths::RadiansToDegrees(angle);
-        GetTransform().SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), angleDegrees));
+        MoveToPosition(nextPathPos);
     }
+}
+
+void BTEnemyGameObject::MoveToPosition(Vector3 targetPos) {
+    Vector3 direction = (targetPos - currentPos).Normalised();
+    GetPhysicsObject()->SetLinearVelocity(direction * speed);
+
+    // face towards target position
+    float angle = atan2(-direction.x, -direction.z);
+    float angleDegrees = Maths::RadiansToDegrees(angle);
+    GetTransform().SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), angleDegrees));
+
 }
