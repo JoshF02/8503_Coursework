@@ -160,7 +160,7 @@ void TutorialGame::UpdateGame(float dt) {
 		}
 	}*/
 
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::B)) {	// TEST GAME OVER
+	/*if (Window::GetKeyboard()->KeyPressed(KeyCodes::B)) {	// TEST GAME OVER
 		player->itemsLeft--;
 		player->itemsCollected++;
 
@@ -170,7 +170,9 @@ void TutorialGame::UpdateGame(float dt) {
 	}
 	if (Window::GetKeyboard()->KeyPressed(KeyCodes::N)) {	// TEST GAME OVER
 		player->lose = true;
-	}
+	}*/
+	/*if (Window::GetKeyboard()->KeyPressed(KeyCodes::B)) player->shouldTarget = !player->shouldTarget;*/
+
 
 
 	if (!player->win && !player->lose) {
@@ -380,6 +382,10 @@ void TutorialGame::LockedObjectMovement() {
 		float torque = Window::GetMouse()->GetWheelMovement() * 100.0f;
 		pickedUpObj->GetPhysicsObject()->AddTorque(Vector3(torque, 0, 0));
 	}
+
+	/*if (Window::GetKeyboard()->KeyPressed(KeyCodes::U)) {
+		std::cout << player->GetTransform().GetPosition();
+	}*/
 }
 
 void TutorialGame::DebugObjectMovement() {
@@ -436,7 +442,7 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
-	player = AddPlayerToWorld(Vector3(100, 20.02f, 100));	// adds player to world			WAS 100, 0.02, -100
+	player = AddPlayerToWorld(Vector3(100, 0.02f, -100));	// adds player to world			WAS 100, 0.02, -100
 	InitPlayer();
 	yaw = 0;
 
@@ -490,7 +496,7 @@ void TutorialGame::InitWorld() {
 	startingArea->GetRenderObject()->SetColour(Vector4(0, 1, 1, 1));
 	AddKeyToWorld(Vector3(170, 2, 160), startingArea, true);
 	AddMazeToWorld();
-	AddBTEnemyToWorld(Vector3(80, 10, 90));
+	AddBTEnemyToWorld(Vector3(80, 2, 90));
 
 	//InitTestingObjs();
 }

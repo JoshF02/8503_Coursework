@@ -1,6 +1,10 @@
 #pragma once
 #include "GameObject.h"
 #include "PlayerGameObject.h"
+#include "BehaviourNode.h"
+#include "BehaviourSelector.h"
+#include "BehaviourSequence.h"
+#include "BehaviourAction.h"
 
 namespace NCL {
     namespace CSC8503 {
@@ -54,17 +58,34 @@ namespace NCL {
             void Update(float dt) override;
 
             void MoveToPosition(Vector3 targetPos);
-            void Pathfind(Vector3 targetPos);
+            bool Pathfind(Vector3 targetPos);
 
         protected:
             PlayerGameObject* player;
             NavigationGrid* grid;
-            int currentNodeIndex = 0;
             float timeSincePathfind = 0;
-            bool foundPath = false;
             Vector3 currentPos;
+            Vector3 playerPos;
             float speed = 10;
-            std::vector<Vector3> testNodes = {};
+            std::vector<Vector3> pathNodes = {};
+            int currentNodeIndex = 0;
+            std::vector<Vector3> patrolPoints = {};
+            int currentPatrolIndex = 0;
+
+            BehaviourState currentState = Ongoing;
+
+            BehaviourSequence* rootSequence;
+
+            BehaviourSelector* patrolSelector;
+            BehaviourAction* detectPlayer;
+            BehaviourAction* moveOnPathPatrol;
+            BehaviourAction* pathfindForPatrol;
+
+            BehaviourSelector* pathfindPlayerSelector;
+            BehaviourAction* moveOnPathToPlayer;
+            BehaviourAction* pathfindToPlayer;
+
+            BehaviourAction* closeMoveToPlayer;
         };
     }
 }

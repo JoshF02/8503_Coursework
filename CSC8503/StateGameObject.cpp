@@ -194,6 +194,103 @@ void EnemyGameObject::OnCollisionBegin(GameObject* otherObject) {
 BTEnemyGameObject::BTEnemyGameObject(PlayerGameObject* player, NavigationGrid* grid) {
     this->player = player;
     this->grid = grid;
+
+    patrolPoints.push_back(Vector3(105, 5, 185));
+    patrolPoints.push_back(Vector3(170, 5, 15));
+    patrolPoints.push_back(Vector3(80, 5, 90));
+    patrolPoints.push_back(Vector3(55, 5, 85));
+
+
+    // detect player - ***NOTE*** change to only if holding heist item / raycast sees them
+    detectPlayer = new BehaviourAction("Detect Player", [&](float dt, BehaviourState state)->BehaviourState {
+        if (playerPos.x > 0 && playerPos.z > 0 && this->player->shouldTarget) return Success;
+        else return Failure;
+        }
+    );
+    
+    // move along path to patrol point
+    moveOnPathPatrol = new BehaviourAction("Move On Path Patrol", [&](float dt, BehaviourState state)->BehaviourState {
+        if (pathNodes.empty()) return Failure; // if no path
+
+        Vector3 nextPathPos = pathNodes[currentNodeIndex];
+
+        if ((nextPathPos - currentPos).LengthSquared() < 1.0f) { // if close to current node
+            if (currentNodeIndex < (pathNodes.size() - 1)) {    // if node isnt the final node, target next node
+                currentNodeIndex++;
+                nextPathPos = pathNodes[currentNodeIndex];
+            }
+            else {
+                currentPatrolIndex++;
+                currentPatrolIndex %= 4;
+                return Failure; // if final node reached, return failure so new path can be generated
+            }
+        }
+
+        MoveToPosition(nextPathPos);  // otherwise move towards next node
+        return Ongoing;
+        }
+    );
+
+    // generate path to patrol point
+    pathfindForPatrol = new BehaviourAction("Pathfind For Patrol", [&](float dt, BehaviourState state)->BehaviourState {
+        if (Pathfind(patrolPoints[currentPatrolIndex])) return Ongoing;
+        else return Failure;
+        }
+    );
+
+    // move along path to player
+    moveOnPathToPlayer = new BehaviourAction("Move On Path To Player", [&](float dt, BehaviourState state)->BehaviourState {
+        if (pathNodes.empty() || timeSincePathfind > 1) return Failure; // if no path or should pathfind again due to time
+
+        Vector3 nextPathPos = pathNodes[currentNodeIndex];
+
+        if ((nextPathPos - currentPos).LengthSquared() < 1.0f) { // if close to current node
+            if (currentNodeIndex < (pathNodes.size() - 1)) {    // if node isnt the final node, target next node
+                currentNodeIndex++;
+                nextPathPos = pathNodes[currentNodeIndex];
+            }
+            else {
+                return Success; // if final node reached, return success
+            }
+        }
+
+        MoveToPosition(nextPathPos);  // otherwise move towards next node
+        return Ongoing;
+        }
+    );
+
+    // generate path to player
+    pathfindToPlayer = new BehaviourAction("Pathfind To Player", [&](float dt, BehaviourState state)->BehaviourState {
+        if (Pathfind(playerPos)) return Ongoing;    
+        else return Failure;
+        }
+    );
+
+
+    // Move directly towards player (when end of path reached)
+    closeMoveToPlayer = new BehaviourAction("Close Move To Player", [&](float dt, BehaviourState state)->BehaviourState {
+        if ((playerPos - currentPos).LengthSquared() < 12.0f) return Success;   // caught player, end the game
+
+        MoveToPosition(playerPos);  // otherwise move towards player
+        return Ongoing;
+        }
+    );
+
+
+
+    patrolSelector = new BehaviourSelector("Patrol Selector");
+    patrolSelector->AddChild(detectPlayer);
+    patrolSelector->AddChild(moveOnPathPatrol);
+    patrolSelector->AddChild(pathfindForPatrol);
+
+    pathfindPlayerSelector = new BehaviourSelector("Pathfind Player Selector");
+    pathfindPlayerSelector->AddChild(moveOnPathToPlayer);
+    pathfindPlayerSelector->AddChild(pathfindToPlayer);
+
+    rootSequence = new BehaviourSequence("Root Sequence");
+    rootSequence->AddChild(patrolSelector);
+    rootSequence->AddChild(pathfindPlayerSelector);
+    rootSequence->AddChild(closeMoveToPlayer);
 }
 
 BTEnemyGameObject::~BTEnemyGameObject() {
@@ -203,38 +300,30 @@ BTEnemyGameObject::~BTEnemyGameObject() {
 void BTEnemyGameObject::Update(float dt) {
 
     currentPos = GetTransform().GetPosition();
-    Vector3 playerPos = player->GetTransform().GetPosition();
+    playerPos = player->GetTransform().GetPosition();
     currentPos.y = 0;
     playerPos.y = 0;
 
     timeSincePathfind += dt;
 
-    if (playerPos.x > 0 && playerPos.z > 0 && timeSincePathfind > 1) {    // only pathfind every second, if player within maze
-        Pathfind(playerPos);
-    }
-
-    if (foundPath) {
-        for (int i = 1; i < testNodes.size(); ++i) {    // draws path for debug
-            Vector3 a = testNodes[i - 1];
-            Vector3 b = testNodes[i];
+    if (!pathNodes.empty()) {
+        for (int i = 1; i < pathNodes.size(); ++i) {    // draws path for debug
+            Vector3 a = pathNodes[i - 1];
+            Vector3 b = pathNodes[i];
 
             Debug::DrawLine(a, b, Vector4(0, 1, 0, 1));
         }
-
-        Vector3 nextPathPos = testNodes[currentNodeIndex];
-
-        if ((nextPathPos - currentPos).LengthSquared() < 1.0f && currentNodeIndex < (testNodes.size() - 1)) { // if close to current node but not at end of path
-            currentNodeIndex++;
-            nextPathPos = testNodes[currentNodeIndex];
-        }
-
-        MoveToPosition(nextPathPos);
     }
+
+    if (currentState == Ongoing || currentState == Failure) currentState = rootSequence->Execute(dt);
+
+    if (currentState == Success) player->lose = true;   // player caught so end game
+    else if (currentState == Failure) std::cout << "Behaviour Tree error\n";    // error
 }
 
 void BTEnemyGameObject::MoveToPosition(Vector3 targetPos) {
     Vector3 direction = (targetPos - currentPos).Normalised();
-    GetPhysicsObject()->SetLinearVelocity(direction * speed);
+    GetPhysicsObject()->SetLinearVelocity(Vector3(0, GetPhysicsObject()->GetLinearVelocity().y, 0) + direction * speed);
 
     float angle = atan2(-direction.x, -direction.z);
     float angleDegrees = Maths::RadiansToDegrees(angle);
@@ -242,16 +331,18 @@ void BTEnemyGameObject::MoveToPosition(Vector3 targetPos) {
 
 }
 
-void BTEnemyGameObject::Pathfind(Vector3 targetPos) { // pathfinds to target position
-    testNodes = {};
+bool BTEnemyGameObject::Pathfind(Vector3 targetPos) { // pathfinds to target position
+    pathNodes = {};
     timeSincePathfind = 0;
     currentNodeIndex = 0;
 
     NavigationPath outPath;
-    foundPath = grid->FindPath(currentPos, targetPos, outPath); 
+    bool foundPath = grid->FindPath(currentPos, targetPos, outPath); 
 
     Vector3 pos;
     while (outPath.PopWaypoint(pos)) {  // converts path into Vector3 position nodes
-        testNodes.push_back(pos);
+        pathNodes.push_back(pos);
     }
+
+    return foundPath;
 }
