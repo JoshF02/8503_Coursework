@@ -209,22 +209,10 @@ void BTEnemyGameObject::Update(float dt) {
 
     timeSincePathfind += dt;
 
-    // make this a behaviour action - if foundPath output success, otherwise failure
-    if (playerPos.x > 0 && playerPos.z > 0 && timeSincePathfind > 5) {    // only pathfind every 5 seconds, if player within maze
-        testNodes = {};
-        timeSincePathfind = 0;
-        currentNodeIndex = 0;
-
-        NavigationPath outPath;
-        foundPath = grid->FindPath(currentPos, playerPos, outPath); // pathfinds to player
-
-        Vector3 pos;
-        while (outPath.PopWaypoint(pos)) {  // converts path into Vector3 position nodes
-            testNodes.push_back(pos);
-        }
+    if (playerPos.x > 0 && playerPos.z > 0 && timeSincePathfind > 1) {    // only pathfind every second, if player within maze
+        Pathfind(playerPos);
     }
 
-    // make this a behaviour action - if pathfinding action successful do this, if end of path reached output success, otherwise ongoing
     if (foundPath) {
         for (int i = 1; i < testNodes.size(); ++i) {    // draws path for debug
             Vector3 a = testNodes[i - 1];
@@ -248,9 +236,22 @@ void BTEnemyGameObject::MoveToPosition(Vector3 targetPos) {
     Vector3 direction = (targetPos - currentPos).Normalised();
     GetPhysicsObject()->SetLinearVelocity(direction * speed);
 
-    // face towards target position
     float angle = atan2(-direction.x, -direction.z);
     float angleDegrees = Maths::RadiansToDegrees(angle);
     GetTransform().SetOrientation(Quaternion::AxisAngleToQuaterion(Vector3(0, 1, 0), angleDegrees));
 
+}
+
+void BTEnemyGameObject::Pathfind(Vector3 targetPos) { // pathfinds to target position
+    testNodes = {};
+    timeSincePathfind = 0;
+    currentNodeIndex = 0;
+
+    NavigationPath outPath;
+    foundPath = grid->FindPath(currentPos, targetPos, outPath); 
+
+    Vector3 pos;
+    while (outPath.PopWaypoint(pos)) {  // converts path into Vector3 position nodes
+        testNodes.push_back(pos);
+    }
 }

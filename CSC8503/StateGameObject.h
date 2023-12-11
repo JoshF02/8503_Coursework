@@ -54,6 +54,7 @@ namespace NCL {
             void Update(float dt) override;
 
             void MoveToPosition(Vector3 targetPos);
+            void Pathfind(Vector3 targetPos);
 
         protected:
             PlayerGameObject* player;
