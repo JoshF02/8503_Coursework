@@ -39,7 +39,7 @@ public:
     bool win = false;
     bool lose = false;
 
-    bool holdingHeistItem = false;  // MAKE THIS TRUE IF HOLDING HEIST ITEM
+    bool holdingHeistItem = false;  
 
     std::vector<GameObject*> alreadyScoredFor = {};
 };

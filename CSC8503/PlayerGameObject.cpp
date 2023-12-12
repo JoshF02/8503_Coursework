@@ -12,50 +12,25 @@ PlayerGameObject::~PlayerGameObject() {
 
 void PlayerGameObject::OnCollisionBegin(NCL::CSC8503::GameObject* otherObject) {
 
-    /*if (otherObject->GetName() == "coinTools") {
-        otherObject->SetActive(false);
-        otherObject->SetBoundingVolume(nullptr);
-        score += 10;
-        itemsCollected++;
-        itemsLeft--;
-
-        if (itemsLeft == 0) {
-            win = true;
-        }
-    }*/
-
     if (otherObject->GetName() == "key" && !(std::find(alreadyScoredFor.begin(), alreadyScoredFor.end(), otherObject) != alreadyScoredFor.end())) {
         score += 5;
         alreadyScoredFor.push_back(otherObject);
 
         itemsCollected++;
         itemsLeft--;
+    }
+    if (otherObject->GetName() == "heistItem" && !(std::find(alreadyScoredFor.begin(), alreadyScoredFor.end(), otherObject) != alreadyScoredFor.end())) {
+        score += 20;
+        alreadyScoredFor.push_back(otherObject);
 
-        /*if (itemsLeft == 0) {
-            win = true;
-        }*/
+        itemsCollected++;
+        itemsLeft--;
     }
     if (otherObject->GetName() == "plate" && !(std::find(alreadyScoredFor.begin(), alreadyScoredFor.end(), otherObject) != alreadyScoredFor.end())) {
         score += 5;
         alreadyScoredFor.push_back(otherObject);
     }
-
     if (otherObject->GetName() == "BTEnemy" || otherObject->GetName() == "Enemy") lose = true;
-
-    //std::cout << counter << " ONBEGIN\n";
-
-    /*if (name == "player" && otherObject->GetName() == "sphereTools") {
-        otherObject->SetActive(false);
-        otherObject->SetBoundingVolume(nullptr);
-        score += 10;
-        itemsCollected++;
-        itemsLeft--;
-    }*/
-    /*if (name == "player" && otherObject->GetName() == "keyTools") {
-        otherObject->SetIsActive(false);
-        otherObject->SetBoundingVolume(nullptr);
-        keyNum++;
-    }*/
 }
 
 void PlayerGameObject::OnCollisionEnd(NCL::CSC8503::GameObject* otherObject) {

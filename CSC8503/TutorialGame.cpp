@@ -443,7 +443,7 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
-	player = AddPlayerToWorld(Vector3(100, 0.02f, -100));	// adds player to world					
+	player = AddPlayerToWorld(Vector3(100, 0.02f, -100));	// adds player to world	
 	InitPlayer();
 	yaw = 0;
 
@@ -467,6 +467,7 @@ void TutorialGame::InitWorld() {
 	GameObject* zone1Door = AddCubeToWorld(Vector3(-160, 5, 1), Vector3(10, 5, 1), 0);
 	zone1Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
 	AddPressurePlateToWorld(Vector3(-160, 0.01f, -70), false, zone1Door);
+
 	AddEnemyToWorld(Vector3(-10, 2.5, -100), -10, -180, -10, -180);
 	AddEnemyToWorld(Vector3(-30, 2.5, -70), -30, -160, -30, -160);
 	AddEnemyToWorld(Vector3(10, 2.5, -100), 10, 180, -10, -180);
@@ -477,6 +478,7 @@ void TutorialGame::InitWorld() {
 	GameObject* zone2Door = AddCubeToWorld(Vector3(-100, 5, 100), Vector3(1, 5, 10), 0);
 	zone2Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
 	AddKeyToWorld(Vector3(-170, 2, -160), zone2Door);	// put at end of bridge in zone 1
+
 	AddOBBToWorld(Vector3(-170, 2, 150), Vector3(2, 2, 2));
 	AddOBBToWorld(Vector3(-180, 2, 150), Vector3(2, 2, 2));
 	AddOBBToWorld(Vector3(-170, 2, 140), Vector3(2, 2, 2));
@@ -496,9 +498,21 @@ void TutorialGame::InitWorld() {
 	GameObject* startingArea = AddCubeToWorld(Vector3(100, 0.01f, -100), Vector3(10, 0.01f, 10), 0);
 	startingArea->GetRenderObject()->SetColour(Vector4(0, 1, 1, 1));
 	KeyGameObject* heistItem = AddKeyToWorld(Vector3(90, 2, 90), startingArea, true);
-	heistItem->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
+	heistItem->GetRenderObject()->SetColour(Vector4(1, 1, 0, 1));
+
 	AddMazeToWorld();
-	AddBTEnemyToWorld(Vector3(80, 2, 80));
+	AddBTEnemyToWorld(Vector3(80, 2, 90));
+
+	GameObject* mazeExitDoor = AddCubeToWorld(Vector3(85, 5, 5), Vector3(5, 5, 5), 0);
+	mazeExitDoor->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
+	AddPressurePlateToWorld(Vector3(20, 0.01f, 170), false, mazeExitDoor);
+
+	GameObject* alarm = AddCubeToWorld(Vector3(138, 5.05f, 135), Vector3(1, 5, 1), 0);	// alarm and lock objects
+	alarm->GetRenderObject()->SetColour(Vector4(1, 0, 0, 1));
+	GameObject* mazeDoorLock = AddCubeToWorld(Vector3(85, -10, 5), Vector3(5, 5, 5), 0);
+	mazeDoorLock->GetRenderObject()->SetColour(Vector4(1, 0, 0, 1));
+	SwitchGameObject* alarmLock = AddPressurePlateToWorld(Vector3(135, 0.01f, 135), false, mazeDoorLock, 0.5f);
+	alarmLock->GetRenderObject()->SetColour(Vector4(1, 0, 0, 1));
 
 	//InitTestingObjs();
 }
@@ -556,12 +570,12 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 }
 
 // Adds immovable pressure plate
-SwitchGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& position, bool onTimer, GameObject* door) {
+SwitchGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& position, bool onTimer, GameObject* door, float scaleFactor) {
 	SwitchGameObject* plate = new SwitchGameObject(onTimer, door);
 	std::string name = "plate";
 	plate->SetName(name);
 
-	Vector3 plateSize = Vector3(10, 0.01f, 10);
+	Vector3 plateSize = Vector3(10 * scaleFactor, 0.01f, 10 * scaleFactor);
 	AABBVolume* volume = new AABBVolume(plateSize);
 	plate->SetBoundingVolume((CollisionVolume*)volume);
 	plate->GetTransform()

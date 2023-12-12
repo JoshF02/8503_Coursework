@@ -72,7 +72,7 @@ namespace NCL {
 			void UpdateScoreAndTimer(float dt);
 			void EndGame();
 
-			SwitchGameObject* AddPressurePlateToWorld(const Vector3& position, bool onTimer, GameObject* door);
+			SwitchGameObject* AddPressurePlateToWorld(const Vector3& position, bool onTimer, GameObject* door, float scaleFactor = 1.0f);
 			KeyGameObject* AddKeyToWorld(const Vector3& position, GameObject* door, bool isHeistItem = false);
 
 #ifdef USEVULKAN

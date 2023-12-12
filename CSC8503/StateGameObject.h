@@ -91,7 +91,7 @@ namespace NCL {
 
             BehaviourAction* closeMoveToPlayer;
 
-            Vector3 alarmPos = Vector3(170, 0, 180);
+            Vector3 alarmPos = Vector3(135, 0, 135);
             int reachAlarmStatus = 0;   // 0 for no path, 1 for path but hasnt reached, 2 for has reached
             GameWorld* world;
 
