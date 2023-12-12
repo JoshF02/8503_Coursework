@@ -40,6 +40,8 @@ void PlayerGameObject::OnCollisionBegin(NCL::CSC8503::GameObject* otherObject) {
         alreadyScoredFor.push_back(otherObject);
     }
 
+    if (otherObject->GetName() == "BTEnemy" || otherObject->GetName() == "Enemy") lose = true;
+
     //std::cout << counter << " ONBEGIN\n";
 
     /*if (name == "player" && otherObject->GetName() == "sphereTools") {
@@ -148,7 +150,7 @@ void KeyGameObject::OnCollisionBegin(GameObject* otherObject) { // deletes key a
         player->score += 10;
 
         if (isHeistItem && player) {
-            player->score += 60;
+            player->score += 50;
             player->win = true;
         }
 

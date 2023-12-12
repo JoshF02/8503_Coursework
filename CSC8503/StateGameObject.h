@@ -34,7 +34,7 @@ namespace NCL {
 
             void MoveToPosition(Vector3 targetPos);
 
-            void OnCollisionBegin(GameObject* otherObject) override;
+            //void OnCollisionBegin(GameObject* otherObject) override;
 
             PlayerGameObject* target;
             StateMachine* stateMachine;
@@ -52,7 +52,7 @@ namespace NCL {
 
         class BTEnemyGameObject : public GameObject {
         public:
-            BTEnemyGameObject(PlayerGameObject* player, NavigationGrid* grid);
+            BTEnemyGameObject(PlayerGameObject* player, NavigationGrid* grid, GameWorld* world);
             ~BTEnemyGameObject();
 
             void Update(float dt) override;
@@ -93,6 +93,12 @@ namespace NCL {
 
             Vector3 alarmPos = Vector3(170, 0, 180);
             int reachAlarmStatus = 0;   // 0 for no path, 1 for path but hasnt reached, 2 for has reached
+            GameWorld* world;
+
+            Vector3 currentPosWithY;
+            Vector3 playerPosWithY;
+
+            float fov = 70; // angle of area in front of enemy that it can detect player within
         };
     }
 }

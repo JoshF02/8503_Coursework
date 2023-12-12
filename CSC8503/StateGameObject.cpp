@@ -178,11 +178,11 @@ void EnemyGameObject::MoveToPosition(Vector3 targetPos) {
 
 }
 
-void EnemyGameObject::OnCollisionBegin(GameObject* otherObject) {
+/*void EnemyGameObject::OnCollisionBegin(GameObject* otherObject) {
     if (otherObject->GetName() == "player") {
         ((PlayerGameObject*)otherObject)->lose = true;
     }
-}
+}*/
 
 
 
@@ -191,9 +191,10 @@ void EnemyGameObject::OnCollisionBegin(GameObject* otherObject) {
 
 
 
-BTEnemyGameObject::BTEnemyGameObject(PlayerGameObject* player, NavigationGrid* grid) {
+BTEnemyGameObject::BTEnemyGameObject(PlayerGameObject* player, NavigationGrid* grid, GameWorld* world) {
     this->player = player;
     this->grid = grid;
+    this->world = world;
 
     patrolPoints.push_back(Vector3(105, 5, 185));
     patrolPoints.push_back(Vector3(170, 5, 15));
@@ -204,9 +205,25 @@ BTEnemyGameObject::BTEnemyGameObject(PlayerGameObject* player, NavigationGrid* g
     // detect player
     detectPlayer = new BehaviourAction("Detect Player", [&](float dt, BehaviourState state)->BehaviourState {
         if (playerPos.x > 0 && playerPos.z > 0) {
-            if (this->player->holdingHeistItem) return Success;
+            if (this->player->holdingHeistItem) return Success; // if holding heist item then auto detect
 
-            //if raycast to player true, return Success
+            Vector3 rayDir = (playerPosWithY - currentPosWithY).Normalised();    
+            Vector3 rayPos = currentPosWithY;
+            
+            Vector3 facingDir =  GetTransform().GetOrientation() * Vector3(0, 0, -1); 
+            float angle = acos(Vector3::Dot(rayDir, facingDir) / sqrt(rayDir.LengthSquared() * facingDir.LengthSquared()));
+            float angleDeg = Maths::RadiansToDegrees(angle);
+            if (angleDeg > fov) return Failure; // if player not within enemy FOV then dont raycast to them, cant 'see'
+
+
+            RayCollision closestCollision;  // raycast to player to detect if visible
+            Ray r = Ray(rayPos, rayDir);
+            if (this->world->Raycast(r, closestCollision, true, this, 65.0f)) {
+                if ((PlayerGameObject*)closestCollision.node == this->player) {
+                    std::cout << "BT CAN SEE PLAYER - CHASE\n";
+                    return Success;
+                }
+            }
         }
         else return Failure;
         }
@@ -348,7 +365,9 @@ void BTEnemyGameObject::Update(float dt) {
 
     currentPos = GetTransform().GetPosition();
     playerPos = player->GetTransform().GetPosition();
+    currentPosWithY = currentPos;
     currentPos.y = 0;
+    playerPosWithY = playerPos;
     playerPos.y = 0;
 
     timeSincePathfind += dt;

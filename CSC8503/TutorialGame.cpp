@@ -707,7 +707,8 @@ EnemyGameObject* TutorialGame::AddEnemyToWorld(const Vector3& position, float xM
 	float inverseMass = 0.5f;
 
 	EnemyGameObject* character = new EnemyGameObject(player, world, xMin, xMax, zMin, zMax);
-	//character->SetName("EnemyPlayer");
+	std::string name = "Enemy";
+	character->SetName(name);
 
 	//AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
 	CapsuleVolume* volume = new CapsuleVolume(0.9f * meshSize, 0.7f * meshSize);
@@ -736,8 +737,9 @@ BTEnemyGameObject* TutorialGame::AddBTEnemyToWorld(const Vector3& position) {	//
 	float meshSize = 3.0f;
 	float inverseMass = 0.5f;
 
-	BTEnemyGameObject* character = new BTEnemyGameObject(player, grid);
-	//character->SetName("EnemyPlayer");
+	BTEnemyGameObject* character = new BTEnemyGameObject(player, grid, world);
+	std::string name = "BTEnemy";
+	character->SetName(name);
 
 	//AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
 	CapsuleVolume* volume = new CapsuleVolume(0.9f * meshSize, 0.7f * meshSize);
