@@ -56,6 +56,7 @@ void TutorialGame::InitialiseAssets() {
 	enemyMesh = renderer->LoadMesh("Keeper.msh");
 	bonusMesh = renderer->LoadMesh("coin.msh");
 	capsuleMesh = renderer->LoadMesh("capsule.msh");
+	gooseMesh = renderer->LoadMesh("goose.msh");
 
 	basicTex = renderer->LoadTexture("checkerboard.png");
 	basicShader = renderer->LoadShader("scene.vert", "scene.frag");
@@ -442,7 +443,7 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
-	player = AddPlayerToWorld(Vector3(100, 0.02f, -100));	// adds player to world
+	player = AddPlayerToWorld(Vector3(100, 20.02f, 100));	// adds player to world					WAS 0.02, -100
 	InitPlayer();
 	yaw = 0;
 
@@ -463,9 +464,9 @@ void TutorialGame::InitWorld() {
 
 
 	// Zone 1
-	//GameObject* zone1Door = AddCubeToWorld(Vector3(-160, 5, 1), Vector3(10, 5, 1), 0);
-	//zone1Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
-	//AddPressurePlateToWorld(Vector3(-160, 0.01f, -70), false, zone1Door);
+	GameObject* zone1Door = AddCubeToWorld(Vector3(-160, 5, 1), Vector3(10, 5, 1), 0);
+	zone1Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
+	AddPressurePlateToWorld(Vector3(-160, 0.01f, -70), false, zone1Door);
 	AddEnemyToWorld(Vector3(-10, 2.5, -100), -10, -180, -10, -180);
 	AddEnemyToWorld(Vector3(-30, 2.5, -70), -30, -160, -30, -160);
 	AddEnemyToWorld(Vector3(10, 2.5, -100), 10, 180, -10, -180);
@@ -473,9 +474,9 @@ void TutorialGame::InitWorld() {
 
 
 	// Zone 2
-	//GameObject* zone2Door = AddCubeToWorld(Vector3(-100, 5, 100), Vector3(1, 5, 10), 0);
-	//zone2Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
-	//AddKeyToWorld(Vector3(-170, 2, -160), zone2Door);	// put at end of bridge in zone 1
+	GameObject* zone2Door = AddCubeToWorld(Vector3(-100, 5, 100), Vector3(1, 5, 10), 0);
+	zone2Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
+	AddKeyToWorld(Vector3(-170, 2, -160), zone2Door);	// put at end of bridge in zone 1
 	AddOBBToWorld(Vector3(-170, 2, 150), Vector3(2, 2, 2));
 	AddOBBToWorld(Vector3(-180, 2, 150), Vector3(2, 2, 2));
 	AddOBBToWorld(Vector3(-170, 2, 140), Vector3(2, 2, 2));
@@ -486,9 +487,9 @@ void TutorialGame::InitWorld() {
 
 
 	// Zone 3
-	//GameObject* zone3Door = AddCubeToWorld(Vector3(5, 5, 170), Vector3(5, 5, 10), 0);
-	//zone3Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
-	//AddPressurePlateToWorld(Vector3(-50, 0.01f, 70), true, zone3Door);
+	GameObject* zone3Door = AddCubeToWorld(Vector3(5, 5, 170), Vector3(5, 5, 10), 0);
+	zone3Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
+	AddPressurePlateToWorld(Vector3(-50, 0.01f, 70), true, zone3Door);
 
 	
 	// Zone 4 (Maze)
@@ -733,8 +734,8 @@ EnemyGameObject* TutorialGame::AddEnemyToWorld(const Vector3& position, float xM
 }
 
 // behaviour tree advanced enemy
-BTEnemyGameObject* TutorialGame::AddBTEnemyToWorld(const Vector3& position) {	// CHANGE TO GOOSE WITH SPHERE COLLIDER
-	float meshSize = 3.0f;
+BTEnemyGameObject* TutorialGame::AddBTEnemyToWorld(const Vector3& position) {	
+	float meshSize = 2.0f;
 	float inverseMass = 0.5f;
 
 	BTEnemyGameObject* character = new BTEnemyGameObject(player, grid, world);
@@ -742,7 +743,8 @@ BTEnemyGameObject* TutorialGame::AddBTEnemyToWorld(const Vector3& position) {	//
 	character->SetName(name);
 
 	//AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
-	CapsuleVolume* volume = new CapsuleVolume(0.9f * meshSize, 0.7f * meshSize);
+	//CapsuleVolume* volume = new CapsuleVolume(0.9f * meshSize, 0.7f * meshSize);
+	SphereVolume* volume = new SphereVolume(1.0f * meshSize);
 
 	character->SetBoundingVolume((CollisionVolume*)volume);
 
@@ -750,10 +752,10 @@ BTEnemyGameObject* TutorialGame::AddBTEnemyToWorld(const Vector3& position) {	//
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(position);
 
-	character->SetRenderObject(new RenderObject(&character->GetTransform(), enemyMesh, nullptr, basicShader));
+	character->SetRenderObject(new RenderObject(&character->GetTransform(), gooseMesh, nullptr, basicShader));
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
-	character->GetRenderObject()->SetColour(Vector4(1, 0, 1, 1));
+	character->GetRenderObject()->SetColour(Vector4(1, 0, 0, 1));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitSphereInertia();

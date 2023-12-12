@@ -99,6 +99,8 @@ namespace NCL {
             Vector3 playerPosWithY;
 
             float fov = 70; // angle of area in front of enemy that it can detect player within
+
+            float timeSinceDetection = 10;
         };
     }
 }

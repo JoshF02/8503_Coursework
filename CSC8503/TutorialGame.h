@@ -105,6 +105,7 @@ namespace NCL {
 			Mesh* charMesh = nullptr;
 			Mesh* enemyMesh = nullptr;
 			Mesh* bonusMesh = nullptr;
+			Mesh* gooseMesh = nullptr;
 
 			//Coursework Additional functionality	
 			GameObject* lockedObject = nullptr;

@@ -204,28 +204,32 @@ BTEnemyGameObject::BTEnemyGameObject(PlayerGameObject* player, NavigationGrid* g
 
     // detect player
     detectPlayer = new BehaviourAction("Detect Player", [&](float dt, BehaviourState state)->BehaviourState {
-        if (playerPos.x > 0 && playerPos.z > 0) {
-            if (this->player->holdingHeistItem) return Success; // if holding heist item then auto detect
+        if (playerPos.x < 0 || playerPos.z < 0 || playerPosWithY.y > 10) return Failure;    // never detect if outside maze
 
-            Vector3 rayDir = (playerPosWithY - currentPosWithY).Normalised();    
-            Vector3 rayPos = currentPosWithY;
+        if (this->player->holdingHeistItem) return Success;   // if holding heist item then auto detect
+
+        if (timeSinceDetection < 10) return Success;   // auto detect for 10 seconds after last detected - doesnt instantly abandon chase if line of sight lost
+        else if (timeSinceDetection < 10.01) std::cout << "lost detection after " << timeSinceDetection << " seconds\n";
+
+        Vector3 rayDir = (playerPosWithY - currentPosWithY).Normalised();    
+        Vector3 rayPos = currentPosWithY;
             
-            Vector3 facingDir =  GetTransform().GetOrientation() * Vector3(0, 0, -1); 
-            float angle = acos(Vector3::Dot(rayDir, facingDir) / sqrt(rayDir.LengthSquared() * facingDir.LengthSquared()));
-            float angleDeg = Maths::RadiansToDegrees(angle);
-            if (angleDeg > fov) return Failure; // if player not within enemy FOV then dont raycast to them, cant 'see'
+        Vector3 facingDir =  GetTransform().GetOrientation() * Vector3(0, 0, -1); 
+        float angle = acos(Vector3::Dot(rayDir, facingDir) / sqrt(rayDir.LengthSquared() * facingDir.LengthSquared()));
+        float angleDeg = Maths::RadiansToDegrees(angle);
+        if (angleDeg > fov) return Failure;                 // if player not within enemy FOV then cant 'see'
 
 
-            RayCollision closestCollision;  // raycast to player to detect if visible
-            Ray r = Ray(rayPos, rayDir);
-            if (this->world->Raycast(r, closestCollision, true, this, 65.0f)) {
-                if ((PlayerGameObject*)closestCollision.node == this->player) {
-                    std::cout << "BT CAN SEE PLAYER - CHASE\n";
-                    return Success;
-                }
+        RayCollision closestCollision;  // raycast to player to detect if visible
+        Ray r = Ray(rayPos, rayDir);
+        if (this->world->Raycast(r, closestCollision, true, this, 65.0f)) {
+            if ((PlayerGameObject*)closestCollision.node == this->player) {
+                //std::cout << "GOOSE CAN SEE PLAYER - CHASING\n";
+                timeSinceDetection = 0;
+                return Success;
             }
         }
-        else return Failure;
+        return Failure; // if the raycast (last resort) fails then detection fails
         }
     );
     
@@ -371,6 +375,7 @@ void BTEnemyGameObject::Update(float dt) {
     playerPos.y = 0;
 
     timeSincePathfind += dt;
+    timeSinceDetection += dt;
 
     if (!pathNodes.empty()) {
         for (int i = 1; i < pathNodes.size(); ++i) {    // draws path for debug
