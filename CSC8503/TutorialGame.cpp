@@ -348,7 +348,7 @@ void TutorialGame::LockedObjectMovement() {
 		if (world->Raycast(r, closestCollision, true, selectionObject, 10.0f)) {
 
 			float inverseMass = ((GameObject*)closestCollision.node)->GetPhysicsObject()->GetInverseMass();
-			if (inverseMass != 0) {	// dont pick up static objects
+			if (inverseMass != 0 && ((GameObject*)closestCollision.node)->GetName() != "heistItem") {	// dont pick up static objects or heist item
 				pickedUpObj = (GameObject*)closestCollision.node;
 				pickedUpObj->GetRenderObject()->SetColour(Vector4(1, 1, 0, 1));
 				oldInverseMass = inverseMass;	// saves inverse mass of object
@@ -442,7 +442,7 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
-	player = AddPlayerToWorld(Vector3(100, 0.02f, -100));	// adds player to world			WAS 100, 0.02, -100
+	player = AddPlayerToWorld(Vector3(100, 0.02f, -100));	// adds player to world
 	InitPlayer();
 	yaw = 0;
 
@@ -463,9 +463,9 @@ void TutorialGame::InitWorld() {
 
 
 	// Zone 1
-	GameObject* zone1Door = AddCubeToWorld(Vector3(-160, 5, 1), Vector3(10, 5, 1), 0);
-	zone1Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
-	AddPressurePlateToWorld(Vector3(-160, 0.01f, -70), false, zone1Door);
+	//GameObject* zone1Door = AddCubeToWorld(Vector3(-160, 5, 1), Vector3(10, 5, 1), 0);
+	//zone1Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
+	//AddPressurePlateToWorld(Vector3(-160, 0.01f, -70), false, zone1Door);
 	AddEnemyToWorld(Vector3(-10, 2.5, -100), -10, -180, -10, -180);
 	AddEnemyToWorld(Vector3(-30, 2.5, -70), -30, -160, -30, -160);
 	AddEnemyToWorld(Vector3(10, 2.5, -100), 10, 180, -10, -180);
@@ -473,9 +473,9 @@ void TutorialGame::InitWorld() {
 
 
 	// Zone 2
-	GameObject* zone2Door = AddCubeToWorld(Vector3(-100, 5, 100), Vector3(1, 5, 10), 0);
-	zone2Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
-	AddKeyToWorld(Vector3(-170, 2, -160), zone2Door);	// put at end of bridge in zone 1
+	//GameObject* zone2Door = AddCubeToWorld(Vector3(-100, 5, 100), Vector3(1, 5, 10), 0);
+	//zone2Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
+	//AddKeyToWorld(Vector3(-170, 2, -160), zone2Door);	// put at end of bridge in zone 1
 	AddOBBToWorld(Vector3(-170, 2, 150), Vector3(2, 2, 2));
 	AddOBBToWorld(Vector3(-180, 2, 150), Vector3(2, 2, 2));
 	AddOBBToWorld(Vector3(-170, 2, 140), Vector3(2, 2, 2));
@@ -486,17 +486,18 @@ void TutorialGame::InitWorld() {
 
 
 	// Zone 3
-	GameObject* zone3Door = AddCubeToWorld(Vector3(5, 5, 170), Vector3(5, 5, 10), 0);
-	zone3Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
-	AddPressurePlateToWorld(Vector3(-50, 0.01f, 70), true, zone3Door);
+	//GameObject* zone3Door = AddCubeToWorld(Vector3(5, 5, 170), Vector3(5, 5, 10), 0);
+	//zone3Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
+	//AddPressurePlateToWorld(Vector3(-50, 0.01f, 70), true, zone3Door);
 
 	
 	// Zone 4 (Maze)
 	GameObject* startingArea = AddCubeToWorld(Vector3(100, 0.01f, -100), Vector3(10, 0.01f, 10), 0);
 	startingArea->GetRenderObject()->SetColour(Vector4(0, 1, 1, 1));
-	AddKeyToWorld(Vector3(170, 2, 160), startingArea, true);
+	KeyGameObject* heistItem = AddKeyToWorld(Vector3(90, 2, 90), startingArea, true);
+	heistItem->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
 	AddMazeToWorld();
-	AddBTEnemyToWorld(Vector3(80, 2, 90));
+	AddBTEnemyToWorld(Vector3(80, 2, 80));
 
 	//InitTestingObjs();
 }
@@ -582,6 +583,7 @@ SwitchGameObject* TutorialGame::AddPressurePlateToWorld(const Vector3& position,
 KeyGameObject* TutorialGame::AddKeyToWorld(const Vector3& position, GameObject* door, bool isHeistItem) {
 	KeyGameObject* key = new KeyGameObject(door, world, isHeistItem, player);
 	std::string name = "key";
+	if (isHeistItem) name = "heistItem";
 	key->SetName(name);
 
 	Vector3 keySize = Vector3(2, 2, 2);
@@ -991,7 +993,7 @@ void TutorialGame::AddMazeToWorld() {
 			//if (n.type == 105) AddStateObjectToWorld(n.position + Vector3(0, 5, 0));
 
 			// p = 112 player
-			if (n.type == 112) AddPlayerToWorld(n.position + Vector3(0, 5, 0));
+			//if (n.type == 112) AddPlayerToWorld(n.position + Vector3(0, 5, 0));
 		}
 	}
 }
@@ -1026,6 +1028,7 @@ void TutorialGame::UpdateScoreAndTimer(float dt) {
 void TutorialGame::EndGame() {
 
 	InitCamera();
+	pickedUpObj = nullptr;
 
 	std::string wonOrLost = "";
 	if (player->lose) wonOrLost = "You Lost...";

@@ -201,9 +201,13 @@ BTEnemyGameObject::BTEnemyGameObject(PlayerGameObject* player, NavigationGrid* g
     patrolPoints.push_back(Vector3(55, 5, 85));
 
 
-    // detect player - ***NOTE*** change to only if holding heist item / raycast sees them
+    // detect player
     detectPlayer = new BehaviourAction("Detect Player", [&](float dt, BehaviourState state)->BehaviourState {
-        if (playerPos.x > 0 && playerPos.z > 0 && this->player->shouldTarget) return Success;
+        if (playerPos.x > 0 && playerPos.z > 0) {
+            if (this->player->holdingHeistItem) return Success;
+
+            //if raycast to player true, return Success
+        }
         else return Failure;
         }
     );
@@ -235,6 +239,44 @@ BTEnemyGameObject::BTEnemyGameObject(PlayerGameObject* player, NavigationGrid* g
     pathfindForPatrol = new BehaviourAction("Pathfind For Patrol", [&](float dt, BehaviourState state)->BehaviourState {
         if (Pathfind(patrolPoints[currentPatrolIndex])) return Ongoing;
         else return Failure;
+        }
+    );
+
+    // check if should sound alarm or not
+    needAlarm = new BehaviourAction("Need Alarm", [&](float dt, BehaviourState state)->BehaviourState {
+        if (this->player->holdingHeistItem && reachAlarmStatus < 2) {
+            if (reachAlarmStatus == 0) {
+                std::cout << "pathfinding to alarm\n";
+                Pathfind(alarmPos);
+                reachAlarmStatus = 1;
+            }
+            //std::cout << "moving to alarm\n";
+            return Failure;
+        }
+        else return Success;
+        }
+    );
+
+    // move along path to alarm
+    moveToAlarm = new BehaviourAction("Move To Alarm", [&](float dt, BehaviourState state)->BehaviourState {
+        if (pathNodes.empty()) return Failure; // if no path
+
+        Vector3 nextPathPos = pathNodes[currentNodeIndex];
+
+        if ((nextPathPos - currentPos).LengthSquared() < 1.0f) { // if close to current node
+            if (currentNodeIndex < (pathNodes.size() - 1)) {    // if node isnt the final node, target next node
+                currentNodeIndex++;
+                nextPathPos = pathNodes[currentNodeIndex];
+            }
+            else {
+                reachAlarmStatus = 2;
+                std::cout << "TRIGGER ALARM\n";
+                return Success; // if final node reached, return success so can chase player
+            }
+        }
+
+        MoveToPosition(nextPathPos);  // otherwise move towards next node
+        return Ongoing;
         }
     );
 
@@ -283,12 +325,17 @@ BTEnemyGameObject::BTEnemyGameObject(PlayerGameObject* player, NavigationGrid* g
     patrolSelector->AddChild(moveOnPathPatrol);
     patrolSelector->AddChild(pathfindForPatrol);
 
+    alarmSelector = new BehaviourSelector("Alarm Selector");
+    alarmSelector->AddChild(needAlarm);
+    alarmSelector->AddChild(moveToAlarm);
+
     pathfindPlayerSelector = new BehaviourSelector("Pathfind Player Selector");
     pathfindPlayerSelector->AddChild(moveOnPathToPlayer);
     pathfindPlayerSelector->AddChild(pathfindToPlayer);
 
     rootSequence = new BehaviourSequence("Root Sequence");
     rootSequence->AddChild(patrolSelector);
+    rootSequence->AddChild(alarmSelector);
     rootSequence->AddChild(pathfindPlayerSelector);
     rootSequence->AddChild(closeMoveToPlayer);
 }

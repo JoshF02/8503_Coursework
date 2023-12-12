@@ -1,4 +1,5 @@
 #include "PlayerGameObject.h"
+#include "PositionConstraint.h"
 
 PlayerGameObject::PlayerGameObject() {
     name = "player";
@@ -154,5 +155,11 @@ void KeyGameObject::OnCollisionBegin(GameObject* otherObject) { // deletes key a
         world->RemoveGameObject(doorToOpen, false);
         world->RemoveGameObject(this, false);
         std::cout << "KEY USED, DELETING DOOR AND USED KEY\n";
+    }
+
+    if (isHeistItem && otherObject == player) {
+        PositionConstraint* constraint = new PositionConstraint(player, this, 5.0f);    // constrain heist item to player
+        world->AddConstraint(constraint);
+        player->holdingHeistItem = true;
     }
 }

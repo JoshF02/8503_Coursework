@@ -81,11 +81,18 @@ namespace NCL {
             BehaviourAction* moveOnPathPatrol;
             BehaviourAction* pathfindForPatrol;
 
+            BehaviourSelector* alarmSelector;
+            BehaviourAction* needAlarm;
+            BehaviourAction* moveToAlarm;
+
             BehaviourSelector* pathfindPlayerSelector;
             BehaviourAction* moveOnPathToPlayer;
             BehaviourAction* pathfindToPlayer;
 
             BehaviourAction* closeMoveToPlayer;
+
+            Vector3 alarmPos = Vector3(170, 0, 180);
+            int reachAlarmStatus = 0;   // 0 for no path, 1 for path but hasnt reached, 2 for has reached
         };
     }
 }
