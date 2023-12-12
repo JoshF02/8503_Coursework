@@ -113,9 +113,14 @@ EnemyGameObject::EnemyGameObject(PlayerGameObject* gameObject, GameWorld* world,
         if (canTransition) {    
             Vector3 rayDir = (playerPos - currentPos).Normalised();
             Vector3 rayPos = GetTransform().GetPosition();
+
+            Vector3 facingDir = GetTransform().GetOrientation() * Vector3(0, 0, -1);
+            float angle = acos(Vector3::Dot(rayDir, facingDir) / sqrt(rayDir.LengthSquared() * facingDir.LengthSquared()));
+            float angleDeg = Maths::RadiansToDegrees(angle);
+            if (angleDeg > fov) return false;                 // if player not within enemy FOV then cant 'see'
+
             RayCollision closestCollision;
             Ray r = Ray(rayPos, rayDir);
-
             if (this->world->Raycast(r, closestCollision, true, this, 65.0f)) {
                 if ((GameObject*)closestCollision.node == target) {
                     std::cout << "CAN SEE PLAYER - ";

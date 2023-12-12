@@ -443,7 +443,7 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
-	player = AddPlayerToWorld(Vector3(100, 20.02f, 100));	// adds player to world					WAS 0.02, -100
+	player = AddPlayerToWorld(Vector3(100, 0.02f, -100));	// adds player to world					
 	InitPlayer();
 	yaw = 0;
 
@@ -742,8 +742,6 @@ BTEnemyGameObject* TutorialGame::AddBTEnemyToWorld(const Vector3& position) {
 	std::string name = "BTEnemy";
 	character->SetName(name);
 
-	//AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
-	//CapsuleVolume* volume = new CapsuleVolume(0.9f * meshSize, 0.7f * meshSize);
 	SphereVolume* volume = new SphereVolume(1.0f * meshSize);
 
 	character->SetBoundingVolume((CollisionVolume*)volume);

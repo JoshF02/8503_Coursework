@@ -45,8 +45,8 @@ namespace NCL {
             float speed;
             Vector3 currentPos;
             Vector3 playerPos;
-
             GameWorld* world;
+            float fov = 70; // angle of area in front of enemy that it can detect player within
         };
 
 
