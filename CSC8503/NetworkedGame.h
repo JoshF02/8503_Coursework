@@ -52,6 +52,8 @@ namespace NCL {
 			int latestClient = 0;
 			std::vector<int> scores;
 			std::vector<int> clientThatGotScore;
+
+			int oldClientCount = 0;
 		};
 	}
 }

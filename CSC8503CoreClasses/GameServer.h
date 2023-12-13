@@ -19,10 +19,11 @@ namespace NCL {
 
 			virtual void UpdateServer();
 
+			int			clientCount;
+
 		protected:
 			int			port;
 			int			clientMax;
-			int			clientCount;
 			GameWorld*	gameWorld;
 
 			int incomingDataRate;

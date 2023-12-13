@@ -59,14 +59,14 @@ void NetworkedGame::UpdateGame(float dt) {
 			UpdateAsServer(dt);
 			thisServer->UpdateServer();
 		}
-		if (thisClient) {
+		else if (thisClient) {
 			UpdateAsClient(dt);
 			thisClient->UpdateClient();
 		}
 		timeToNextPacket += 1.0f / 20.0f; //20hz server/client update
 	}
 
-	/*if (!thisServer && Window::GetKeyboard()->KeyPressed(KeyCodes::F9)) {	// move into initialisation
+	/*if (!thisServer && Window::GetKeyboard()->KeyPressed(KeyCodes::F9)) {	
 		std::cout << "starting server\n";
 		StartAsServer();
 	}
@@ -75,11 +75,10 @@ void NetworkedGame::UpdateGame(float dt) {
 		StartAsClient(127,0,0,1);
 	}*/
 
-	if (!thisServer) TutorialGame::UpdateGame(dt);
+	if (thisClient) TutorialGame::UpdateGame(dt);
 }
 
 void NetworkedGame::UpdateAsServer(float dt) {
-	//std::cout << "updating as server\n";
 	packetsToSnapshot--;
 	if (packetsToSnapshot < 0) {
 		BroadcastSnapshot(false);
@@ -89,10 +88,7 @@ void NetworkedGame::UpdateAsServer(float dt) {
 		BroadcastSnapshot(true);
 	}
 
-	if (numScores != oldNumScores) {
-		//GamePacket* msgFromServer = new StringPacket(" Number of scores recorded increased to " + std::to_string(numScores));
-		//thisServer->SendGlobalPacket(*msgFromServer);
-
+	if (numScores != oldNumScores) {	// save new scores and send out new scores list
 		oldNumScores = numScores;
 		scores.push_back(latestScore);
 		clientThatGotScore.push_back(latestClient);
@@ -104,28 +100,27 @@ void NetworkedGame::UpdateAsServer(float dt) {
 			scoresList += std::to_string(*i) + ": " + std::to_string(clientThatGotScore[index]) + ", ";
 			index++;
 		}
+		GamePacket* msgFromServer = new StringPacket(scoresList);	
+		thisServer->SendGlobalPacket(*msgFromServer);
+	}
+	if (thisServer->clientCount > oldClientCount) {	// send out new scores list when client connects
+		oldClientCount = thisServer->clientCount;
+
+		std::string scoresList = "";
+		int index = 0;
+		for (auto i = scores.begin(); i != scores.end(); ++i) {
+			scoresList += std::to_string(*i) + ": " + std::to_string(clientThatGotScore[index]) + ", ";
+			index++;
+		}
 		GamePacket* msgFromServer = new StringPacket(scoresList);
 		thisServer->SendGlobalPacket(*msgFromServer);
 	}
+	else if (thisServer->clientCount < oldClientCount) oldClientCount = thisServer->clientCount; // when client disconnects, update old count
 }
 
 void NetworkedGame::UpdateAsClient(float dt) {
-	/*ClientPacket newPacket;
-
-	if (Window::GetKeyboard()->KeyPressed(KeyCodes::SPACE)) {
-		//fire button pressed!
-		newPacket.buttonstates[0] = 1;
-		newPacket.lastID = 0; //You'll need to work this out somehow...
-	}
-	thisClient->SendPacket(newPacket);*/
-
-	//std::cout << "updating as client\n";
-
-	//GamePacket* msgFromClient = new StringPacket(" Client says hello ! " + std::to_string(666));
-	//thisClient->SendPacket(*msgFromClient);
-
 	if (player->win && !hasSentScore) {
-		GamePacket* msgFromClient = new StringPacket(/*" Player won with score " + */std::to_string(player->score));
+		GamePacket* msgFromClient = new StringPacket(std::to_string(player->score));
 		thisClient->SendPacket(*msgFromClient);
 		hasSentScore = true;
 	}
@@ -196,14 +191,14 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 		std::string msg = realPacket->GetStringFromData();
 		//std::cout << " received msg (source " << source << "): " << msg << std::endl;
 
-		if (source >= 0) {	// if message came from client, record score
-			std::cout << "server received score (source " << source << "): " << msg << std::endl;	
+		if (thisServer) {	// if server, record score
+			//std::cout << "server received score (source " << source << "): " << msg << std::endl;	
 			numScores++;
 			latestScore = std::stoi(msg);	// can probably remove these and put score saving functionality here
 			latestClient = source;
 		}
 		
-		else {	// came from server so save scores
+		else {	// if client, save scores
 			/*scores = {};
 			std::stringstream ss(msg);
 
