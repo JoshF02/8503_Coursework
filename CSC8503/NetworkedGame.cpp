@@ -75,7 +75,25 @@ void NetworkedGame::UpdateGame(float dt) {
 		StartAsClient(127,0,0,1);
 	}*/
 
-	if (thisClient) TutorialGame::UpdateGame(dt);
+	if (thisClient) {
+		TutorialGame::UpdateGame(dt);
+
+		if (Window::GetKeyboard()->KeyPressed(KeyCodes::K)) {
+			showScoreTable = !showScoreTable;
+		}
+
+		if (showScoreTable) {
+			std::string scoreRow = "SERVER HIGH SCORE TABLE";
+			Debug::Print(scoreRow, Vector2(30 - scoreRow.length(), 30), Vector4(0, 1, 0, 1));
+
+			int index = 1;
+			for (auto i = scoresWithIds.begin(); i != scoresWithIds.end(); ++i) {
+				scoreRow = std::to_string(index) + ".  Score: " + std::to_string((int)(*i).x) + "  Client ID: " + std::to_string((int)(*i).y);
+				Debug::Print(scoreRow, Vector2(30 - scoreRow.length(), 30 + (index * 10)), Vector4(0, 1, 0, 1));
+				index++;
+			}
+		}
+	}
 }
 
 bool SortVec2(Vector2 i, Vector2 j) { return (i.x > j.x); }	// orders scores high-low
@@ -198,6 +216,8 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 		
 		else {	// if client, save scores
 			if (msg == "") return;
+
+			std::cout << "client received updated score list: " << msg << std::endl;
 			scoresWithIds = {};
 			std::stringstream ss(msg);
 
@@ -212,13 +232,6 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 
 				scoresWithIds.push_back(Vector2(tempScore, tempId));
 			}
-
-
-			std::string scoresList = "";	// output local score list to console
-			for (auto i = scoresWithIds.begin(); i != scoresWithIds.end(); ++i) {
-				scoresList += std::to_string((int)(*i).x) + ": " + std::to_string((int)(*i).y) + ", ";
-			}
-			std::cout << "CLIENT UPDATED SORTED SCORE LIST: " << scoresList << "\n\n";	// NEED TO DISPLAY THEM
 		}
 	}
 }

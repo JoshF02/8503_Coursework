@@ -53,6 +53,8 @@ namespace NCL {
 			int latestClient = 0;
 
 			std::vector<Vector2> scoresWithIds;
+
+			bool showScoreTable = false;
 		};
 	}
 }
