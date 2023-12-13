@@ -43,6 +43,15 @@ namespace NCL {
 
 			std::map<int, GameObject*> serverPlayers;
 			GameObject* localPlayer;
+
+			bool hasSentScore = false;
+			int numScores = 0;
+			int oldNumScores = 0;
+
+			int latestScore = 0;
+			int latestClient = 0;
+			std::vector<int> scores;
+			std::vector<int> clientThatGotScore;
 		};
 	}
 }

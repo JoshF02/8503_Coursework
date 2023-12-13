@@ -224,7 +224,7 @@ void TestBehaviourTree() {
 
 class InitWorldState : public PushdownState {
 public:
-	InitWorldState(TutorialGame* g, bool shouldRestart) { 
+	InitWorldState(NetworkedGame* g, bool shouldRestart) { 
 		this->g = g;
 		restart = shouldRestart;
 	};
@@ -252,14 +252,14 @@ public:
 	}
 
 protected:
-	TutorialGame* g;
+	NetworkedGame* g;
 
 	bool restart;
 };
 
 class MenuState : public PushdownState {
 public:
-	MenuState(TutorialGame* g) { this->g = g; };
+	MenuState(NetworkedGame* g) { this->g = g; };
 
 	PushdownResult OnUpdate(float dt, PushdownState** newState) override {
 		if (Window::GetKeyboard()->KeyDown(KeyCodes::NUM1)) {	// restart / start for first time
@@ -279,7 +279,7 @@ public:
 	}
 
 protected:
-	TutorialGame* g;
+	NetworkedGame* g;
 };
 
 
@@ -446,8 +446,11 @@ int main() {
 
 	//TestPushdownAutomata(w);
 
-	TutorialGame* g = new TutorialGame();
-	//NetworkedGame* g = new NetworkedGame();
+	//TutorialGame* g = new TutorialGame();
+	NetworkedGame* gServer = new NetworkedGame();
+	gServer->StartAsServer();
+	NetworkedGame* g = new NetworkedGame();
+	g->StartAsClient(127, 0, 0, 1);
 	PushdownMachine* menuState = new PushdownMachine(new MenuState(g));
 
 	//TestStateMachine();
@@ -474,8 +477,15 @@ int main() {
 			w->SetWindowPosition(0, 0);
 		}
 
+		if (Window::GetKeyboard()->KeyPressed(KeyCodes::J)) {	// create new client using current window
+			//delete g;
+			g = new NetworkedGame();
+			g->StartAsClient(127, 0, 0, 1);
+		}
+
 		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 
+		gServer->UpdateGame(dt);
 		g->UpdateGame(dt);
 		menuState->Update(dt);
 		DisplayPathfinding();
