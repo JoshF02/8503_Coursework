@@ -24,7 +24,7 @@ events:
       The output was:
       0
       MSBuild version 17.6.3+07e294721 for .NET Framework
-      Build started 09/12/2023 18:52:05.
+      Build started 13/12/2023 22:07:58.
       
       Project "D:\\C++ Projects\\CSC8503 2023\\CMakeFiles\\3.28.0\\CompilerIdCXX\\CompilerIdCXX.vcxproj" on node 1 (default targets).
       PrepareForBuild:
@@ -51,7 +51,7 @@ events:
           0 Warning(s)
           0 Error(s)
       
-      Time Elapsed 00:00:00.48
+      Time Elapsed 00:00:00.49
       
       
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -70,8 +70,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "D:/C++ Projects/CSC8503 2023/CMakeFiles/CMakeScratch/TryCompile-s0835k"
-      binary: "D:/C++ Projects/CSC8503 2023/CMakeFiles/CMakeScratch/TryCompile-s0835k"
+      source: "D:/C++ Projects/CSC8503 2023/CMakeFiles/CMakeScratch/TryCompile-78gwl9"
+      binary: "D:/C++ Projects/CSC8503 2023/CMakeFiles/CMakeScratch/TryCompile-78gwl9"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /GR /EHsc"
       CMAKE_CXX_FLAGS_DEBUG: "/Zi /Ob0 /Od /RTC1"
@@ -80,38 +80,38 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'D:/C++ Projects/CSC8503 2023/CMakeFiles/CMakeScratch/TryCompile-s0835k'
+        Change Dir: 'D:/C++ Projects/CSC8503 2023/CMakeFiles/CMakeScratch/TryCompile-78gwl9'
         
-        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_1bb6e.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): "C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe" cmTC_1e8ce.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         MSBuild version 17.6.3+07e294721 for .NET Framework
-        Build started 09/12/2023 18:52:06.
+        Build started 13/12/2023 22:07:59.
         
-        Project "D:\\C++ Projects\\CSC8503 2023\\CMakeFiles\\CMakeScratch\\TryCompile-s0835k\\cmTC_1bb6e.vcxproj" on node 1 (default targets).
+        Project "D:\\C++ Projects\\CSC8503 2023\\CMakeFiles\\CMakeScratch\\TryCompile-78gwl9\\cmTC_1e8ce.vcxproj" on node 1 (default targets).
         PrepareForBuild:
-          Creating directory "cmTC_1bb6e.dir\\Debug\\".
-          Creating directory "D:\\C++ Projects\\CSC8503 2023\\CMakeFiles\\CMakeScratch\\TryCompile-s0835k\\Debug\\".
-          Creating directory "cmTC_1bb6e.dir\\Debug\\cmTC_1bb6e.tlog\\".
+          Creating directory "cmTC_1e8ce.dir\\Debug\\".
+          Creating directory "D:\\C++ Projects\\CSC8503 2023\\CMakeFiles\\CMakeScratch\\TryCompile-78gwl9\\Debug\\".
+          Creating directory "cmTC_1e8ce.dir\\Debug\\cmTC_1e8ce.tlog\\".
         InitializeBuildStatus:
-          Creating "cmTC_1bb6e.dir\\Debug\\cmTC_1bb6e.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
+          Creating "cmTC_1e8ce.dir\\Debug\\cmTC_1e8ce.tlog\\unsuccessfulbuild" because "AlwaysCreate" was specified.
         ClCompile:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_1bb6e.dir\\Debug\\\\" /Fd"cmTC_1bb6e.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.28\\Modules\\CMakeCXXCompilerABI.cpp"
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\CL.exe /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_1e8ce.dir\\Debug\\\\" /Fd"cmTC_1e8ce.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.28\\Modules\\CMakeCXXCompilerABI.cpp"
           Microsoft (R) C/C++ Optimizing Compiler Version 19.36.32535 for x64
           CMakeCXXCompilerABI.cpp
           Copyright (C) Microsoft Corporation.  All rights reserved.
-          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_1bb6e.dir\\Debug\\\\" /Fd"cmTC_1bb6e.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.28\\Modules\\CMakeCXXCompilerABI.cpp"
+          cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_1e8ce.dir\\Debug\\\\" /Fd"cmTC_1e8ce.dir\\Debug\\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "C:\\Program Files\\CMake\\share\\cmake-3.28\\Modules\\CMakeCXXCompilerABI.cpp"
         Link:
-          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\C++ Projects\\CSC8503 2023\\CMakeFiles\\CMakeScratch\\TryCompile-s0835k\\Debug\\cmTC_1bb6e.exe" /INCREMENTAL /ILK:"cmTC_1bb6e.dir\\Debug\\cmTC_1bb6e.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/C++ Projects/CSC8503 2023/CMakeFiles/CMakeScratch/TryCompile-s0835k/Debug/cmTC_1bb6e.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/C++ Projects/CSC8503 2023/CMakeFiles/CMakeScratch/TryCompile-s0835k/Debug/cmTC_1bb6e.lib" /MACHINE:X64  /machine:x64 cmTC_1bb6e.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_1bb6e.vcxproj -> D:\\C++ Projects\\CSC8503 2023\\CMakeFiles\\CMakeScratch\\TryCompile-s0835k\\Debug\\cmTC_1bb6e.exe
+          C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.36.32532\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\C++ Projects\\CSC8503 2023\\CMakeFiles\\CMakeScratch\\TryCompile-78gwl9\\Debug\\cmTC_1e8ce.exe" /INCREMENTAL /ILK:"cmTC_1e8ce.dir\\Debug\\cmTC_1e8ce.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/C++ Projects/CSC8503 2023/CMakeFiles/CMakeScratch/TryCompile-78gwl9/Debug/cmTC_1e8ce.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/C++ Projects/CSC8503 2023/CMakeFiles/CMakeScratch/TryCompile-78gwl9/Debug/cmTC_1e8ce.lib" /MACHINE:X64  /machine:x64 cmTC_1e8ce.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_1e8ce.vcxproj -> D:\\C++ Projects\\CSC8503 2023\\CMakeFiles\\CMakeScratch\\TryCompile-78gwl9\\Debug\\cmTC_1e8ce.exe
         FinalizeBuildStatus:
-          Deleting file "cmTC_1bb6e.dir\\Debug\\cmTC_1bb6e.tlog\\unsuccessfulbuild".
-          Touching "cmTC_1bb6e.dir\\Debug\\cmTC_1bb6e.tlog\\cmTC_1bb6e.lastbuildstate".
-        Done Building Project "D:\\C++ Projects\\CSC8503 2023\\CMakeFiles\\CMakeScratch\\TryCompile-s0835k\\cmTC_1bb6e.vcxproj" (default targets).
+          Deleting file "cmTC_1e8ce.dir\\Debug\\cmTC_1e8ce.tlog\\unsuccessfulbuild".
+          Touching "cmTC_1e8ce.dir\\Debug\\cmTC_1e8ce.tlog\\cmTC_1e8ce.lastbuildstate".
+        Done Building Project "D:\\C++ Projects\\CSC8503 2023\\CMakeFiles\\CMakeScratch\\TryCompile-78gwl9\\cmTC_1e8ce.vcxproj" (default targets).
         
         Build succeeded.
             0 Warning(s)
             0 Error(s)
         
-        Time Elapsed 00:00:00.37
+        Time Elapsed 00:00:00.38
         
       exitCode: 0
 ...

@@ -9,6 +9,7 @@
 #include "OBBVolume.h"
 #include "SphereVolume.h"
 #include "CapsuleVolume.h"
+#include "PlaneVolume.h"
 #include "Ray.h"
 
 using NCL::Camera;
@@ -71,6 +72,7 @@ namespace NCL {
 
 		//TODO ADD THIS PROPERLY
 		static bool RayBoxIntersection(const Ray&r, const Vector3& boxPos, const Vector3& boxSize, RayCollision& collision);
+		static int RayCylinderIntersection(const Ray& r, const float halfHeight, const float radius, RayCollision& collision);
 
 		static Ray BuildRayFromMouse(const PerspectiveCamera& c);
 
@@ -81,7 +83,6 @@ namespace NCL {
 		static bool RayOBBIntersection(const Ray&r, const Transform& worldTransform, const OBBVolume&	volume, RayCollision& collision);
 		static bool RaySphereIntersection(const Ray&r, const Transform& worldTransform, const SphereVolume& volume, RayCollision& collision);
 		static bool RayCapsuleIntersection(const Ray& r, const Transform& worldTransform, const CapsuleVolume& volume, RayCollision& collision);
-
 
 		static bool RayPlaneIntersection(const Ray&r, const Plane&p, RayCollision& collisions);
 
@@ -123,6 +124,9 @@ namespace NCL {
 
 		static bool CapsuleOBBIntersection(const CapsuleVolume& volumeA, const Transform& worldTransformA,
 			const OBBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
+
+		static bool PlaneSphereIntersection(const PlaneVolume& volumeA, const Transform& worldTransformA,
+			const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
 
 		static Vector3 Unproject(const Vector3& screenPos, const PerspectiveCamera& cam);
 

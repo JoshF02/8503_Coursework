@@ -527,6 +527,9 @@ void TutorialGame::InitWorld() {
 	steelBall->GetPhysicsObject()->SetElasticity(0.2f);
 	steelBall->GetRenderObject()->SetColour(Vector4(0, 0, 0, 1));
 
+	GameObject* plane = AddPlaneToWorld(Vector3(100, 5, -120));
+	plane->GetRenderObject()->SetColour(Vector4(1, 0, 1, 1));
+
 	//InitTestingObjs();
 }
 
@@ -836,6 +839,27 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position) {
 	world->AddGameObject(apple);
 
 	return apple;
+}
+
+GameObject* TutorialGame::AddPlaneToWorld(const Vector3& position) {
+	GameObject* floor = new GameObject();
+
+	Vector2 floorSize = Vector2(20, 20);
+	PlaneVolume* volume = new PlaneVolume(floorSize / 2);
+	floor->SetBoundingVolume((CollisionVolume*)volume);
+	floor->GetTransform()
+		.SetScale(Vector3(floorSize.x, 0.01f, floorSize.y))
+		.SetPosition(position);
+
+	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), cubeMesh, basicTex, basicShader));
+	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
+
+	floor->GetPhysicsObject()->SetInverseMass(0);
+	floor->GetPhysicsObject()->InitCubeInertia();
+
+	world->AddGameObject(floor);
+
+	return floor;
 }
 
 void TutorialGame::InitDefaultFloor() {

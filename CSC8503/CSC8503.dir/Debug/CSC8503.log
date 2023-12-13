@@ -1,11 +1,2 @@
-﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (CSC8503CoreClasses.dir\Debug\) contains files shared from another project (CSC8503CoreClasses.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  Scanning sources for module dependencies...
-  NetworkedGame.cpp
-D:\C++ Projects\CSC8503 2023\CSC8503\NetworkedGame.cpp(92,38): warning C4244: 'argument': conversion from 'unsigned __int64' to 'float', possible loss of data
-D:\C++ Projects\CSC8503 2023\CSC8503\NetworkedGame.cpp(98,63): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\C++ Projects\CSC8503 2023\CSC8503\NetworkedGame.cpp(98,39): warning C4244: 'argument': conversion from 'unsigned __int64' to 'float', possible loss of data
-D:\C++ Projects\CSC8503 2023\CSC8503\NetworkedGame.cpp(119,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\C++ Projects\CSC8503 2023\CSC8503\NetworkedGame.cpp(119,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\C++ Projects\CSC8503 2023\CSC8503\NetworkedGame.cpp(239,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\C++ Projects\CSC8503 2023\CSC8503\NetworkedGame.cpp(239,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  Scanning sources for module dependencies...
   CSC8503.vcxproj -> D:\C++ Projects\CSC8503 2023\x64\Debug\CSC8503.exe
