@@ -272,19 +272,19 @@ void TutorialGame::LockedObjectMovement() {
 
 
 	if (Window::GetKeyboard()->KeyDown(KeyCodes::W)) {
-		selectionObject->GetPhysicsObject()->AddForce(fwdAxis * 20);
+		selectionObject->GetPhysicsObject()->AddForce(fwdAxis * 20 * player->speedMultiplier);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyCodes::S)) {
-		selectionObject->GetPhysicsObject()->AddForce(-fwdAxis * 20);
+		selectionObject->GetPhysicsObject()->AddForce(-fwdAxis * 20 * player->speedMultiplier);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyCodes::A)) {
-		selectionObject->GetPhysicsObject()->AddForce(-rightAxis * 20);
+		selectionObject->GetPhysicsObject()->AddForce(-rightAxis * 20 * player->speedMultiplier);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyCodes::D)) {
-		selectionObject->GetPhysicsObject()->AddForce(rightAxis * 20);
+		selectionObject->GetPhysicsObject()->AddForce(rightAxis * 20 * player->speedMultiplier);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyCodes::SPACE)) {	// only allow jump if on ground
@@ -296,7 +296,7 @@ void TutorialGame::LockedObjectMovement() {
 
 		if (world->Raycast(r, closestCollision, true, selectionObject, 1.5f)) {
 			//std::cout << "CLOSE TO GROUND, ALLOWING JUMP\n";
-			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 200, 0));
+			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 200, 0) * player->speedMultiplier);
 		}
 	}
 
@@ -514,7 +514,13 @@ void TutorialGame::InitWorld() {
 	SwitchGameObject* alarmLock = AddPressurePlateToWorld(Vector3(135, 0.01f, 135), false, mazeDoorLock, 0.5f);
 	alarmLock->GetRenderObject()->SetColour(Vector4(1, 0, 0, 1));
 
-	BridgeConstraintTest();
+
+	// Bridge Obstacle and Bonus Coins
+	BridgeConstraintTest();	
+	AddBonusToWorld(Vector3(120, 10, -120));	// next to start
+	AddBonusToWorld(Vector3(-60, 26, -160));	// at other end of bridge
+	AddBonusToWorld(Vector3(10, 5, -180));		// on state enemy path
+	AddBonusToWorld(Vector3(125, 5, 135));		// by alarm (goose can collect)
 
 	//InitTestingObjs();
 }
@@ -782,8 +788,10 @@ BTEnemyGameObject* TutorialGame::AddBTEnemyToWorld(const Vector3& position) {
 GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 	GameObject* apple = new GameObject();
 	//TriggerGameObject* apple = new TriggerGameObject();
+	std::string name = "Bonus";
+	apple->SetName(name);
 
-	SphereVolume* volume = new SphereVolume(0.5f);
+	SphereVolume* volume = new SphereVolume(1.0f);
 	apple->SetBoundingVolume((CollisionVolume*)volume);
 	apple->GetTransform()
 		.SetScale(Vector3(0.2f, 0.2f, 0.2f))
@@ -978,6 +986,7 @@ void TutorialGame::BridgeConstraintTest() {
 	GameObject* midBoost2 = AddCubeToWorld(startPos + Vector3((numLinks + 2) / 2 * cubeDistance, -12.5, 7), cubeSize * 0.75, 0);
 	GameObject* midBoost3 = AddCubeToWorld(startPos + Vector3((numLinks + 2) / 2 * cubeDistance, -15.5, 10), cubeSize * 0.75, 0);
 	GameObject* midBoost4 = AddCubeToWorld(startPos + Vector3((numLinks + 2) / 2 * cubeDistance, -18.5, 13), cubeSize * 0.75, 0);
+	GameObject* startPlatform = AddCubeToWorld(startPos + Vector3(0, 0, -10), cubeSize * 2, 0);
 	GameObject* endPlatform = AddCubeToWorld(startPos + Vector3((numLinks + 2) * cubeDistance, 0, -10), cubeSize * 2, 0);
 
 	GameObject* start = AddCubeToWorld(startPos + Vector3(0, 0, 0), cubeSize, 0);

@@ -1,8 +1,10 @@
 #include "PlayerGameObject.h"
 #include "PositionConstraint.h"
+#include "PhysicsObject.h"
 
-PlayerGameObject::PlayerGameObject() {
+PlayerGameObject::PlayerGameObject(GameWorld* world) {
     name = "player";
+    this->world = world;
 }
 PlayerGameObject::~PlayerGameObject() {
 
@@ -11,30 +13,45 @@ PlayerGameObject::~PlayerGameObject() {
 //int counter = 0;
 
 void PlayerGameObject::OnCollisionBegin(NCL::CSC8503::GameObject* otherObject) {
+    std::string otherName = otherObject->GetName();
 
-    if (otherObject->GetName() == "key" && !(std::find(alreadyScoredFor.begin(), alreadyScoredFor.end(), otherObject) != alreadyScoredFor.end())) {
+    if (otherName == "key" && !(std::find(alreadyScoredFor.begin(), alreadyScoredFor.end(), otherObject) != alreadyScoredFor.end())) {
         score += 5;
         alreadyScoredFor.push_back(otherObject);
 
         itemsCollected++;
         itemsLeft--;
     }
-    if (otherObject->GetName() == "heistItem" && !(std::find(alreadyScoredFor.begin(), alreadyScoredFor.end(), otherObject) != alreadyScoredFor.end())) {
+    if (otherName == "heistItem" && !(std::find(alreadyScoredFor.begin(), alreadyScoredFor.end(), otherObject) != alreadyScoredFor.end())) {
         score += 20;
         alreadyScoredFor.push_back(otherObject);
 
         itemsCollected++;
         itemsLeft--;
     }
-    if (otherObject->GetName() == "plate" && !(std::find(alreadyScoredFor.begin(), alreadyScoredFor.end(), otherObject) != alreadyScoredFor.end())) {
+    if (otherName == "plate" && !(std::find(alreadyScoredFor.begin(), alreadyScoredFor.end(), otherObject) != alreadyScoredFor.end())) {
         score += 5;
         alreadyScoredFor.push_back(otherObject);
     }
-    if (otherObject->GetName() == "BTEnemy" || otherObject->GetName() == "Enemy") lose = true;
+    if (otherName == "BTEnemy" || otherName == "Enemy") {
+        lose = true;
+    }
+    
 }
 
 void PlayerGameObject::OnCollisionEnd(NCL::CSC8503::GameObject* otherObject) {
     //std::cout << counter << " ONEND\n\n\n";
+    if (otherObject->GetName() == "Bonus") {
+        std::cout << "Player collected speed bonus\n";
+        speedMultiplier += 1.0f;
+        //world->RemoveGameObject(otherObject, true);
+        //delete otherObject;
+        //*otherObject = GameObject();
+        //world->RemoveGameObject(this, false);
+        otherObject->SetActive(false);
+        otherObject->GetTransform().SetPosition(Vector3(0, -20, 0));
+        otherObject->GetPhysicsObject()->SetInverseMass(0);
+    }
 }
 
 

@@ -32,9 +32,9 @@ namespace NCL {
 
             void Update(float dt) override;
 
-            void MoveToPosition(Vector3 targetPos);
+            void OnCollisionBegin(GameObject* otherObject) override;
 
-            //void OnCollisionBegin(GameObject* otherObject) override;
+            void MoveToPosition(Vector3 targetPos);
 
             PlayerGameObject* target;
             StateMachine* stateMachine;
@@ -42,7 +42,8 @@ namespace NCL {
         protected:
             std::vector<Vector3> patrolPoints = {};
             int currentPatrolIndex = 0;
-            float speed;
+            float speed = 30;
+            float speedBonus = 0;
             Vector3 currentPos;
             Vector3 playerPos;
             GameWorld* world;
@@ -56,6 +57,8 @@ namespace NCL {
             ~BTEnemyGameObject();
 
             void Update(float dt) override;
+
+            void OnCollisionBegin(GameObject* otherObject) override;
 
             void MoveToPosition(Vector3 targetPos);
             bool Pathfind(Vector3 targetPos);

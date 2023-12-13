@@ -83,7 +83,7 @@ EnemyGameObject::EnemyGameObject(PlayerGameObject* gameObject, GameWorld* world,
 
     State* patrol = new State([&](float dt) -> void {
         Vector3 nextPatrolPointPos = patrolPoints[currentPatrolIndex];
-        speed = 30.0f;
+        speed = 30.0f + speedBonus;
 
         if (currentPos.z > 1) { // if the enemy leaves its zone, next patrol point is the doorway back to its zone
             nextPatrolPointPos = Vector3(-160, 2.5, 1);
@@ -99,7 +99,7 @@ EnemyGameObject::EnemyGameObject(PlayerGameObject* gameObject, GameWorld* world,
         });
 
     State* chase = new State([&](float dt) -> void {
-        speed = 10.0f;
+        speed = 10.0f + speedBonus;
         MoveToPosition(Vector3(playerPos.x, 2.5, playerPos.z)); // keeps enemy on the ground
         });
 
@@ -170,6 +170,17 @@ void EnemyGameObject::Update(float dt) {    // update position, player position 
     currentPos = GetTransform().GetPosition();
     playerPos = target->GetTransform().GetPosition();
     stateMachine->Update(dt);
+}
+
+void EnemyGameObject::OnCollisionBegin(GameObject* otherObject) {
+    if (otherObject->GetName() == "Bonus") {
+        std::cout << "Enemy collected speed bonus\n";
+        speedBonus += 10;
+        //world->RemoveGameObject(otherObject);
+        otherObject->SetActive(false);
+        otherObject->GetTransform().SetPosition(Vector3(0, -20, 0));
+        otherObject->GetPhysicsObject()->SetInverseMass(0);
+    }
 }
 
 void EnemyGameObject::MoveToPosition(Vector3 targetPos) {
@@ -395,6 +406,17 @@ void BTEnemyGameObject::Update(float dt) {
 
     if (currentState == Success) player->lose = true;   // player caught so end game
     else if (currentState == Failure) std::cout << "Behaviour Tree error\n";    // error
+}
+
+void BTEnemyGameObject::OnCollisionBegin(GameObject* otherObject) {
+    if (otherObject->GetName() == "Bonus") {
+        std::cout << "Goose collected speed bonus\n";
+        speed += 10;
+        //world->RemoveGameObject(otherObject);
+        otherObject->SetActive(false);
+        otherObject->GetTransform().SetPosition(Vector3(0, -20, 0));
+        otherObject->GetPhysicsObject()->SetInverseMass(0);
+    }
 }
 
 void BTEnemyGameObject::MoveToPosition(Vector3 targetPos) {

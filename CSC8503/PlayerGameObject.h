@@ -21,7 +21,7 @@ using namespace CSC8503;
 class PlayerGameObject : public GameObject {
 
 public:
-    PlayerGameObject();
+    PlayerGameObject(GameWorld* world = nullptr);
 
     ~PlayerGameObject();
 
@@ -42,6 +42,9 @@ public:
     bool holdingHeistItem = false;  
 
     std::vector<GameObject*> alreadyScoredFor = {};
+
+    float speedMultiplier = 1.0f;
+    GameWorld* world;
 };
 
 /*class TriggerGameObject : public GameObject {
