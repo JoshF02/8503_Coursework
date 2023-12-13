@@ -468,8 +468,8 @@ void TutorialGame::InitWorld() {
 	zone1Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
 	AddPressurePlateToWorld(Vector3(-160, 0.01f, -70), false, zone1Door);
 
-	AddEnemyToWorld(Vector3(-10, 2.5, -100), -10, -180, -10, -180);
-	AddEnemyToWorld(Vector3(-30, 2.5, -70), -30, -160, -30, -160);
+	AddEnemyToWorld(Vector3(-10, 2.5, -100), -10, -180, -10, -100);
+	AddEnemyToWorld(Vector3(-30, 2.5, -70), -30, -160, -30, -90);
 	AddEnemyToWorld(Vector3(10, 2.5, -100), 10, 180, -10, -180);
 	AddEnemyToWorld(Vector3(30, 2.5, -70), 30, 160, -30, -160);
 
@@ -477,7 +477,7 @@ void TutorialGame::InitWorld() {
 	// Zone 2
 	GameObject* zone2Door = AddCubeToWorld(Vector3(-100, 5, 100), Vector3(1, 5, 10), 0);
 	zone2Door->GetRenderObject()->SetColour(Vector4(0, 0, 1, 1));
-	AddKeyToWorld(Vector3(-170, 2, -160), zone2Door);	// put at end of bridge in zone 1
+	AddKeyToWorld(Vector3(-170, 26, -160), zone2Door);	// at end of bridge in zone 1
 
 	AddOBBToWorld(Vector3(-170, 2, 150), Vector3(2, 2, 2));
 	AddOBBToWorld(Vector3(-180, 2, 150), Vector3(2, 2, 2));
@@ -513,6 +513,8 @@ void TutorialGame::InitWorld() {
 	mazeDoorLock->GetRenderObject()->SetColour(Vector4(1, 0, 0, 1));
 	SwitchGameObject* alarmLock = AddPressurePlateToWorld(Vector3(135, 0.01f, 135), false, mazeDoorLock, 0.5f);
 	alarmLock->GetRenderObject()->SetColour(Vector4(1, 0, 0, 1));
+
+	BridgeConstraintTest();
 
 	//InitTestingObjs();
 }
@@ -963,14 +965,20 @@ void TutorialGame::MoveSelectedObject() {
 
 void TutorialGame::BridgeConstraintTest() {
 	//implemented
-	Vector3 cubeSize = Vector3(8, 8, 8);
+	Vector3 cubeSize = Vector3(2, 2, 2);
 
 	float invCubeMass = 5;
-	int numLinks = 10;
-	float maxDistance = 30;
-	float cubeDistance = 20;
+	int numLinks = 20;
+	float maxDistance = 5.25;
+	float cubeDistance = -5;
 
-	Vector3 startPos = Vector3(0, 100.0f, 0);
+	Vector3 startPos = Vector3(-60, 20, -150);
+
+	GameObject* midBoost1 = AddCubeToWorld(startPos + Vector3((numLinks + 2) / 2 * cubeDistance, -9.5, 4), cubeSize * 0.75, 0);
+	GameObject* midBoost2 = AddCubeToWorld(startPos + Vector3((numLinks + 2) / 2 * cubeDistance, -12.5, 7), cubeSize * 0.75, 0);
+	GameObject* midBoost3 = AddCubeToWorld(startPos + Vector3((numLinks + 2) / 2 * cubeDistance, -15.5, 10), cubeSize * 0.75, 0);
+	GameObject* midBoost4 = AddCubeToWorld(startPos + Vector3((numLinks + 2) / 2 * cubeDistance, -18.5, 13), cubeSize * 0.75, 0);
+	GameObject* endPlatform = AddCubeToWorld(startPos + Vector3((numLinks + 2) * cubeDistance, 0, -10), cubeSize * 2, 0);
 
 	GameObject* start = AddCubeToWorld(startPos + Vector3(0, 0, 0), cubeSize, 0);
 	GameObject* end = AddCubeToWorld(startPos + Vector3((numLinks + 2) * cubeDistance, 0, 0), cubeSize, 0);

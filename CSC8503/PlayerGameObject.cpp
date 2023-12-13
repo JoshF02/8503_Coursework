@@ -67,7 +67,7 @@ void SwitchGameObject::OnCollisionBegin(GameObject* otherObject) {
     //std::cout << "ONBEGIN\n";
     timeSinceLastEnter = 0;
 
-    if (!switchActive) {
+    if (!switchActive && otherObject->GetName() != "Enemy") {
         std::cout << "ISONTIMER=" << isOnTimer << " ACTIVATING\n";
         switchActive = true;
     }
