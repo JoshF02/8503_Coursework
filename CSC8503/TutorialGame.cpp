@@ -287,6 +287,26 @@ void TutorialGame::LockedObjectMovement() {
 		selectionObject->GetPhysicsObject()->AddForce(rightAxis * 20 * player->speedMultiplier);
 	}
 
+	if (Window::GetKeyboard()->KeyDown(KeyCodes::UP)) {
+		freeRotation = true;
+		//selectionObject->GetPhysicsObject()->ClearForces();
+		selectionObject->GetPhysicsObject()->SetAngularVelocity(Vector3(0, 0, 0));
+	}
+	if (Window::GetKeyboard()->KeyDown(KeyCodes::DOWN)) {
+		freeRotation = false;
+		selectionObject->GetPhysicsObject()->SetAngularVelocity(Vector3(0, 0, 0));
+		
+		yaw = selectionObject->GetTransform().GetOrientation().ToEuler().y;	// keeps player facing same way, and rotates camera to match
+	}
+	if (freeRotation) {
+		if (Window::GetKeyboard()->KeyDown(KeyCodes::LEFT)) {
+			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, 10, 0));
+		}
+		if (Window::GetKeyboard()->KeyDown(KeyCodes::RIGHT)) {
+			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, -10, 0));
+		}
+	}
+
 	if (Window::GetKeyboard()->KeyDown(KeyCodes::SPACE)) {	// only allow jump if on ground
 		
 		RayCollision closestCollision;
@@ -295,19 +315,10 @@ void TutorialGame::LockedObjectMovement() {
 		Ray r = Ray(rayPos, rayDir);
 
 		if (world->Raycast(r, closestCollision, true, selectionObject, 1.5f)) {
-			//Vector3 oldPos = selectionObject->GetTransform().GetPosition();
-			//selectionObject->GetTransform().SetPosition(Vector3(oldPos.x, oldPos.y + 0.05, oldPos.z));
-			//Vector3 oldVel = selectionObject->GetPhysicsObject()->GetLinearVelocity();
-			//std::cout << oldVel.y << std::endl;
-			//selectionObject->GetPhysicsObject()->SetLinearVelocity(Vector3(oldVel.x, 20, oldVel.z));
 			//std::cout << "CLOSE TO GROUND, ALLOWING JUMP\n";
 			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 700, 0) * player->speedMultiplier);
 		}
 	}
-
-	/*if (Window::GetKeyboard()->KeyDown(KeyCodes::SHIFT)) {
-		selectionObject->GetPhysicsObject()->AddForce(Vector3(0, -200, 0));
-	}*/
 
 	// rotate player with mouse
 	yaw -= controller.GetNamedAxis("XLook");
@@ -319,7 +330,7 @@ void TutorialGame::LockedObjectMovement() {
 		yaw -= 360.0f;
 	}
 
-	selectionObject->GetTransform().SetOrientation(Quaternion::Quaternion(Matrix4::Rotation(yaw, Vector3(0, 1, 0))));
+	if (!freeRotation) selectionObject->GetTransform().SetOrientation(Quaternion::Quaternion(Matrix4::Rotation(yaw, Vector3(0, 1, 0))));
 
 	// pick up item in front of player
 	RayCollision closestCollision;
@@ -332,24 +343,6 @@ void TutorialGame::LockedObjectMovement() {
 		rayPos = selectionObject->GetTransform().GetPosition();
 
 		Ray r = Ray(rayPos, rayDir);
-
-
-		/*GameObject* player = selectionObject;
-
-		yaw = controller.GetNamedAxis("XLook");
-
-		if (yaw < 0) {
-			yaw += 360.0f;
-		}
-		if (yaw > 360.0f) {
-			yaw -= 360.0f;
-		}
-
-		Quaternion facingDir = player->GetTransform().GetOrientation();
-
-		selectionObject->GetTransform().SetOrientation(facingDir + 
-			Quaternion::Quaternion(Matrix4::Rotation(yaw, Vector3(0, 1, 0))));*/
-
 
 		if (world->Raycast(r, closestCollision, true, selectionObject, 10.0f)) {
 
@@ -527,6 +520,7 @@ void TutorialGame::InitWorld() {
 	AddBonusToWorld(Vector3(10, 5, -180));		// on state enemy path
 	AddBonusToWorld(Vector3(125, 5, 135));		// by alarm (goose can collect)
 
+	// Rubber and Steel Balls
 	GameObject* rubberBall = AddSphereToWorld(Vector3(95, 30, -120), 2.0f);
 	rubberBall->GetPhysicsObject()->SetElasticity(0.95f);
 	GameObject* steelBall = AddSphereToWorld(Vector3(105, 30, -120), 2.0f);

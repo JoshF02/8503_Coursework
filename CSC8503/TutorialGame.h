@@ -126,6 +126,8 @@ namespace NCL {
 			PlayerGameObject* player = nullptr;
 
 			NavigationGrid* grid;
+
+			bool freeRotation = false;
 		};
 	}
 }
