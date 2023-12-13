@@ -97,7 +97,7 @@ void NetworkedGame::UpdateAsServer(float dt) {
 		std::string scoresList = "";
 		int index = 0;
 		for (auto i = scores.begin(); i != scores.end(); ++i) {
-			scoresList += std::to_string(*i) + ": " + std::to_string(clientThatGotScore[index]) + ", ";
+			scoresList += std::to_string(*i) + "," + std::to_string(clientThatGotScore[index]) + ",";
 			index++;
 		}
 		GamePacket* msgFromServer = new StringPacket(scoresList);	
@@ -109,7 +109,7 @@ void NetworkedGame::UpdateAsServer(float dt) {
 		std::string scoresList = "";
 		int index = 0;
 		for (auto i = scores.begin(); i != scores.end(); ++i) {
-			scoresList += std::to_string(*i) + ": " + std::to_string(clientThatGotScore[index]) + ", ";
+			scoresList += std::to_string(*i) + "," + std::to_string(clientThatGotScore[index]) + ",";
 			index++;
 		}
 		GamePacket* msgFromServer = new StringPacket(scoresList);
@@ -194,33 +194,36 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 		if (thisServer) {	// if server, record score
 			//std::cout << "server received score (source " << source << "): " << msg << std::endl;	
 			numScores++;
-			latestScore = std::stoi(msg);	// can probably remove these and put score saving functionality here
+			latestScore = std::stoi(msg);
 			latestClient = source;
 		}
 		
 		else {	// if client, save scores
-			/*scores = {};
+			if (msg == "") return;
+			//std::cout << "CLIENT RECIEVED SCORE LIST: " << msg << "\n\n";
+
+			scores = {};
+			clientThatGotScore = {};
 			std::stringstream ss(msg);
 
-			/*for (int i; ss >> i;) {
-				scores.push_back(i);
-				if (ss.peek() == ',')
-					ss.ignore();
-			}*/
-			
-			/*while (ss.good()) {
+			while (ss.good()) {
 				std::string substr;
-				getline(ss, substr, ',');
+				getline(ss, substr, ',');	// score
+				if (substr == "" || substr == " ") continue;
 				scores.push_back(std::stoi(substr));
+
+				getline(ss, substr, ',');	// client id
+				clientThatGotScore.push_back(std::stoi(substr));
 			}
 
-			std::cout << "CLIENT SCORE LIST: ";
+
+			std::string scoresList = "";	// output local score list to console
+			int index = 0;
 			for (auto i = scores.begin(); i != scores.end(); ++i) {
-				std::cout << std::to_string(*i) + ",";
+				scoresList += std::to_string(*i) + ": " + std::to_string(clientThatGotScore[index]) + ", ";
+				index++;
 			}
-			std::cout << "\n\n";*/
-
-			std::cout << "CLIENT RECIEVED SCORE LIST: " << msg << "\n\n";	// need to process and save scores
+			std::cout << "CLIENT UPDATED SCORE LIST: " << scoresList << "\n\n";	// NEED TO ORDER AND DISPLAY THEM
 		}
 	}
 }
