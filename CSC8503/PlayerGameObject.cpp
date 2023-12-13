@@ -18,16 +18,10 @@ void PlayerGameObject::OnCollisionBegin(NCL::CSC8503::GameObject* otherObject) {
     if (otherName == "key" && !(std::find(alreadyScoredFor.begin(), alreadyScoredFor.end(), otherObject) != alreadyScoredFor.end())) {
         score += 5;
         alreadyScoredFor.push_back(otherObject);
-
-        itemsCollected++;
-        itemsLeft--;
     }
     if (otherName == "heistItem" && !(std::find(alreadyScoredFor.begin(), alreadyScoredFor.end(), otherObject) != alreadyScoredFor.end())) {
         score += 20;
         alreadyScoredFor.push_back(otherObject);
-
-        itemsCollected++;
-        itemsLeft--;
     }
     if (otherName == "plate" && !(std::find(alreadyScoredFor.begin(), alreadyScoredFor.end(), otherObject) != alreadyScoredFor.end())) {
         score += 5;
@@ -36,22 +30,24 @@ void PlayerGameObject::OnCollisionBegin(NCL::CSC8503::GameObject* otherObject) {
     if (otherName == "BTEnemy" || otherName == "Enemy") {
         lose = true;
     }
+    if (otherName == "Bonus" && !(std::find(alreadyScoredFor.begin(), alreadyScoredFor.end(), otherObject) != alreadyScoredFor.end())) {
+        std::cout << "Player collected speed bonus\n";
+        score += 2;
+        alreadyScoredFor.push_back(otherObject);
+
+        itemsCollected++;
+        itemsLeft--;
+        speedMultiplier += 1.0f;
+        
+        otherObject->SetActive(false);
+        otherObject->GetTransform().SetPosition(Vector3(0, -20, 0));
+        otherObject->GetPhysicsObject()->SetInverseMass(0);
+    }
     
 }
 
 void PlayerGameObject::OnCollisionEnd(NCL::CSC8503::GameObject* otherObject) {
     //std::cout << counter << " ONEND\n\n\n";
-    if (otherObject->GetName() == "Bonus") {
-        std::cout << "Player collected speed bonus\n";
-        speedMultiplier += 1.0f;
-        //world->RemoveGameObject(otherObject, true);
-        //delete otherObject;
-        //*otherObject = GameObject();
-        //world->RemoveGameObject(this, false);
-        otherObject->SetActive(false);
-        otherObject->GetTransform().SetPosition(Vector3(0, -20, 0));
-        otherObject->GetPhysicsObject()->SetInverseMass(0);
-    }
 }
 
 

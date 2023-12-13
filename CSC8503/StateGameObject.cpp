@@ -27,7 +27,7 @@ StateGameObject::StateGameObject() {
 
 	stateMachine->AddTransition(new StateTransition(stateA, stateB, [&]()->bool
 		{
-			return this->counter > 3.0f;
+			return this->counter > 5.0f;
 		}
 	));
 
@@ -47,12 +47,14 @@ void StateGameObject::Update(float dt) {
 }
 
 void StateGameObject::MoveLeft(float dt) {
-	GetPhysicsObject()->AddForce({ -100, 0, 0 });
+	//GetPhysicsObject()->AddForce({ -20, 0, 0 });
+    GetPhysicsObject()->AddTorque({0, 0.1, 0});
 	counter += dt;
 }
 
 void StateGameObject::MoveRight(float dt) {
-	GetPhysicsObject()->AddForce({ 100, 0, 0 });
+	//GetPhysicsObject()->AddForce({ 20, 0, 0 });
+    GetPhysicsObject()->AddTorque({0, -0.1, 0});
 	counter -= dt;
 }
 
@@ -176,6 +178,8 @@ void EnemyGameObject::OnCollisionBegin(GameObject* otherObject) {
     if (otherObject->GetName() == "Bonus") {
         std::cout << "Enemy collected speed bonus\n";
         speedBonus += 10;
+        target->itemsLeft--;
+
         //world->RemoveGameObject(otherObject);
         otherObject->SetActive(false);
         otherObject->GetTransform().SetPosition(Vector3(0, -20, 0));
@@ -412,6 +416,8 @@ void BTEnemyGameObject::OnCollisionBegin(GameObject* otherObject) {
     if (otherObject->GetName() == "Bonus") {
         std::cout << "Goose collected speed bonus\n";
         speed += 10;
+        player->itemsLeft--;
+
         //world->RemoveGameObject(otherObject);
         otherObject->SetActive(false);
         otherObject->GetTransform().SetPosition(Vector3(0, -20, 0));

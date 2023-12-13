@@ -515,10 +515,10 @@ void TutorialGame::InitWorld() {
 
 	// Bridge Obstacle and Bonus Coins
 	BridgeConstraintTest();	
-	AddBonusToWorld(Vector3(120, 10, -120));	// next to start
-	AddBonusToWorld(Vector3(-60, 26, -160));	// at other end of bridge
-	AddBonusToWorld(Vector3(10, 5, -180));		// on state enemy path
-	AddBonusToWorld(Vector3(125, 5, 135));		// by alarm (goose can collect)
+	AddStateObjectToWorld(Vector3(120, 10, -120));		// next to start
+	AddStateObjectToWorld(Vector3(-60, 26, -160));		// at other end of bridge
+	AddStateObjectToWorld(Vector3(10, 5, -180));		// on state enemy path
+	AddStateObjectToWorld(Vector3(125, 5, 135));		// by alarm (goose can collect)
 
 	// Rubber and Steel Balls
 	GameObject* rubberBall = AddSphereToWorld(Vector3(95, 30, -120), 2.0f);
@@ -808,6 +808,7 @@ GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 
 	apple->GetPhysicsObject()->SetInverseMass(1.0f);
 	apple->GetPhysicsObject()->InitSphereInertia();
+	apple->GetRenderObject()->SetColour(Vector4(1, 1, 0, 1));
 
 	world->AddGameObject(apple);
 
@@ -816,8 +817,10 @@ GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 
 StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position) {
 	StateGameObject* apple = new StateGameObject();
+	std::string name = "Bonus";
+	apple->SetName(name);
 
-	SphereVolume* volume = new SphereVolume(0.5f);
+	SphereVolume* volume = new SphereVolume(1.0f);
 	apple->SetBoundingVolume((CollisionVolume*)volume);
 	apple->GetTransform()
 		.SetScale(Vector3(0.2f, 0.2f, 0.2f))
@@ -828,6 +831,7 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position) {
 
 	apple->GetPhysicsObject()->SetInverseMass(1.0f);
 	apple->GetPhysicsObject()->InitSphereInertia();
+	apple->GetRenderObject()->SetColour(Vector4(1, 1, 0, 1));
 
 	world->AddGameObject(apple);
 
@@ -1023,16 +1027,7 @@ void TutorialGame::AddMazeToWorld() {
 			if (n.type == 120) AddCubeToWorld(n.position + Vector3(0, 5, 0), { (float)grid->nodeSize / 2,(float)grid->nodeSize / 2,(float)grid->nodeSize / 2 }, 0);
 
 			// c = 99 coin
-			//if (n.type == 99) AddBonusToWorld(n.position + Vector3(0, 5, 0));
-
-			// e = 101 enemy
-			//if (n.type == 101) AddEnemyToWorld(n.position + Vector3(0, 5, 0));
-
-			// i = 105 state object	
-			//if (n.type == 105) AddStateObjectToWorld(n.position + Vector3(0, 5, 0));
-
-			// p = 112 player
-			//if (n.type == 112) AddPlayerToWorld(n.position + Vector3(0, 5, 0));
+			//if (n.type == 99) AddStateObjectToWorld(n.position + Vector3(0, 5, 0));
 		}
 	}
 }
@@ -1053,7 +1048,7 @@ void TutorialGame::UpdateScoreAndTimer(float dt) {
 	std::string score = "Score = " + std::to_string(player->score);
 	Debug::Print(score, Vector2(90 - time.length(), 10), timerColor);
 
-	std::string itemsLeft = "Items Left = " + std::to_string(player->itemsLeft);
+	std::string itemsLeft = "Coins Left = " + std::to_string(player->itemsLeft);
 	Debug::Print(itemsLeft, Vector2(90 - time.length() - 9.5, 15), timerColor);
 
 	std::string itemsCollected = "(" + std::to_string(player->itemsCollected) + " Collected)";
@@ -1080,8 +1075,8 @@ void TutorialGame::EndGame() {
 	Debug::Print(score, Vector2(30, 50));
 
 
-	std::string itemLeft = "Items Left = ";
-	itemLeft.append(std::to_string(player->itemsLeft));
+	std::string itemLeft = "Coins Collected = ";
+	itemLeft.append(std::to_string(player->itemsCollected));
 	itemLeft.append(";");
 	Debug::Print(itemLeft, Vector2(30, 60));
 

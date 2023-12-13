@@ -34,7 +34,7 @@ public:
     //void Update(float dt) override;;
 
     int itemsCollected = 0;
-    int itemsLeft = 2;
+    int itemsLeft = 4;
     int score = 0;
     bool win = false;
     bool lose = false;
