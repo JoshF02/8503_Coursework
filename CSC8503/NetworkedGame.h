@@ -47,13 +47,12 @@ namespace NCL {
 			bool hasSentScore = false;
 			int numScores = 0;
 			int oldNumScores = 0;
+			int oldClientCount = 0;
 
 			int latestScore = 0;
 			int latestClient = 0;
-			std::vector<int> scores;
-			std::vector<int> clientThatGotScore;
 
-			int oldClientCount = 0;
+			std::vector<Vector2> scoresWithIds;
 		};
 	}
 }

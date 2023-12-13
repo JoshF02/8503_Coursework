@@ -78,6 +78,8 @@ void NetworkedGame::UpdateGame(float dt) {
 	if (thisClient) TutorialGame::UpdateGame(dt);
 }
 
+bool SortVec2(Vector2 i, Vector2 j) { return (i.x > j.x); }	// orders scores high-low
+
 void NetworkedGame::UpdateAsServer(float dt) {
 	packetsToSnapshot--;
 	if (packetsToSnapshot < 0) {
@@ -90,15 +92,13 @@ void NetworkedGame::UpdateAsServer(float dt) {
 
 	if (numScores != oldNumScores) {	// save new scores and send out new scores list
 		oldNumScores = numScores;
-		scores.push_back(latestScore);
-		clientThatGotScore.push_back(latestClient);
-		//std::cout << "score of " << latestScore << " saved\n";
+		scoresWithIds.push_back(Vector2(latestScore, latestClient));
+
+		std::sort(scoresWithIds.begin(), scoresWithIds.end(), SortVec2);
 
 		std::string scoresList = "";
-		int index = 0;
-		for (auto i = scores.begin(); i != scores.end(); ++i) {
-			scoresList += std::to_string(*i) + "," + std::to_string(clientThatGotScore[index]) + ",";
-			index++;
+		for (auto i = scoresWithIds.begin(); i != scoresWithIds.end(); ++i) {
+			scoresList += std::to_string((int)(*i).x) + "," + std::to_string((int)(*i).y) + ",";
 		}
 		GamePacket* msgFromServer = new StringPacket(scoresList);	
 		thisServer->SendGlobalPacket(*msgFromServer);
@@ -107,10 +107,8 @@ void NetworkedGame::UpdateAsServer(float dt) {
 		oldClientCount = thisServer->clientCount;
 
 		std::string scoresList = "";
-		int index = 0;
-		for (auto i = scores.begin(); i != scores.end(); ++i) {
-			scoresList += std::to_string(*i) + "," + std::to_string(clientThatGotScore[index]) + ",";
-			index++;
+		for (auto i = scoresWithIds.begin(); i != scoresWithIds.end(); ++i) {
+			scoresList += std::to_string((int)(*i).x) + "," + std::to_string((int)(*i).y) + ",";
 		}
 		GamePacket* msgFromServer = new StringPacket(scoresList);
 		thisServer->SendGlobalPacket(*msgFromServer);
@@ -200,30 +198,27 @@ void NetworkedGame::ReceivePacket(int type, GamePacket* payload, int source) {
 		
 		else {	// if client, save scores
 			if (msg == "") return;
-			//std::cout << "CLIENT RECIEVED SCORE LIST: " << msg << "\n\n";
-
-			scores = {};
-			clientThatGotScore = {};
+			scoresWithIds = {};
 			std::stringstream ss(msg);
 
 			while (ss.good()) {
 				std::string substr;
 				getline(ss, substr, ',');	// score
 				if (substr == "" || substr == " ") continue;
-				scores.push_back(std::stoi(substr));
+				int tempScore = std::stoi(substr);
 
 				getline(ss, substr, ',');	// client id
-				clientThatGotScore.push_back(std::stoi(substr));
+				int tempId = std::stoi(substr);
+
+				scoresWithIds.push_back(Vector2(tempScore, tempId));
 			}
 
 
 			std::string scoresList = "";	// output local score list to console
-			int index = 0;
-			for (auto i = scores.begin(); i != scores.end(); ++i) {
-				scoresList += std::to_string(*i) + ": " + std::to_string(clientThatGotScore[index]) + ", ";
-				index++;
+			for (auto i = scoresWithIds.begin(); i != scoresWithIds.end(); ++i) {
+				scoresList += std::to_string((int)(*i).x) + ": " + std::to_string((int)(*i).y) + ", ";
 			}
-			std::cout << "CLIENT UPDATED SCORE LIST: " << scoresList << "\n\n";	// NEED TO ORDER AND DISPLAY THEM
+			std::cout << "CLIENT UPDATED SORTED SCORE LIST: " << scoresList << "\n\n";	// NEED TO DISPLAY THEM
 		}
 	}
 }
