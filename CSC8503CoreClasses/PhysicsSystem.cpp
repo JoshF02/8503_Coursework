@@ -17,7 +17,7 @@ PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
 	useBroadPhase	= true;	
 	dTOffset		= 0.0f;
 	globalDamping	= 0.995f;
-	SetGravity(Vector3(0.0f, -9.8f, 0.0f));
+	SetGravity(Vector3(0.0f, -19.8f, 0.0f));
 }
 
 PhysicsSystem::~PhysicsSystem()	{
@@ -267,7 +267,7 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 
 	float angularEffect = Vector3::Dot(inertiaA + inertiaB, p.normal);
 
-	float cRestitution = 0.66f;
+	float cRestitution = physA->GetElasticity() * physB->GetElasticity();
 
 	float j = (-(1.0f + cRestitution) * impulseForce) / (totalMass + angularEffect);
 

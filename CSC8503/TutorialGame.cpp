@@ -295,8 +295,13 @@ void TutorialGame::LockedObjectMovement() {
 		Ray r = Ray(rayPos, rayDir);
 
 		if (world->Raycast(r, closestCollision, true, selectionObject, 1.5f)) {
+			//Vector3 oldPos = selectionObject->GetTransform().GetPosition();
+			//selectionObject->GetTransform().SetPosition(Vector3(oldPos.x, oldPos.y + 0.05, oldPos.z));
+			//Vector3 oldVel = selectionObject->GetPhysicsObject()->GetLinearVelocity();
+			//std::cout << oldVel.y << std::endl;
+			//selectionObject->GetPhysicsObject()->SetLinearVelocity(Vector3(oldVel.x, 20, oldVel.z));
 			//std::cout << "CLOSE TO GROUND, ALLOWING JUMP\n";
-			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 200, 0) * player->speedMultiplier);
+			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 700, 0) * player->speedMultiplier);
 		}
 	}
 
@@ -522,6 +527,12 @@ void TutorialGame::InitWorld() {
 	AddBonusToWorld(Vector3(10, 5, -180));		// on state enemy path
 	AddBonusToWorld(Vector3(125, 5, 135));		// by alarm (goose can collect)
 
+	GameObject* rubberBall = AddSphereToWorld(Vector3(95, 30, -120), 2.0f);
+	rubberBall->GetPhysicsObject()->SetElasticity(0.95f);
+	GameObject* steelBall = AddSphereToWorld(Vector3(105, 30, -120), 2.0f);
+	steelBall->GetPhysicsObject()->SetElasticity(0.2f);
+	steelBall->GetRenderObject()->SetColour(Vector4(0, 0, 0, 1));
+
 	//InitTestingObjs();
 }
 
@@ -718,6 +729,7 @@ PlayerGameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitSphereInertia();
+	character->GetPhysicsObject()->SetElasticity(0.2f);
 
 	world->AddGameObject(character);
 
