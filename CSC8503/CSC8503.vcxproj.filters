@@ -25,6 +25,18 @@
     <ClCompile Include="D:\C++ Projects\CSC8503 2023\CSC8503\PlayerGameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\C++ Projects\CSC8503 2023\CSC8503\EnemyGameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\C++ Projects\CSC8503 2023\CSC8503\BTEnemyGameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\C++ Projects\CSC8503 2023\CSC8503\SwitchGameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\C++ Projects\CSC8503 2023\CSC8503\KeyGameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\C++ Projects\CSC8503 2023\CSC8503\GameTechRenderer.h">
@@ -43,6 +55,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\C++ Projects\CSC8503 2023\CSC8503\PlayerGameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\C++ Projects\CSC8503 2023\CSC8503\EnemyGameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\C++ Projects\CSC8503 2023\CSC8503\BTEnemyGameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\C++ Projects\CSC8503 2023\CSC8503\SwitchGameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\C++ Projects\CSC8503 2023\CSC8503\KeyGameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\C++ Projects\CSC8503 2023\CSC8503\CMakeFiles\CSC8503.dir\Debug\cmake_pch.hxx">

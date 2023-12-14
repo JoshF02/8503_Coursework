@@ -9,6 +9,10 @@
 
 #include "StateGameObject.h"
 #include "PlayerGameObject.h"
+#include "EnemyGameObject.h"
+#include "BTEnemyGameObject.h"
+#include "SwitchGameObject.h"
+#include "KeyGameObject.h"
 
 namespace NCL {
 	namespace CSC8503 {
