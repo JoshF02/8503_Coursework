@@ -1,2 +1,7 @@
-﻿  Scanning sources for module dependencies...
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (CSC8503CoreClasses.dir\Debug\) contains files shared from another project (CSC8503CoreClasses.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Scanning sources for module dependencies...
+  StateGameObject.cpp
+D:\C++ Projects\CSC8503 2023\CSC8503\StateGameObject.cpp(51,39): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\C++ Projects\CSC8503 2023\CSC8503\StateGameObject.cpp(57,40): warning C4305: 'argument': truncation from 'double' to 'float'
+  LINK : program database D:\C++ Projects\CSC8503 2023\x64\Debug\CSC8503.pdb missing; performing full link
   CSC8503.vcxproj -> D:\C++ Projects\CSC8503 2023\x64\Debug\CSC8503.exe

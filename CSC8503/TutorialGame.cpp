@@ -85,13 +85,13 @@ void TutorialGame::UpdateGame(float dt) {
 		InitCamera();
 
 		if (!gameHasStarted) {	// loaded into menu upon opening game
-			Debug::Print("1. Start Game ", Vector2(30, 40), Debug::GREEN);
+			Debug::Print("Start Game (1)", Vector2(30, 40), Debug::GREEN);
 		}
 		else {	// brought up menu by pausing
-			Debug::Print("1. Restart Game ", Vector2(30, 40), Debug::GREEN);
-			Debug::Print("2. Unpause Game ", Vector2(30, 50), Debug::GREEN);
+			Debug::Print("Restart Game (1)", Vector2(30, 40), Debug::GREEN);
+			Debug::Print("Unpause Game (2)", Vector2(30, 50), Debug::GREEN);
 		}
-		Debug::Print("Exit - Press ESC", Vector2(30, 60), Debug::GREEN);
+		Debug::Print("Exit (ESC)", Vector2(30, 60), Debug::GREEN);
 		
 		renderer->Update(dt);
 		renderer->Render();
@@ -213,6 +213,7 @@ void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyCodes::F1)) {
 		InitWorld(); //We can reset the simulation at any time with F1
 		selectionObject = nullptr;
+		pickedUpObj = nullptr;
 	}
 
 	/*if (Window::GetKeyboard()->KeyPressed(KeyCodes::F2)) {
@@ -618,7 +619,7 @@ KeyGameObject* TutorialGame::AddKeyToWorld(const Vector3& position, GameObject* 
 	key->SetName(name);
 
 	Vector3 keySize = Vector3(2, 2, 2);
-	AABBVolume* volume = new AABBVolume(keySize);
+	OBBVolume* volume = new OBBVolume(keySize);
 	key->SetBoundingVolume((CollisionVolume*)volume);
 	key->GetTransform()
 		.SetScale(keySize * 2)
@@ -630,6 +631,7 @@ KeyGameObject* TutorialGame::AddKeyToWorld(const Vector3& position, GameObject* 
 
 	key->GetPhysicsObject()->SetInverseMass(10);
 	key->GetPhysicsObject()->InitCubeInertia();
+	key->GetPhysicsObject()->SetElasticity(0.1f);
 
 	world->AddGameObject(key);
 
@@ -645,6 +647,8 @@ physics worlds. You'll probably need another function for the creation of OBB cu
 */
 GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius, float inverseMass) {
 	GameObject* sphere = new GameObject();
+	std::string name = "sphere";
+	sphere->SetName(name);
 
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
@@ -688,6 +692,8 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 
 GameObject* TutorialGame::AddOBBToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
 	GameObject* cube = new GameObject();
+	std::string name = "obb";
+	cube->SetName(name);
 
 	OBBVolume* volume = new OBBVolume(dimensions);
 	cube->SetBoundingVolume((CollisionVolume*)volume);
@@ -701,6 +707,7 @@ GameObject* TutorialGame::AddOBBToWorld(const Vector3& position, Vector3 dimensi
 
 	cube->GetPhysicsObject()->SetInverseMass(inverseMass);
 	cube->GetPhysicsObject()->InitCubeInertia();
+	cube->GetPhysicsObject()->SetElasticity(0.1f);
 
 	world->AddGameObject(cube);
 
@@ -1091,25 +1098,23 @@ void TutorialGame::EndGame() {
 	std::string wonOrLost = "";
 	if (player->lose) wonOrLost = "You Lost...";
 	if (player->win) wonOrLost = "You Won!";
-	Debug::Print(wonOrLost, Vector2(30, 40));
+	Debug::Print(wonOrLost, Vector2(30, 40), (player->win) ? Debug::GREEN : Debug::RED);
 
 	std::string score = "Score = ";
 	score.append(std::to_string(player->score));
-	score.append(";");
-	Debug::Print(score, Vector2(30, 50));
+	Debug::Print(score, Vector2(30, 50), (player->win) ? Debug::GREEN : Debug::RED);
 
 
 	std::string itemLeft = "Coins Collected = ";
 	itemLeft.append(std::to_string(player->itemsCollected));
-	itemLeft.append(";");
-	Debug::Print(itemLeft, Vector2(30, 60));
+	Debug::Print(itemLeft, Vector2(30, 60), (player->win) ? Debug::GREEN : Debug::RED);
 
-	std::string text = "Play Again(F3);";
+	std::string text = "Return To Menu (F3)";
 
-	Debug::Print(text, Vector2(30, 70));
+	Debug::Print(text, Vector2(30, 70), (player->win) ? Debug::GREEN : Debug::RED);
 
-	text = "Exit (ESC);";
-	Debug::Print(text, Vector2(30, 80));
+	text = "Exit (ESC)";
+	Debug::Print(text, Vector2(30, 80), (player->win) ? Debug::GREEN : Debug::RED);
 
 	gameHasStarted = false;
 }

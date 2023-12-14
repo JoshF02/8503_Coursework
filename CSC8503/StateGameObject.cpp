@@ -185,6 +185,15 @@ void EnemyGameObject::OnCollisionBegin(GameObject* otherObject) {
         otherObject->GetTransform().SetPosition(Vector3(0, -20, 0));
         otherObject->GetPhysicsObject()->SetInverseMass(0);
     }
+
+    else if (otherObject->GetName() == "sphere" || otherObject->GetName() == "obb") {   // throw props at enemies to destroy them
+        if (otherObject->GetPhysicsObject()->GetLinearVelocity().Length() > 20) {
+            //std::cout << otherObject->GetPhysicsObject()->GetLinearVelocity().Length() << " Enemy killed with thrown object\n";
+            target->score += 5;
+            world->RemoveGameObject(this, false);
+            world->RemoveGameObject(otherObject, false);
+        }
+    }
 }
 
 void EnemyGameObject::MoveToPosition(Vector3 targetPos) {
