@@ -1,8 +1,10 @@
+This is my coursework from the CSC8503: Advanced Game Technologies module of my masters degree at Newcastle University. The areas of focus were physics, AI and networking using C++. 
+
 Note - to run the code, use CMake to generate a new project
 
 <br/>
 
-Youtube Video Link
+Youtube Video Showcase
 https://youtu.be/Q8Xz2w_ecww?si=GsHHwANC_iu9zI82
 
 <br/>
